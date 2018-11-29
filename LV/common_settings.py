@@ -4,3 +4,4 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : common_settings.py
+APIKEY_YUNPIAN = ''
