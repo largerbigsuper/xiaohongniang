@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('sms/', include('datamodels.sms.urls')),
+    path('customer/', include('datamodels.role.urls')),
 ]

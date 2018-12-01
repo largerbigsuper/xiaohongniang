@@ -1,7 +1,10 @@
+import traceback
+
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, transaction
 
 from lib.common import BaseManger
+from lib.exceptions import LVException
 
 
 class BaseRole(models.Model):
@@ -24,14 +27,28 @@ class BaseRole(models.Model):
 
 
 class CustomerManager(BaseManger):
-    pass
 
-#
-# class Customer(BaseRole):
-#     objects = CustomerManager()
-#
-#     class Meta:
-#         db_table = 'lv_customers'
-#
-#
-# mm_Customer = Customer.objects
+    def add(self, login_tel, password):
+        try:
+            with transaction.atomic():
+                user = self._add_user(login_tel, password)
+                customer = self.create(user=user, login_tel=login_tel)
+                return customer
+        except:
+            msg = traceback.format_exc()
+            raise LVException(code=1, msg=msg)
+
+    @staticmethod
+    def _add_user(login_tel, password):
+        user = User.objects.create(username=login_tel, password=password)
+        return user
+
+
+class Customer(BaseRole):
+    objects = CustomerManager()
+
+    class Meta:
+        db_table = 'lv_customers'
+
+
+mm_Customer = Customer.objects

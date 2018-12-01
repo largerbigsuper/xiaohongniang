@@ -44,7 +44,8 @@ THIRD_PARTS_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'datamodels.sms'
+    'datamodels.sms',
+    'datamodels.role',
 ]
 
 INSTALLED_APPS += THIRD_PARTS_APPS
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'lib.middleware.ResponseFormateMiddleware',
 ]
 
 ROOT_URLCONF = 'LV.urls'
@@ -87,9 +89,16 @@ WSGI_APPLICATION = 'LV.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'root',
+        'NAME': 'lv',
+        'PASSWORD': 'Password123/',
+        'HOST': '127.0.0.1'
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
 
 
@@ -117,13 +126,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
+
+# TIME_ZONE = 'zh-hans'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -143,3 +154,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+APPEND_SLASH = False
