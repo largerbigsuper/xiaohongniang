@@ -44,7 +44,7 @@ THIRD_PARTS_APPS = [
 ]
 
 CUSTOM_APPS = [
-
+    'datamodels.sms'
 ]
 
 INSTALLED_APPS += THIRD_PARTS_APPS

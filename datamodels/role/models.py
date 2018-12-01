@@ -26,12 +26,12 @@ class BaseRole(models.Model):
 class CustomerManager(BaseManger):
     pass
 
-
-class Customer(BaseRole):
-    objects = CustomerManager()
-
-    class Meta:
-        db_table = 'lv_customers'
-
-
-mm_Customer = Customer.objects
+#
+# class Customer(BaseRole):
+#     objects = CustomerManager()
+#
+#     class Meta:
+#         db_table = 'lv_customers'
+#
+#
+# mm_Customer = Customer.objects
