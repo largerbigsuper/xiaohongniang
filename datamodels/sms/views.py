@@ -4,25 +4,25 @@ from django.views.decorators.http import require_POST
 
 from datamodels.sms.models import mm_SMSCode
 from lib.aliyun_sms import send_simple_code, gen_code
-from lib.tools import Params
+from lib.tools import Tool
 
 
 @csrf_exempt
 @require_POST
 def get_poll_code(request):
     """获取验证码"""
-    Params.required_params(request, ['login_tel'])
-    login_tel = request.POST.get('login_tel')
+    Tool.required_params(request, ['account'])
+    account = request.POST.get('account')
     code = gen_code()
-    if not mm_SMSCode.can_get_new_code(tel=login_tel):
+    if not mm_SMSCode.can_get_new_code(tel=account):
         error = {
             'code': 1,
             'msg': '请过几分钟尝试'
         }
         return JsonResponse(error)
-    response = send_simple_code(login_tel, code)
+    response = send_simple_code(account, code)
     if response['Code'] == 'OK':
-        mm_SMSCode.add(login_tel, code)
+        mm_SMSCode.add(account, code)
         return JsonResponse({'code': 0})
     else:
         error = {

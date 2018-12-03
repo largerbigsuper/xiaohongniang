@@ -6,7 +6,7 @@
 # @File    : middleware.py
 from django.http import JsonResponse
 
-from lib.exceptions import LVException
+from lib.exceptions import LVError
 
 
 class ResponseFormateMiddleware:
@@ -26,8 +26,8 @@ class ResponseFormateMiddleware:
 
         return response
 
-    def process_exception(self, request, exception):
-        if isinstance(exception, LVException):
-            return JsonResponse(dict(code=exception.code, msg=exception.msg))
-        else:
-            return None
+    # def process_exception(self, request, exception):
+        # if isinstance(exception, LVError):
+        #     return JsonResponse(dict(code=exception.code, msg=exception.msg))
+        # else:
+        #     return None

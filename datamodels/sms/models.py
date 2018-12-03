@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.db import models
 
 from lib.common import BaseManger
-from lib.exceptions import LVException
+from lib.exceptions import LVError
 
 
 class SMSCodeManager(BaseManger):
@@ -19,9 +19,9 @@ class SMSCodeManager(BaseManger):
         try:
             record = self.get(tel=tel, code=code)
             if record.expire_at < datetime.now():
-                raise LVException(code=1, msg='验证码已失效')
+                raise LVError('验证码已失效')
         except self.model.DoesNotExist:
-            raise LVException(code=1, msg='验证码不存在')
+            raise LVError('验证码不存在')
 
 
 class SMSCode(models.Model):

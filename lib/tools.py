@@ -6,10 +6,10 @@
 # @File    : tools.py
 from django.core.handlers.wsgi import WSGIRequest
 
-from lib.exceptions import LVException
+from lib.exceptions import LVError
 
 
-class Params:
+class Tool:
 
     @staticmethod
     def required_params(request: WSGIRequest, required_params: list) -> None:
@@ -19,4 +19,4 @@ class Params:
             _params = required_params
         lacked_params = [key for key in _params if key not in request.POST.keys()]
         if lacked_params:
-            raise LVException('缺少参数%s' % lacked_params, code=1)
+            raise LVError('缺少参数%s' % lacked_params)

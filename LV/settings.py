@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-
+from .common_settings import *
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
 THIRD_PARTS_APPS = [
     'rest_framework',
+    # 'rest_framework.authtoken'
 ]
 
 CUSTOM_APPS = [
@@ -84,24 +85,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'LV.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'USER': 'root',
-        'NAME': 'lv',
-        'PASSWORD': 'Password123/',
-        'HOST': '127.0.0.1'
-    }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -124,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -148,11 +131,43 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Thtird parts settings
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
-APPEND_SLASH = False
+# APPEND_SLASH = False
+
+ADMINS = [
+    ('admin', 'zaihuazhao@163.com'),
+]
+
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_CACHE_ALIAS = "default"
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7 * 2
+CSRF_COOKIE_AGE = 60 * 60 * 24 * 7 * 2
+
+# X-XSRF-TOKEN
+# CSRF_HEADER_NAME = 'HTTP_X_XSRF_TOKEN'
+
+# DATE_FORMAT = ''
+# DATETIME_FORMAT = ''
+
+EMAIL_FILE_PATH = ''
+
+# 周一为第一天
+FIRST_DAY_OF_WEEK = 1
+
+# 错误邮件名
+SERVER_EMAIL = 'lv@localhost'
+
+# LOGIN_REDIRECT_URL = '/accounts/profile/'
+# LOGIN_URL = '/accounts/login/'
+# LOGOUT_REDIRECT_URL = ''

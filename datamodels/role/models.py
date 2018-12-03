@@ -3,8 +3,9 @@ import traceback
 from django.contrib.auth.models import User
 from django.db import models, transaction
 
+from datamodels.sms.models import mm_SMSCode
 from lib.common import BaseManger
-from lib.exceptions import LVException
+from lib.exceptions import LVError
 
 
 class BaseRole(models.Model):
@@ -18,7 +19,7 @@ class BaseRole(models.Model):
     age = models.PositiveSmallIntegerField('年龄', null=True, blank=True)
     gender = models.IntegerField('性别', choices=GENDER_CHOICE, default=0)
     avatar = models.CharField('头像', max_length=120, blank=True)
-    login_tel = models.CharField('电话', max_length=11, unique=True)
+    account = models.CharField('电话', max_length=11, unique=True)
     wechat_id = models.CharField('微信号', max_length=24, blank=True)
     # intro = models.CharField('自我简介', max_length=24, blank=True)
 
@@ -28,19 +29,40 @@ class BaseRole(models.Model):
 
 class CustomerManager(BaseManger):
 
-    def add(self, login_tel, password):
+    def add(self, account, password):
         try:
             with transaction.atomic():
-                user = self._add_user(login_tel, password)
-                customer = self.create(user=user, login_tel=login_tel)
+                user = self._add_user(account, password)
+                customer = self.create(user=user, login_tel=account)
                 return customer
         except:
             msg = traceback.format_exc()
-            raise LVException(code=1, msg=msg)
+            raise LVError(msg)
+
+    def reset_password_by_login(self, user_id, raw_password, new_password):
+            user = User.objects.get(id=user_id)
+            if user.check_password(raw_password):
+                return self._reset_password(user, new_password)
+            else:
+                raise LVError('%s原始密码错误' % raw_password)
+
+    def reset_password_by_sms(self, account, password, code):
+        try:
+            mm_SMSCode.is_effective(account, code)
+            user = User.objects.get(username=account)
+            return self._reset_password(user, password)
+        except User.DoesNotExist:
+            raise LVError('%s账号不存在' % account)
 
     @staticmethod
-    def _add_user(login_tel, password):
-        user = User.objects.create(username=login_tel, password=password)
+    def _reset_password(user: User, password: str) -> User:
+        user.set_password(password)
+        user.save()
+        return user
+
+    @staticmethod
+    def _add_user(account, password):
+        user = User.objects.create(username=account, password=password)
         return user
 
 
