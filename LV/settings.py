@@ -11,7 +11,15 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from .common_settings import *
+
+ENV = os.getenv('DJANGO_RUN_ENV', 'DEV')
+if ENV == 'TEST':
+    from .settings_docker import *
+    DEBUG = False
+else:
+    from .common_settings import *
+    DEBUG = True
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,9 +31,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^ww=aak_o4#=nue97+8@=7g)m+t_b33qqv%o)_^r5ypc%a^)g0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
