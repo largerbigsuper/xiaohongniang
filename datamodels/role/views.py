@@ -9,20 +9,22 @@ from rest_framework.views import APIView
 from datamodels.role.models import mm_Customer
 from datamodels.role.serializers import CustomerSerializer
 from datamodels.sms.models import mm_SMSCode
+from lib.exceptions import LVError
 from lib.tools import Tool
 
 
 class RegisterView(APIView):
 
     def post(self, request):
-        required_params = ['code', 'login_tel', 'password']
+        required_params = ['code', 'account', 'password']
         Tool.required_params(request, required_params)
         code = request.data.get('code')
-        login_tel = request.data.get('login_tel')
+        account = request.data.get('account')
         password = request.data.get('password')
-        mm_SMSCode.is_effective(login_tel, code)
-        mm_Customer.add(login_tel, password)
-        return Response(dict(account=login_tel), status=status.HTTP_200_OK)
+        mm_SMSCode.is_effective(account, code)
+        customer = mm_Customer.add(account, password)
+        login(request, customer.user)
+        return Response(dict(account=account), status=status.HTTP_200_OK)
 
 
 class LoginView(APIView):
@@ -46,9 +48,9 @@ class LoginView(APIView):
                 }
                 return Response(data)
             else:
-                return Response('账号或密码错误', status=status.HTTP_400_BAD_REQUEST)
+                raise LVError('账号或密码错误')
         except User.DoesNotExist:
-            return Response('账号不存在', status=status.HTTP_400_BAD_REQUEST)
+            raise LVError('账号不存在')
 
 
 class LogoutView(APIView):
@@ -60,14 +62,14 @@ class LogoutView(APIView):
 
 class PasswordResetView(APIView):
 
-    @csrf_exempt
+    # @csrf_exempt
     def post(self, request):
         """密码重置"""
-        if request:
-            return Response('OK', status=status.HTTP_200_OK)
+        # if request:
+        #     return Response('OK', status=status.HTTP_200_OK)
 
         if request.user.is_authenticated:
-            Tool.required_params(request.data, ['raw_password', 'new_password'])
+            Tool.required_params(request, ['raw_password', 'new_password'])
             raw_password = request.data['raw_password']
             new_password = request.data['new_password']
             user = mm_Customer.reset_password_by_login(request.user.id, raw_password, new_password)

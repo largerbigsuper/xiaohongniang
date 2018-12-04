@@ -1,7 +1,7 @@
 import traceback
 
 from django.contrib.auth.models import User
-from django.db import models, transaction
+from django.db import models, transaction, IntegrityError
 
 from datamodels.sms.models import mm_SMSCode
 from lib.common import BaseManger
@@ -33,8 +33,10 @@ class CustomerManager(BaseManger):
         try:
             with transaction.atomic():
                 user = self._add_user(account, password)
-                customer = self.create(user=user, login_tel=account)
+                customer = self.create(user=user, account=account)
                 return customer
+        except IntegrityError:
+            raise LVError('账号已注册')
         except:
             msg = traceback.format_exc()
             raise LVError(msg)
@@ -44,7 +46,7 @@ class CustomerManager(BaseManger):
             if user.check_password(raw_password):
                 return self._reset_password(user, new_password)
             else:
-                raise LVError('%s原始密码错误' % raw_password)
+                raise LVError('原始密码错误')
 
     def reset_password_by_sms(self, account, password, code):
         try:

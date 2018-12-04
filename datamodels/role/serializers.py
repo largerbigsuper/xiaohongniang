@@ -14,7 +14,7 @@ from datamodels.role.models import Customer
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar', 'login_tel', 'wechat_id')
+        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar', 'account', 'wechat_id')
         read_only_fields = ('login_tel',)
 
     def create(self, validated_data):

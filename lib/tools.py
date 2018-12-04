@@ -17,6 +17,6 @@ class Tool:
             _params = [required_params]
         else:
             _params = required_params
-        lacked_params = [key for key in _params if key not in request.POST.keys()]
+        lacked_params = [key for key in _params if key not in request.data.keys()]
         if lacked_params:
             raise LVError('缺少参数%s' % lacked_params)
