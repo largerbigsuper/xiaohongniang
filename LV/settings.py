@@ -179,3 +179,96 @@ SERVER_EMAIL = 'lv@localhost'
 # LOGIN_REDIRECT_URL = '/accounts/profile/'
 # LOGIN_URL = '/accounts/login/'
 # LOGOUT_REDIRECT_URL = ''
+
+# logging settings
+# logger name datamodels.appname.views
+# logger = logging.getLogger(__name__)
+
+LOG_LEVEL_DEBUG = 'DEBUG'
+LOG_LEVEL_INFO = 'INFO'
+LOG_LEVEL_WARNING = 'WARNING'
+LOG_LEVEL_ERROR = 'ERROR'
+LOG_LEVEL_CRITICAL = 'CRITICAL'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse",
+        },
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            # 'filters': ['special']
+        },
+        "django_file": {
+            "level": LOG_LEVEL_INFO,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "./log/access.log",
+            "maxBytes": 1024 * 1024 * 10,  # 10MB
+            "backupCount": 10,
+            "formatter": "verbose"
+        },
+        "request_file": {
+            "level": LOG_LEVEL_ERROR,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "./log/requests.log",
+            "maxBytes": 1024 * 1024 * 10,  # 10MB
+            "backupCount": 10,
+            "formatter": "verbose"
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'django_file', 'mail_admins'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['request_file', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    }
+}
+
+
+for app_name in CUSTOM_APPS:
+    handler_name = app_name
+    handler_config = {
+        "level": LOG_LEVEL_INFO,
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": "./log/" + app_name + ".log",
+        "maxBytes": 1024 * 1024 * 10,  # 10MB
+        "backupCount": 10,
+        "formatter": "verbose"
+    }
+    LOGGING['handlers'][handler_name] = handler_config
+    logger_name = app_name + '.views'
+    logger_config = {
+        'handlers': ['console', handler_name],
+        'level': 'INFO',
+    }
+    LOGGING['loggers'][logger_name] = handler_config
+

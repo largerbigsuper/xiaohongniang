@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import Http404
@@ -11,6 +13,9 @@ from datamodels.role.serializers import CustomerSerializer
 from datamodels.sms.models import mm_SMSCode
 from lib.exceptions import LVError
 from lib.tools import Tool
+
+
+logger = logging.getLogger(__name__)
 
 
 class RegisterView(APIView):
@@ -62,12 +67,8 @@ class LogoutView(APIView):
 
 class PasswordResetView(APIView):
 
-    # @csrf_exempt
     def post(self, request):
         """密码重置"""
-        # if request:
-        #     return Response('OK', status=status.HTTP_200_OK)
-
         if request.user.is_authenticated:
             Tool.required_params(request, ['raw_password', 'new_password'])
             raw_password = request.data['raw_password']
