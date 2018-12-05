@@ -1,31 +1,5 @@
-# Use root/example as user/password credentials
 version: '3.1'
-
-networks:
-  app-tier:
-    driver: bridge
-
 services:
-
-  db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_DATABASE: lv
-      MYSQL_USER: lv
-      MYSQL_PASSWORD: lv
-      MYSQL_ROOT_PASSWORD: root
-    networks:
-      - app-tier
-
-  redis:
-    image: 'bitnami/redis:latest'
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    networks:
-      - app-tier
-
   web:
     build: .
     command: ["./run_web.sh"]
@@ -39,7 +13,20 @@ services:
     depends_on:
       - db
       - redis
-    networks:
-      - app-tier
+
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_DATABASE=lv_web
+      - MYSQL_ROOT_PASSWORD=lv_web_password
+
+  redis:
+    image: redis:5.0
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+
 
 

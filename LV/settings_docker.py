@@ -15,12 +15,13 @@ class AliYunSMS:
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'lv',
-        'NAME': 'lv',
-        'PASSWORD': 'lv',
+        'USER': 'root',
+        'NAME': 'lv_web',
+        'PASSWORD': 'lv_web_password',
         'HOST': 'db',
         'PORT': 3306,
         'OPTIONS': {
@@ -32,7 +33,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://redis:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
