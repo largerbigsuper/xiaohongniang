@@ -23,9 +23,7 @@ DATABASES = {
         'NAME': 'lv_web',
         'PASSWORD': 'lv_web_password',
         'HOST': 'db',
-        'PORT': 3306,
-        'OPTIONS': {
-         },
+        'PORT': '3306',
     }
 }
 
