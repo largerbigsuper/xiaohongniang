@@ -1,6 +1,6 @@
-from django.http import JsonResponse
+import logging
+
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -8,6 +8,9 @@ from datamodels.sms.models import mm_SMSCode
 from lib.aliyun_sms import send_simple_code, gen_code
 from lib.exceptions import LVError
 from lib.tools import Tool
+
+
+logger = logging.getLogger(__name__)
 
 
 @csrf_exempt
