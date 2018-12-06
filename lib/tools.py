@@ -20,3 +20,11 @@ class Tool:
         lacked_params = [key for key in _params if key not in request.data.keys()]
         if lacked_params:
             raise LVError('缺少参数%s' % lacked_params)
+
+    @staticmethod
+    def format_data(data=None, msg='OK'):
+        _data = {
+            'msg': msg,
+            'data': data
+        }
+        return _data

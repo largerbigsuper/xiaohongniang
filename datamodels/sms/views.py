@@ -25,7 +25,7 @@ def get_poll_code(request):
     response = send_simple_code(account, code)
     if response['Code'] == 'OK':
         mm_SMSCode.add(account, code)
-        return Response("OK")
+        return Response(Tool.format_data())
     else:
         raise LVError(response['Message'])
 

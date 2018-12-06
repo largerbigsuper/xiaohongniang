@@ -29,7 +29,8 @@ class RegisterView(APIView):
         mm_SMSCode.is_effective(account, code)
         customer = mm_Customer.add(account, password)
         login(request, customer.user)
-        return Response(dict(account=account), status=status.HTTP_200_OK)
+        data = dict(account=account)
+        return Response(Tool.format_data(data), status=status.HTTP_200_OK)
 
 
 class LoginView(APIView):
@@ -51,7 +52,7 @@ class LoginView(APIView):
                     'user_id': user.id,
                     'name': user.customer.name,
                 }
-                return Response(data)
+                return Response(Tool.format_data(data))
             else:
                 raise LVError('账号或密码错误')
         except User.DoesNotExist:
@@ -62,7 +63,7 @@ class LogoutView(APIView):
 
     def get(self, request):
         logout(request)
-        return Response('OK', status=status.HTTP_200_OK)
+        return Response(Tool.format_data(), status=status.HTTP_200_OK)
 
 
 class PasswordResetView(APIView):
@@ -79,7 +80,7 @@ class PasswordResetView(APIView):
             password = request.data.get('password')
             code = request.data.get('code')
             user = mm_Customer.reset_password_by_sms(account, password, code)
-        return Response('OK', status=status.HTTP_200_OK)
+        return Response(Tool.format_data(), status=status.HTTP_200_OK)
 
 
 class CustomerDetail(APIView):

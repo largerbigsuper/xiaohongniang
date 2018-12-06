@@ -67,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'lib.middleware.ResponseFormateMiddleware',
+    # 'lib.middleware.ResponseFormateMiddleware',
 ]
 
 ROOT_URLCONF = 'LV.urls'
@@ -146,6 +146,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         # 'rest_framework.permissions.IsAuthenticated',
     ),
+    'EXCEPTION_HANDLER': 'lib.handlers.custom_exception_handler',
 }
 
 # APPEND_SLASH = False
