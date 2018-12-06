@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from LV.views import UploadTokenView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('sms/', include('datamodels.sms.urls')),
     path('customer/', include('datamodels.role.urls')),
+    path('token/', UploadTokenView.as_view())
 ]

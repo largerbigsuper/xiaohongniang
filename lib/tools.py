@@ -17,9 +17,22 @@ class Tool:
             _params = [required_params]
         else:
             _params = required_params
-        lacked_params = [key for key in _params if key not in request.data.keys()]
+        data_dict = request.query_params if request.method == 'GET' else request.data
+        lacked_params = [key for key in _params if key not in data_dict.keys()]
         if lacked_params:
             raise LVError('缺少参数%s' % lacked_params)
+
+    @staticmethod
+    def param_in_options(request: WSGIRequest, key, options):
+        data_dict = request.query_params if request.method == 'GET' else request.data
+        value = data_dict.get(key)
+        if not value:
+            return
+        if isinstance(options, (list, tuple)):
+            if value not in options:
+                raise LVError('参数%s可选值为：%s' % (key, options))
+        else:
+            return
 
     @staticmethod
     def format_data(data=None, msg='OK'):

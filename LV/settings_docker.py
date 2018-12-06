@@ -12,6 +12,15 @@ class AliYunSMS:
     SMS_TEMPLATE_NAME = '正能科技'
     SMS_TEMPLATE_ID = 'SMS_152210626'
 
+
+class QiNiuSettings:
+    ACCESS_KEY = 'YU8-GbpmWJ_8UEdBc7VTv4n_eku3zlgoHuUI2l9D'
+    SECRET_KEY = 'Mkms7UphbEH4sWdkWoEnqk0PCjD3V84rIZ3EuL_H'
+    BUCKET_NAME_DICT = {
+        'image': 'img-workspace',
+    }
+
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
