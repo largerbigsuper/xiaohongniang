@@ -43,7 +43,7 @@ class LoginView(APIView):
         username = request.data.get('account')
         password = request.data.get('password')
         try:
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(self.request, username=username, password=password)
             if user:
                 login(request, user)
                 request.session['user_id'] = user.id

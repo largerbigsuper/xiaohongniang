@@ -64,7 +64,7 @@ class CustomerManager(BaseManger):
 
     @staticmethod
     def _add_user(account, password):
-        user = User.objects.create(username=account, password=password)
+        user = User.objects.create_user(username=account, password=password)
         return user
 
 
