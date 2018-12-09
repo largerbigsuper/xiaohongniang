@@ -34,7 +34,7 @@ DATABASES = {
         'HOST': 'db',
         'PORT': '3306',
         'OPTIONS': {
-            'read_default_file': 'docker_configs/mysql/my.cnf',
+            'init_command': 'SET CHARACTER SET utf8mb4',
         }
     }
 }
