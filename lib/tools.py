@@ -4,15 +4,14 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : tools.py
-from django.core.handlers.wsgi import WSGIRequest
-
-from lib.exceptions import LVError
+from rest_framework.exceptions import ParseError
+from rest_framework.request import Request
 
 
 class Tool:
 
     @staticmethod
-    def required_params(request: WSGIRequest, required_params: list) -> None:
+    def required_params(request: Request, required_params: list) -> None:
         if isinstance(required_params, str):
             _params = [required_params]
         else:
@@ -20,17 +19,17 @@ class Tool:
         data_dict = request.query_params if request.method == 'GET' else request.data
         lacked_params = [key for key in _params if key not in data_dict.keys()]
         if lacked_params:
-            raise LVError('缺少参数%s' % lacked_params)
+            raise ParseError('%s参数缺少' % lacked_params)
 
     @staticmethod
-    def param_in_options(request: WSGIRequest, key, options):
+    def param_in_options(request: Request, key, options):
         data_dict = request.query_params if request.method == 'GET' else request.data
         value = data_dict.get(key)
         if not value:
             return
         if isinstance(options, (list, tuple)):
             if value not in options:
-                raise LVError('参数%s可选值为：%s' % (key, options))
+                raise ParseError('%s可选值为：%s' % (key, options))
         else:
             return
 

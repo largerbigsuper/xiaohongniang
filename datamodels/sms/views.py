@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from datamodels.sms.models import mm_SMSCode
 from lib.aliyun_sms import send_simple_code, gen_code
-from lib.exceptions import LVError
+from lib.exceptions import SMSExcecption
 from lib.tools import Tool
 
 
@@ -21,12 +21,12 @@ def get_poll_code(request):
     account = request.data.get('account')
     code = gen_code()
     if not mm_SMSCode.can_get_new_code(tel=account):
-        raise LVError('请过几分钟尝试')
+        raise SMSExcecption('请过几分钟尝试')
     response = send_simple_code(account, code)
     if response['Code'] == 'OK':
         mm_SMSCode.add(account, code)
         return Response(Tool.format_data())
     else:
-        raise LVError(response['Message'])
+        raise SMSExcecption(response['Message'])
 
 

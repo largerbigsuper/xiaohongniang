@@ -5,7 +5,7 @@ from django.db import models, transaction, IntegrityError
 
 from datamodels.sms.models import mm_SMSCode
 from lib.common import BaseManger
-from lib.exceptions import LVError
+from lib.exceptions import DBException
 
 
 class BaseRole(models.Model):
@@ -18,10 +18,12 @@ class BaseRole(models.Model):
     name = models.CharField('名称', max_length=20)
     age = models.PositiveSmallIntegerField('年龄', null=True, blank=True)
     gender = models.IntegerField('性别', choices=GENDER_CHOICE, default=0)
-    avatar = models.CharField('头像', max_length=120, blank=True)
+    avatar_url = models.CharField('头像', max_length=120, blank=True)
     account = models.CharField('电话', max_length=11, unique=True)
     wechat_id = models.CharField('微信号', max_length=24, blank=True)
-    # intro = models.CharField('自我简介', max_length=24, blank=True)
+    intro = models.CharField('自我简介', max_length=120, blank=True)
+    address_home = models.CharField('家庭住址', max_length=100, blank=True)
+    address_company = models.CharField('公司地址', max_length=100, blank=True)
 
     class Meta:
         abstract = True
@@ -36,17 +38,17 @@ class CustomerManager(BaseManger):
                 customer = self.create(user=user, account=account)
                 return customer
         except IntegrityError:
-            raise LVError('账号已注册')
+            raise DBException('账号已注册')
         except:
             msg = traceback.format_exc()
-            raise LVError(msg)
+            raise DBException(msg)
 
     def reset_password_by_login(self, user_id, raw_password, new_password):
             user = User.objects.get(id=user_id)
             if user.check_password(raw_password):
                 return self._reset_password(user, new_password)
             else:
-                raise LVError('原始密码错误')
+                raise DBException('原始密码错误')
 
     def reset_password_by_sms(self, account, password, code):
         try:
@@ -54,7 +56,7 @@ class CustomerManager(BaseManger):
             user = User.objects.get(username=account)
             return self._reset_password(user, password)
         except User.DoesNotExist:
-            raise LVError('%s账号不存在' % account)
+            raise DBException('%s账号不存在' % account)
 
     @staticmethod
     def _reset_password(user: User, password: str) -> User:

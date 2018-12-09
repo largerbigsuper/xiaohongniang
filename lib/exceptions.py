@@ -9,7 +9,19 @@ from rest_framework.exceptions import APIException
 from django.utils.translation import ugettext_lazy as _
 
 
-class LVError(APIException):
+class SMSExcecption(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
-    default_detail = _('Customer Error.')
-    default_code = 'customer_error'
+    default_detail = _('获取验证码失败')
+    default_code = '获取验证码失败'
+
+
+class LoginException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = _('账号或密码不正确')
+    default_code = '账号或密码不正确'
+
+
+class DBException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = _('数据异常')
+    default_code = '数据异常'

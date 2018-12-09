@@ -7,11 +7,12 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 from datamodels.role.models import mm_Customer
 from datamodels.role.serializers import CustomerSerializer
 from datamodels.sms.models import mm_SMSCode
-from lib.exceptions import LVError
+from lib.exceptions import LoginException
 from lib.tools import Tool
 
 
@@ -54,9 +55,9 @@ class LoginView(APIView):
                 }
                 return Response(Tool.format_data(data))
             else:
-                raise LVError('账号或密码错误')
+                raise LoginException('账号或密码错误')
         except User.DoesNotExist:
-            raise LVError('账号不存在')
+            raise LoginException('账号不存在')
 
 
 class LogoutView(APIView):
@@ -81,6 +82,22 @@ class PasswordResetView(APIView):
             code = request.data.get('code')
             user = mm_Customer.reset_password_by_sms(account, password, code)
         return Response(Tool.format_data(), status=status.HTTP_200_OK)
+
+
+class CustomerProfile(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        serializer = CustomerSerializer(request.user.customer)
+        return Response(Tool.format_data(serializer.data))
+
+    def post(self, request, format=None):
+        serializer = CustomerSerializer(request.user.customer, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(Tool.format_data(serializer.data))
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomerDetail(APIView):

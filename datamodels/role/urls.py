@@ -13,5 +13,6 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view()),
     path('enroll/', views.RegisterView.as_view()),
     path('password/', views.PasswordResetView.as_view()),
+    path('profile/', views.CustomerProfile.as_view()),
     path('<int:pk>/', views.CustomerDetail.as_view()),
 ]
