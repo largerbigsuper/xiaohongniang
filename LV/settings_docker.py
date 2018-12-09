@@ -33,6 +33,9 @@ DATABASES = {
         'PASSWORD': 'lv_web_password',
         'HOST': 'db',
         'PORT': '3306',
+        'OPTIONS': {
+            'read_default_file': 'docker_configs/mysql/my.cnf',
+        }
     }
 }
 
