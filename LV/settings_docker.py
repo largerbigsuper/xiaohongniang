@@ -33,6 +33,9 @@ DATABASES = {
         'PASSWORD': 'lv_web_password',
         'HOST': 'db',
         'PORT': '3306',
+        'OPTIONS': {
+            'init_command': {'charset': 'utf8mb4'},
+        }
     }
 }
 
