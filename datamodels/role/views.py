@@ -92,7 +92,7 @@ class CustomerProfile(APIView):
         return Response(Tool.format_data(serializer.data))
 
     def post(self, request, format=None):
-        serializer = CustomerSerializer(request.user.customer, data=request.data)
+        serializer = CustomerSerializer(request.user.customer, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(Tool.format_data(serializer.data))
