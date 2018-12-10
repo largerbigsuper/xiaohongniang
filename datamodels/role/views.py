@@ -13,6 +13,7 @@ from datamodels.role.models import mm_Customer
 from datamodels.role.serializers import CustomerSerializer
 from datamodels.sms.models import mm_SMSCode
 from lib.exceptions import LoginException
+from lib.im import IMServe
 from lib.tools import Tool
 
 
@@ -52,6 +53,7 @@ class LoginView(APIView):
                 data = {
                     'user_id': user.id,
                     'name': user.customer.name,
+                    'im_token': user.customer.im_token,
                 }
                 return Response(Tool.format_data(data))
             else:
@@ -92,9 +94,13 @@ class CustomerProfile(APIView):
         return Response(Tool.format_data(serializer.data))
 
     def post(self, request, format=None):
+        _name = request.user.customer.name
+        _avatar_url = request.user.customer.avatar_url
         serializer = CustomerSerializer(request.user.customer, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            if any([not _name == serializer.data['name'], not _avatar_url == serializer.data['avatar_url']]):
+                IMServe.refresh_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)
             return Response(Tool.format_data(serializer.data))
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

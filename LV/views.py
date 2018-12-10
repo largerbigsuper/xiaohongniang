@@ -4,10 +4,12 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : views.py
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
+from lib.im import IMServe
 from lib.qiniucloud import QiniuServe
 from lib.tools import Tool
 
@@ -24,4 +26,14 @@ class UploadTokenView(APIView):
         token = QiniuServe.gen_app_upload_token(bucket_name, file_name, request.user.id)
         data = {'token': token}
         return Response(Tool.format_data(data))
+
+
+class ImTokenView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        data = IMServe.gen_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)
+        return Response(Tool.format_data(data))
+
+
 

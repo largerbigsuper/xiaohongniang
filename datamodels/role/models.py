@@ -6,6 +6,7 @@ from django.db import models, transaction, IntegrityError
 from datamodels.sms.models import mm_SMSCode
 from lib.common import BaseManger
 from lib.exceptions import DBException
+from lib.im import IMServe
 
 
 class BaseRole(models.Model):
@@ -24,6 +25,7 @@ class BaseRole(models.Model):
     intro = models.CharField('自我简介', max_length=120, blank=True)
     address_home = models.CharField('家庭住址', max_length=100, blank=True)
     address_company = models.CharField('公司地址', max_length=100, blank=True)
+    im_token = models.CharField('融云token', max_length=100, blank=True)
 
     class Meta:
         abstract = True
@@ -35,7 +37,8 @@ class CustomerManager(BaseManger):
         try:
             with transaction.atomic():
                 user = self._add_user(account, password)
-                customer = self.create(user=user, account=account)
+                im_token = IMServe.gen_token(user.id, account)['token']
+                customer = self.create(user=user, account=account, im_token=im_token)
                 return customer
         except IntegrityError:
             raise DBException('账号已注册')

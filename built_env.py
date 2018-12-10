@@ -11,5 +11,6 @@ call(['pip', 'install', '-r', 'requirements.txt'])
 # step2
 # call(['pip', 'install', 'git+https://github.com/htwenning/aliyun-python-sdk-core'])
 call(['pip', 'install', 'git+https://github.com/htwenning/aliyun-python-sdk-dysmsapi'])
+call(['pip', 'install', 'https://github.com/rongcloud/server-sdk-python/tree/v2.0.1'])
 
 

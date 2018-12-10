@@ -16,7 +16,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
         # fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar', 'account', 'wechat_id')
-        read_only_fields = ('account', 'user', 'id')
+        read_only_fields = ('account', 'user', 'id', 'im_token')
 
     def create(self, validated_data):
         with transaction.atomic():
