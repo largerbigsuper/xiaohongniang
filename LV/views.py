@@ -33,6 +33,8 @@ class ImTokenView(APIView):
 
     def get(self, request, format=None):
         data = IMServe.gen_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)
+        request.user.customer.im_token = data['token']
+        request.user.customer.save()
         return Response(Tool.format_data(data))
 
 
