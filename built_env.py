@@ -14,3 +14,4 @@ call(['pip', 'install', 'git+https://github.com/htwenning/aliyun-python-sdk-dysm
 call(['pip', 'install', 'git+https://github.com/rongcloud/server-sdk-python.git'])
 
 
+
