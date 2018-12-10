@@ -18,6 +18,9 @@ class QiNiuSettings:
         'image': 'img-workspace',
     }
 
+class RongYunSettings:
+    APP_KEY = 'k51hidwqk404b'
+    APP_SECRET = 'JV6ZKZWpM4TZ'
 
 
 # Database
