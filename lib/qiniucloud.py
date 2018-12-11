@@ -19,7 +19,7 @@ class QiniuServe:
         return QiNiuSettings.BUCKET_NAME_DICT[file_type]
 
     @classmethod
-    def gen_app_upload_token(cls, bucket_name, filename, user_id):
+    def gen_app_upload_token(cls, bucket_name):
         """
         app 上传token生成
         :param bucket_name: 文件存储空间名
@@ -36,9 +36,9 @@ class QiniuServe:
         #     'saveKey': '%s/$(etag)$(ext)' % user_id
         #  }
         policy = {
-            'saveKey': '%s/$(etag)$(ext)' % user_id,
+            # 'saveKey': '%s/$(etag)$(ext)' % user_id,
             'fsizeLimit': 10 * 1024 * 1024
         }
         #3600为token过期时间，秒为单位。3600等于一小时
-        token = cls.qiniuAuth.upload_token(bucket_name, filename, 3600, policy)
+        token = cls.qiniuAuth.upload_token(bucket_name, None, 3600, policy)
         return token

@@ -18,12 +18,10 @@ class UploadTokenView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-        Tool.required_params(request, ['file_name'])
         Tool.param_in_options(request, 'file_type', ['image'])
         file_type = request.query_params.get('file_type', 'image')
-        file_name = request.query_params.get('file_name')
         bucket_name = QiniuServe.get_bucket_name(file_type)
-        token = QiniuServe.gen_app_upload_token(bucket_name, file_name, request.user.id)
+        token = QiniuServe.gen_app_upload_token(bucket_name)
         data = {'token': token}
         return Response(Tool.format_data(data))
 
