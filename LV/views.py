@@ -23,7 +23,7 @@ class UploadTokenView(APIView):
         file_type = request.query_params.get('file_type', 'image')
         file_name = request.query_params.get('file_name')
         bucket_name = QiniuServe.get_bucket_name(file_type)
-        token = QiniuServe.gen_app_upload_token(bucket_name, file_name, request.user.id)
+        token = QiniuServe.gen_app_upload_token(bucket_name, file_name)
         data = {'token': token}
         return Response(Tool.format_data(data))
 
