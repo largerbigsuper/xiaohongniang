@@ -14,6 +14,7 @@ from datamodels.role.serializers import CustomerSerializer
 from datamodels.sms.models import mm_SMSCode
 from lib.exceptions import LoginException
 from lib.im import IMServe
+from lib.qiniucloud import QiniuServe
 from lib.tools import Tool
 
 
@@ -98,9 +99,13 @@ class CustomerProfile(APIView):
         _avatar_url = request.user.customer.avatar_url
         serializer = CustomerSerializer(request.user.customer, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
+            if 'avatar_url' in serializer.validated_data:
+                serializer.validated_data['avatar_url'] = QiniuServe.bucket_domain_dict['image'] + \
+                                                          serializer.validated_data['avatar_url']
             serializer.save()
             if any([not _name == serializer.data['name'], not _avatar_url == serializer.data['avatar_url']]):
                 IMServe.refresh_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)
+                #TODO 删除替换的图片
             return Response(Tool.format_data(serializer.data))
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

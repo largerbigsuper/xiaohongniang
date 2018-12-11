@@ -19,6 +19,9 @@ class QiNiuSettings:
     BUCKET_NAME_DICT = {
         'image': 'img-workspace',
     }
+    BUCKET_DOMAIN_DICT = {
+        'image': 'http://pj945cdo2.bkt.clouddn.com/'
+    }
 
 
 class RongYunSettings:

@@ -13,10 +13,12 @@ class QiniuServe:
     access_key = QiNiuSettings.ACCESS_KEY
     secret_key = QiNiuSettings.SECRET_KEY
     qiniuAuth = Auth(access_key, secret_key)
+    bucket_name_dict = QiNiuSettings.BUCKET_NAME_DICT
+    bucket_domain_dict = QiNiuSettings.BUCKET_DOMAIN_DICT
 
-    @staticmethod
-    def get_bucket_name(file_type):
-        return QiNiuSettings.BUCKET_NAME_DICT[file_type]
+    @classmethod
+    def get_bucket_name(cls, file_type):
+        return cls.bucket_name_dict[file_type]
 
     @classmethod
     def gen_app_upload_token(cls, bucket_name):
