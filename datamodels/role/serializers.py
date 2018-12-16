@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from rest_framework import serializers
 
-from datamodels.role.models import Customer
+from datamodels.role.models import Customer, RelationShip
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -27,3 +27,25 @@ class CustomerSerializer(serializers.ModelSerializer):
             user.save()
             customer = Customer.objects.create(user=user, login_tel=validated_data['username'])
             return customer
+
+
+class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ('id', 'user_id', 'name')
+
+
+class FollowingRelationShipSerializer(serializers.ModelSerializer):
+    customer = CoustomerBaseInfoSerializer(source='to_customer')
+
+    class Meta:
+        model = RelationShip
+        fields = ('id', 'customer', 'create_at', 'status')
+
+
+class FollowersRelationShipSerializer(serializers.ModelSerializer):
+    customer = CoustomerBaseInfoSerializer(source='from_customer')
+
+    class Meta:
+        model = RelationShip
+        fields = ('id', 'customer', 'create_at', 'status')
