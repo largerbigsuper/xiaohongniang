@@ -28,6 +28,10 @@ class RongYunSettings:
     APP_KEY = 'k51hidwqk404b'
     APP_SECRET = 'JV6ZKZWpM4TZ'
 
+class RongYunSettings:
+    APP_KEY = 'k51hidwqk404b'
+    APP_SECRET = 'JV6ZKZWpM4TZ'
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 

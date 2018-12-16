@@ -4,13 +4,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from datamodels.role.models import mm_Customer
-from datamodels.role.serializers import CustomerSerializer
+from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
+from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
+    FollowersRelationShipSerializer
 from datamodels.sms.models import mm_SMSCode
 from lib.exceptions import LoginException
 from lib.im import IMServe
@@ -32,7 +33,7 @@ class RegisterView(APIView):
         mm_SMSCode.is_effective(account, code)
         customer = mm_Customer.add(account, password)
         login(request, customer.user)
-        data = dict(account=account)
+        data = dict(account=account, id=customer.id, user_id=customer.user.id)
         return Response(Tool.format_data(data), status=status.HTTP_200_OK)
 
 
@@ -138,3 +139,43 @@ class CustomerDetail(APIView):
         snippet = self.get_object(pk)
         snippet.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class MyFollowerView(APIView):
+    """
+    我的关注
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, format=None):
+        customer_id = request.data['coustomer_id']
+        relationship = request.user.customer.add_relationship(customer_id, RELATIONSHIP_FOLLOWING)
+        return Response(Tool.format_data())
+
+    def delete(self, request, format=None):
+        customer_id = request.data['coustomer_id']
+        request.user.customer.remove_relationship(customer_id)
+        return Response(Tool.format_data())
+
+
+class MyFollowersList(generics.ListAPIView):
+    """
+    关注我的
+    """
+    def get_queryset(self):
+        return self.request.user.customer.get_follower_recoreds()
+
+    serializer_class = FollowersRelationShipSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class MyFollowingList(generics.ListAPIView):
+    """
+    我的关注
+    """
+    def get_queryset(self):
+        return self.request.user.customer.get_following_recoreds()
+
+    serializer_class = FollowingRelationShipSerializer
+    permission_classes = (IsAuthenticated,)
+
