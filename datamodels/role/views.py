@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
-    FollowersRelationShipSerializer
+    FollowersRelationShipSerializer, CustomerListSerializer
 from datamodels.sms.models import mm_SMSCode
 from lib.exceptions import LoginException
 from lib.im import IMServe
@@ -110,6 +110,15 @@ class CustomerProfile(APIView):
             return Response(Tool.format_data(serializer.data))
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomerList(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomerListSerializer
+
+    def get_queryset(self):
+        return mm_Customer.all()
 
 
 class CustomerDetail(APIView):

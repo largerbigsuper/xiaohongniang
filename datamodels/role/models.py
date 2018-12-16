@@ -159,6 +159,10 @@ class RelationShipManager(BaseManger):
                 self.filter(from_customer_id=to_customer_id, to_customer_id=from_customer_id, status=RELATIONSHIP_BOTH_FOLLOWING).update(status=RELATIONSHIP_FOLLOWING)
             relation.delete()
 
+    def get_following_customer_ids_map(self, from_customer_id):
+        relations = self.filter(from_customer_id=from_customer_id).values_list('to_customer_id', 'status')
+        return {customer_id: status for customer_id, status in relations}
+
 
 class RelationShip(models.Model):
 
