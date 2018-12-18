@@ -54,6 +54,7 @@ THIRD_PARTS_APPS = [
 CUSTOM_APPS = [
     'datamodels.sms',
     'datamodels.role',
+    'datamodels.moments',
 ]
 
 INSTALLED_APPS += THIRD_PARTS_APPS
@@ -67,7 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'lib.middleware.ResponseFormateMiddleware',
+    'lib.middleware.ResponseFormateMiddleware',
 ]
 
 ROOT_URLCONF = 'LV.urls'

@@ -33,8 +33,6 @@ class CustomerSerializer(serializers.ModelSerializer):
             return customer
 
 
-
-
 class CustomerListSerializer(serializers.ModelSerializer):
     relation_status = serializers.SerializerMethodField()
 
