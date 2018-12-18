@@ -2,7 +2,6 @@ import logging
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -13,7 +12,7 @@ from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer
 from datamodels.sms.models import mm_SMSCode
-from lib.exceptions import LoginException
+from lib.exceptions import LoginException, DBException
 from lib.im import IMServe
 from lib.qiniucloud import QiniuServe
 from lib.tools import Tool
@@ -129,25 +128,12 @@ class CustomerDetail(APIView):
         try:
             return mm_Customer.get(pk=pk)
         except mm_Customer.model.DoesNotExist:
-            raise Http404
+            raise DBException('用户不存在')
 
     def get(self, request, pk, format=None):
         customer = self.get_object(pk)
         serializer = CustomerSerializer(customer)
-        return Response(serializer.data)
-
-    def post(self, request, pk, format=None):
-        customer = self.get_object(pk)
-        serializer = CustomerSerializer(customer, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        snippet.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(Tool.format_data(serializer.data))
 
 
 class MyFollowerView(APIView):

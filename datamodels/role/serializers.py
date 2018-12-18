@@ -17,7 +17,8 @@ CUSTOMER_FIELDS = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'acco
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
+                  'wechat_id', 'intro', 'address_home', 'address_company', 'im_token',)
         # fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar', 'account', 'wechat_id')
         read_only_fields = ('account', 'user', 'id', 'im_token')
 
@@ -30,6 +31,8 @@ class CustomerSerializer(serializers.ModelSerializer):
             user.save()
             customer = Customer.objects.create(user=user, login_tel=validated_data['username'])
             return customer
+
+
 
 
 class CustomerListSerializer(serializers.ModelSerializer):
