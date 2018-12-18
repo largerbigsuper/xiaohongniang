@@ -4,6 +4,7 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : middleware.py
+import json
 
 
 class ResponseFormateMiddleware:
@@ -17,6 +18,23 @@ class ResponseFormateMiddleware:
         # the view (and later middleware) are called.
 
         response = self.get_response(request)
+
+        if response.status_code in [200, 201, 204]:
+            if response.status_code in [201, 204]:
+                response.status_code = 200
+            if not response.data:
+                response.data = {
+                    'msg': 'OK',
+                    'data': None
+                }
+                response.content = bytes(json.dumps(response.data).encode('utf-8'))
+            else:
+                if 'msg' not in response.data:
+                    response.data = {
+                        'msg': 'OK',
+                        'data': response.data
+                    }
+                    response.content = bytes(json.dumps(response.data).encode('utf-8'))
 
         # Code to be executed for each request/response after
         # the view is called.

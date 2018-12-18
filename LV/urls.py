@@ -23,6 +23,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('sms/', include('datamodels.sms.urls')),
     path('customer/', include('datamodels.role.urls')),
+    path('moments/', include('datamodels.moments.urls')),
     path('token/', UploadTokenView.as_view()),
     path('im/', ImTokenView.as_view()),
 ]
