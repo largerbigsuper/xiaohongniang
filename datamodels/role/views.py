@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
-    FollowersRelationShipSerializer, CustomerListSerializer
+    FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer
 from datamodels.sms.models import mm_SMSCode
 from lib.exceptions import LoginException
 from lib.im import IMServe
@@ -160,7 +160,8 @@ class MyFollowerView(APIView):
         customer_id = request.data['coustomer_id']
         relationship_status = request.data.get('status', RELATIONSHIP_FOLLOWING)
         relationship = request.user.customer.add_relationship(customer_id, relationship_status)
-        return Response(Tool.format_data())
+        serializer = BaseRelationShipSerializer(relationship)
+        return Response(Tool.format_data(serializer.data))
 
     def delete(self, request, format=None):
         customer_id = request.data['coustomer_id']

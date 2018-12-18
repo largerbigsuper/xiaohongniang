@@ -10,7 +10,8 @@ from rest_framework import serializers
 
 from datamodels.role.models import Customer, RelationShip, mm_RelationShip
 
-CUSTOMER_FIELDS = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'im_token')
+CUSTOMER_FIELDS = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
+                   'wechat_id', 'intro', 'address_home', 'address_company', 'im_token',)
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -43,13 +44,23 @@ class CustomerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'im_token',
-                  'relation_status')
+                  'address_company', 'address_home', 'relation_status')
 
 
 class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'im_token')
+        fields = (
+            'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'address_home',
+            'address_company', 'im_token',)
+
+
+class BaseRelationShipSerializer(serializers.ModelSerializer):
+    customer = CoustomerBaseInfoSerializer(source='to_customer')
+
+    class Meta:
+        model = RelationShip
+        fields = ('id', 'customer', 'status')
 
 
 class FollowingRelationShipSerializer(serializers.ModelSerializer):
