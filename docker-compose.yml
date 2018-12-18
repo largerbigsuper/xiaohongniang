@@ -30,6 +30,23 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
 
+  celery:
+    build: .
+    command: celery -A LV worker -l info -f log/celery.log
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A LV beat -l info -f log/celery_beat.log
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+
 
 
 
