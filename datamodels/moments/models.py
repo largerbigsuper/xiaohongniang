@@ -10,7 +10,7 @@ class MomentsManager(BaseManger):
         if customer_list is None:
             return []
         else:
-            return self.filter(customer_id__in=customer_list).select_related('customer').order_by('update_at')
+            return self.filter(customer_id__in=customer_list).select_related('customer').order_by('-update_at')
 
 
 class Moments(models.Model):
