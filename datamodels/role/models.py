@@ -27,6 +27,9 @@ class BaseRole(models.Model):
     address_company = models.CharField('公司地址', max_length=100, blank=True)
     im_token = models.CharField('融云token', max_length=100, blank=True)
     relationships = models.ManyToManyField('self', through='RelationShip', symmetrical=False, related_name='relations')
+    # following_count = models.PositiveIntegerField('我的关注总数', default=0)
+    # followers_count = models.PositiveIntegerField('关注总数', default=0)
+    # blocked_count = models.PositiveIntegerField('屏蔽总数', default=0)
 
     class Meta:
         abstract = True
@@ -122,6 +125,9 @@ class Customer(BaseRole):
 
     def get_follower_recoreds(self):
         return self.get_related_to_records(RELATIONSHIP_FOLLOWING)
+
+    def get_following_ids(self):
+        return self.get_following_recoreds().values_list('to_customer_id', flat=True)
 
 
 RELATIONSHIP_BLOCKED = 0

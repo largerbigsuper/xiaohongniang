@@ -5,7 +5,12 @@ from lib.common import BaseManger
 
 
 class MomentsManager(BaseManger):
-    pass
+
+    def get_customer_moments(self, customer_list=None):
+        if customer_list is None:
+            return []
+        else:
+            return self.filter(customer_id__in=customer_list).select_related('customer').order_by('update_at')
 
 
 class Moments(models.Model):

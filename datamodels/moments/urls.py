@@ -14,4 +14,5 @@ urlpatterns = [
     path('<int:pk>/', views.MomentModifyView.as_view(), name='get-update-delete-my-moments'),
     path('detail/<int:pk>/', views.MomentsDetailView.as_view(), name='detail-moments'),
     path('customer/<int:pk>/lists/', views.CustomerMomentsListView.as_view(), name='list-momemts'),
+    path('following/lists/', views.FollowingMonmentsListView.as_view(), name='following-list-momemts'),
 ]
