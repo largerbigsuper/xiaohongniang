@@ -62,3 +62,14 @@ class MomentsDetailView(generics.RetrieveAPIView):
     queryset = mm_Moments.all()
 
 
+class FollowingMonmentsListView(generics.ListAPIView):
+    """
+    获取我的关注的人动态列表
+    """
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MomentsDetailSerializer
+
+    def get_queryset(self):
+        return mm_Moments.get_customer_moments(self.request.user.customer.get_following_ids())
+
