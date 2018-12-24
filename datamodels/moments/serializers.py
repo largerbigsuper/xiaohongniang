@@ -8,8 +8,8 @@ import json
 
 from rest_framework import serializers
 
-from datamodels.moments.models import Moments
-from datamodels.role.serializers import CoustomerBaseInfoSerializer
+from datamodels.moments.models import Moments, Comments, Likes
+from datamodels.role.serializers import CoustomerBaseInfoSerializer, CustomerSimpleSerializer
 
 
 class MomentsSerializer(serializers.ModelSerializer):
@@ -20,7 +20,9 @@ class MomentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Moments
-        fields = ('id', 'text', 'images', 'latitude', 'longitude', 'create_at', 'update_at')
+        fields = ('id', 'text', 'images', 'latitude', 'longitude',
+                  'create_at', 'update_at',
+                  'comment_total', 'like_total')
 
 
 class MomentsDetailSerializer(serializers.ModelSerializer):
@@ -32,10 +34,41 @@ class MomentsDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Moments
-        fields = ('id', 'text', 'images', 'latitude', 'longitude', 'create_at', 'update_at', 'customer')
+        fields = ('id', 'text', 'images', 'latitude', 'longitude',
+                  'create_at', 'update_at', 'customer',
+                  'comment_total', 'like_total')
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    moment_id = serializers.IntegerField(write_only=True)
+    from_customer_id = serializers.IntegerField(write_only=True)
+    reply_to_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
+    to_customer_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
+
+    class Meta:
+        model = Comments
+        fields = ('id', 'moment_id', 'from_customer_id', 'reply_to_id', 'text', 'create_at', 'to_customer_id')
 
 
+class CommentListSerializer(serializers.ModelSerializer):
+    from_customer = CustomerSimpleSerializer()
+    reply_to_id = serializers.IntegerField()
+    to_customer = CustomerSimpleSerializer()
+
+    class Meta:
+        model = Comments
+        fields = ('id', 'from_customer', 'reply_to_id', 'text', 'create_at', 'to_customer')
 
 
+class LikeCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Likes
+        fields = ('id',)
+
+
+class LikeListSerialzier(serializers.ModelSerializer):
+    customer = CustomerSimpleSerializer()
+
+    class Meta:
+        model = Likes
+        fields = ('id', 'customer', 'create_at')

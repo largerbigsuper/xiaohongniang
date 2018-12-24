@@ -22,19 +22,20 @@ class ResponseFormateMiddleware:
         if response.status_code in [200, 201, 204]:
             if response.status_code in [201, 204]:
                 response.status_code = 200
-            if not response.data:
-                response.data = {
-                    'msg': 'OK',
-                    'data': None
-                }
-                response.content = bytes(json.dumps(response.data).encode('utf-8'))
-            else:
-                if 'msg' not in response.data:
+            if hasattr(response, 'data'):
+                if not response.data:
                     response.data = {
                         'msg': 'OK',
-                        'data': response.data
+                        'data': None
                     }
                     response.content = bytes(json.dumps(response.data).encode('utf-8'))
+                else:
+                    if 'msg' not in response.data:
+                        response.data = {
+                            'msg': 'OK',
+                            'data': response.data
+                        }
+                        response.content = bytes(json.dumps(response.data).encode('utf-8'))
 
         # Code to be executed for each request/response after
         # the view is called.
