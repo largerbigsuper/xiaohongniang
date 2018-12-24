@@ -56,6 +56,12 @@ class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
             'address_company', 'im_token',)
 
 
+class CustomerSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'im_token',)
+
+
 class BaseRelationShipSerializer(serializers.ModelSerializer):
     customer = CoustomerBaseInfoSerializer(source='to_customer')
 

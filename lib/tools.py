@@ -4,6 +4,8 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : tools.py
+import json
+
 from rest_framework.exceptions import ParseError
 from rest_framework.request import Request
 
@@ -32,6 +34,16 @@ class Tool:
                 raise ParseError('%s可选值为：%s' % (key, options))
         else:
             return
+
+    @staticmethod
+    def param_is_json(request, key):
+        data_dict = request.query_params if request.method == 'GET' else request.data
+        try:
+            result = json.loads(data_dict.get(key, '[]'))
+            if not isinstance(result, (dict, list)):
+                raise ParseError('%s格式应为json' % key)
+        except:
+            raise ParseError('%s格式应为json' % key)
 
     @staticmethod
     def format_data(data=None, msg='OK'):
