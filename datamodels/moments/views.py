@@ -91,7 +91,7 @@ class CommentView(generics.ListCreateAPIView):
     serializer_class = CommentListSerializer
 
     def get_queryset(self):
-        return mm_Comments.filter(moment_id=self.kwargs['pk']).select_related('from_customer', 'to_customer').order_by('create_at')
+        return mm_Comments.filter(moment_id=self.kwargs['pk']).select_related('from_customer', 'to_customer').order_by('-create_at')
 
     def post(self, request, *args, **kwargs):
         data = request.data.dict()
@@ -114,7 +114,7 @@ class ReplyOrDeleteCommentView(generics.DestroyAPIView, generics.CreateAPIView):
         if self.request.method == 'POST':
             return mm_Comments.valid()
         else:
-            return mm_Comments.filter(from_customer_id=self.request.session['customer_id'])
+            return mm_Comments.valid().filter(from_customer_id=self.request.session['customer_id'])
 
     def delete(self, request, *args, **kwargs):
         with transaction.atomic():

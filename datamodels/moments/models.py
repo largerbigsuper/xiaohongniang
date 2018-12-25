@@ -11,7 +11,7 @@ class MomentsManager(BaseManger):
         if customer_list is None:
             return []
         else:
-            return self.filter(customer_id__in=customer_list).select_related('customer').order_by('-update_at')
+            return self.filter(customer_id__in=customer_list).select_related('customer').order_by('-create_at')
 
 
 class Moments(models.Model):
@@ -34,6 +34,7 @@ class Moments(models.Model):
         index_together = [
             ('latitude', 'longitude')
         ]
+        ordering = ['-create_at']
 
     def limited_comment(self):
         return self.comment.all()[:3]
@@ -69,6 +70,7 @@ class Comments(models.Model):
         index_together = [
             ('from_customer', 'moment', 'reply_to', 'to_customer')
         ]
+        ordering = ['-create_at']
 
 
 class LikesManager(BaseManger):
@@ -90,6 +92,7 @@ class Likes(models.Model):
         index_together = [
             ('customer', 'moment')
         ]
+        ordering = ['-create_at']
 
 
 mm_Moments = Moments.objects
