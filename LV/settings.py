@@ -55,6 +55,7 @@ CUSTOM_APPS = [
     'datamodels.sms',
     'datamodels.role',
     'datamodels.moments',
+    'datamodels.notices',
 ]
 
 INSTALLED_APPS += THIRD_PARTS_APPS

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from datamodels.moments.models import mm_Moments, mm_Comments, mm_Likes
 from datamodels.moments.serializers import MomentsSerializer, MomentsDetailSerializer, CommentSerializer, \
     CommentListSerializer, LikeListSerialzier, LikeCreateSerializer
+from datamodels.notices.models import mm_Notice, Action
 from lib.exceptions import DBException
 from lib.tools import Tool
 from lib import messages
@@ -91,7 +92,9 @@ class CommentView(generics.ListCreateAPIView):
     serializer_class = CommentListSerializer
 
     def get_queryset(self):
-        return mm_Comments.filter(moment_id=self.kwargs['pk']).select_related('from_customer', 'to_customer').order_by('-create_at')
+        return mm_Comments.valid().filter(moment_id=self.kwargs['pk']).select_related('from_customer',
+                                                                                      'to_customer').order_by(
+            '-create_at')
 
     def post(self, request, *args, **kwargs):
         data = request.data.dict()
@@ -103,6 +106,7 @@ class CommentView(generics.ListCreateAPIView):
                 comment = serializer.save()
                 comment.moment.comment.add(comment)
                 comment.moment.modify_comment_total()
+                mm_Notice.add_notice(comment.moment, comment, Action.ACTION_TYPE_ADD_COMMENT)
             return Response(Tool.format_data(msg=messages.ADD_COMMENT_OK))
 
 
@@ -141,6 +145,7 @@ class ReplyOrDeleteCommentView(generics.DestroyAPIView, generics.CreateAPIView):
                 comment = serializer.save()
                 comment.moment.comment.add(comment)
                 comment.moment.modify_comment_total()
+                mm_Notice.add_notice(comment.moment, comment, Action.ACTION_TYPE_ADD_REPLY)
             return Response(Tool.format_data(msg=messages.REPLY_COMMENT_OK))
 
 """
@@ -177,6 +182,7 @@ class LikesView(generics.CreateAPIView, generics.DestroyAPIView, generics.ListAP
             like, created = mm_Likes.get_or_create(customer_id=request.session['customer_id'], moment_id=kwargs['pk'])
             if created:
                 like.moment.modify_like_total()
+                mm_Notice.add_notice(like.moment, like, Action.ACTION_TYPE_ADD_LIKE)
             serializer = LikeCreateSerializer(like)
             return Response(Tool.format_data(serializer.data, msg=messages.ADD_LIKE_OK))
 
