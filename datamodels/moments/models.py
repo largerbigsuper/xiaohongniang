@@ -13,6 +13,9 @@ class MomentsManager(BaseManger):
         else:
             return self.filter(customer_id__in=customer_list).select_related('customer').order_by('-create_at')
 
+    def latest_moments(self):
+        return self.all().order_by('-create_at')
+
 
 class Moments(models.Model):
     customer = models.ForeignKey(Customer, related_name='moments', on_delete=models.CASCADE)

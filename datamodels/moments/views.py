@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from datamodels.moments.models import mm_Moments, mm_Comments, mm_Likes
 from datamodels.moments.serializers import MomentsSerializer, MomentsDetailSerializer, CommentSerializer, \
-    CommentListSerializer, LikeListSerialzier, LikeCreateSerializer
+    CommentListSerializer, LikeListSerialzier, LikeCreateSerializer, NormalMomentsDetailSerializer
 from datamodels.notices.models import mm_Notice, Action
 from lib.exceptions import DBException
 from lib.tools import Tool
@@ -66,7 +66,7 @@ class MomentsDetailView(generics.RetrieveAPIView):
     queryset = mm_Moments.all()
 
 
-class FollowingMonmentsListView(generics.ListAPIView):
+class FollowingMomentsListView(generics.ListAPIView):
     """
     获取我的关注的人动态列表
     """
@@ -76,6 +76,15 @@ class FollowingMonmentsListView(generics.ListAPIView):
 
     def get_queryset(self):
         return mm_Moments.get_customer_moments(self.request.user.customer.get_following_ids())
+
+
+class LatestMomentsListView(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = NormalMomentsDetailSerializer
+
+    def get_queryset(self):
+        return mm_Moments.latest_moments()
 
 
 """

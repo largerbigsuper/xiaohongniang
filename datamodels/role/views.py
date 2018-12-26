@@ -122,6 +122,15 @@ class CustomerList(generics.ListAPIView):
         return mm_Customer.all()
 
 
+class ActiveCustomerList(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomerListSerializer
+
+    def get_queryset(self):
+        return mm_Customer.active_customers()
+
+
 class CustomerDetail(generics.RetrieveAPIView):
     """
     Retrieve, update or delete a snippet instance.

@@ -26,6 +26,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class CustomerListSerializer(serializers.ModelSerializer):
     relation_status = serializers.SerializerMethodField()
+    is_myself = serializers.SerializerMethodField()
 
     def get_relation_status(self, obj):
         customer_id = self.context['request'].session['customer_id']
@@ -33,12 +34,15 @@ class CustomerListSerializer(serializers.ModelSerializer):
             self._relation_map = mm_RelationShip.get_following_customer_ids_map(customer_id)
         return self._relation_map.get(obj.id, -1)
 
+    def get_is_myself(self, obj):
+        return obj.id == self.context['request'].session['customer_id']
+
     class Meta:
         model = Customer
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url',
                   'account', 'wechat_id', 'intro', 'im_token',
                   'address_company', 'address_home', 'relation_status',
-                  'following_count', 'followers_count', 'blocked_count')
+                  'following_count', 'followers_count', 'blocked_count', 'is_myself')
 
 
 class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
@@ -47,6 +51,27 @@ class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count')
+
+
+class NormalCoustomerSerializer(serializers.ModelSerializer):
+    relation_status = serializers.SerializerMethodField()
+    is_myself = serializers.SerializerMethodField()
+
+    def get_relation_status(self, obj):
+        customer_id = self.context['request'].session['customer_id']
+        if not hasattr(self, '_relation_map'):
+            self._relation_map = mm_RelationShip.get_following_customer_ids_map(customer_id)
+        return self._relation_map.get(obj.id, -1)
+
+    def get_is_myself(self, obj):
+        return obj.id == self.context['request'].session['customer_id']
+
+    class Meta:
+        model = Customer
+        fields = (
+            'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'address_home',
+            'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
+            'is_myself')
 
 
 class CustomerSimpleSerializer(serializers.ModelSerializer):

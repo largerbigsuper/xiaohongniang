@@ -78,6 +78,9 @@ class CustomerManager(BaseManger):
         user = User.objects.create_user(username=account, password=password)
         return user
 
+    def active_customers(self):
+        return self.all().order_by('-last_request_at')
+
 
 class Customer(BaseRole):
     objects = CustomerManager()

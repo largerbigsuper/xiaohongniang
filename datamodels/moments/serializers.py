@@ -9,7 +9,7 @@ import json
 from rest_framework import serializers
 
 from datamodels.moments.models import Moments, Comments, Likes
-from datamodels.role.serializers import CoustomerBaseInfoSerializer, CustomerSimpleSerializer
+from datamodels.role.serializers import CoustomerBaseInfoSerializer, CustomerSimpleSerializer, NormalCoustomerSerializer
 
 
 class MomentsSerializer(serializers.ModelSerializer):
@@ -27,6 +27,20 @@ class MomentsSerializer(serializers.ModelSerializer):
 
 class MomentsDetailSerializer(serializers.ModelSerializer):
     customer = CoustomerBaseInfoSerializer()
+    images = serializers.SerializerMethodField(source='images')
+
+    def get_images(self, obj):
+        return json.loads(obj.images)
+
+    class Meta:
+        model = Moments
+        fields = ('id', 'text', 'images', 'latitude', 'longitude',
+                  'create_at', 'update_at', 'customer',
+                  'comment_total', 'like_total')
+
+
+class NormalMomentsDetailSerializer(serializers.ModelSerializer):
+    customer = NormalCoustomerSerializer()
     images = serializers.SerializerMethodField(source='images')
 
     def get_images(self, obj):
