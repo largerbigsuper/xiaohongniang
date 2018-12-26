@@ -39,7 +39,7 @@ STATUS_CHOICE = (
 
 class NoticeManager(BaseManger):
 
-    def _notices(self, custmoer_id, status=None):
+    def all_notices(self, custmoer_id, status=None):
         f = {
             'to_customer_id': custmoer_id
         }
@@ -48,10 +48,7 @@ class NoticeManager(BaseManger):
         return self.filter(**f).select_related('from_customer')
 
     def unread_notices(self, custmoer_id, status=NoticeStatus.STATUS_UNREAD):
-        return self._notices(custmoer_id, status=status)
-
-    def all_notices(self, custmoer_id):
-        return self._notices(custmoer_id)
+        return self.all_notices(custmoer_id, status=status)
 
     def add_notice(self, content_object, content_result, action_type=1):
         """

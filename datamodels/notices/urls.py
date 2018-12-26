@@ -10,6 +10,7 @@ from datamodels.notices import views
 
 
 urlpatterns = [
-    path('unread/', views.NoticeListView.as_view(), name='unread-notices'),
+    path('lists/', views.NoticeListView.as_view(), name='unread-notices'),
     path('<int:pk>/', views.SetNoticeStatusView.as_view(), name='set-read-notices'),
+    path('status/', views.UnreadNoticeAmountView.as_view(), name='get-unread-count')
 ]
