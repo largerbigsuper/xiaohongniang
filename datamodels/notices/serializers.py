@@ -22,4 +22,4 @@ class NoticeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notice
-        fields = ('id', 'action_type', 'object_id', 'result_id', 'from_customer', 'create_at', 'text')
+        fields = ('id', 'action_type', 'object_id', 'result_id', 'from_customer', 'create_at', 'text', 'status')
