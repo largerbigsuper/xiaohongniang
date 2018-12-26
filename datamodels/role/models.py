@@ -2,6 +2,7 @@ import traceback
 
 from django.contrib.auth.models import User
 from django.db import models, transaction, IntegrityError
+from django.db.models import F
 
 from datamodels.sms.models import mm_SMSCode
 from lib.common import BaseManger
@@ -27,9 +28,10 @@ class BaseRole(models.Model):
     address_company = models.CharField('公司地址', max_length=100, blank=True)
     im_token = models.CharField('融云token', max_length=100, blank=True)
     relationships = models.ManyToManyField('self', through='RelationShip', symmetrical=False, related_name='relations')
-    # following_count = models.PositiveIntegerField('我的关注总数', default=0)
-    # followers_count = models.PositiveIntegerField('关注总数', default=0)
-    # blocked_count = models.PositiveIntegerField('屏蔽总数', default=0)
+    last_request_at = models.DateTimeField(null=True, blank=True)
+    following_count = models.PositiveIntegerField('我的关注总数', default=0)
+    followers_count = models.PositiveIntegerField('关注总数', default=0)
+    blocked_count = models.PositiveIntegerField('屏蔽总数', default=0)
 
     class Meta:
         abstract = True
@@ -147,15 +149,22 @@ class RelationShipManager(BaseManger):
         if status == RELATIONSHIP_BLOCKED:
             rows = self.filter(from_customer_id=to_customer_id, to_customer_id=from_customer_id).exclude(
                 status=RELATIONSHIP_BLOCKED).update(status=RELATIONSHIP_FOLLOWING)
+            if rows:
+                mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') + 1)
         else:
             rows = self.filter(from_customer_id=to_customer_id, to_customer_id=from_customer_id,
                                status=RELATIONSHIP_FOLLOWING).update(status=RELATIONSHIP_BOTH_FOLLOWING)
             if rows:
                 status = RELATIONSHIP_BOTH_FOLLOWING
+                mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') + 1)
+
         relationship, created = self.get_or_create(
             from_customer_id=from_customer_id,
             to_customer_id=to_customer_id,
             status=status)
+        if created:
+            mm_Customer.filter(id=from_customer_id).update(following_count=F('following_count') + 1)
+
         return relationship
 
     def remove_relation(self, from_customer_id, to_customer_id):
@@ -163,6 +172,12 @@ class RelationShipManager(BaseManger):
         if relation:
             if relation.status == RELATIONSHIP_BOTH_FOLLOWING:
                 self.filter(from_customer_id=to_customer_id, to_customer_id=from_customer_id, status=RELATIONSHIP_BOTH_FOLLOWING).update(status=RELATIONSHIP_FOLLOWING)
+
+            if relation.status == RELATIONSHIP_BLOCKED:
+                mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') - 1)
+            else:
+                mm_Customer.filter(id=from_customer_id).update(following_count=F('following_count') - 1)
+                mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') - 1)
             relation.delete()
 
     def get_following_customer_ids_map(self, from_customer_id):
