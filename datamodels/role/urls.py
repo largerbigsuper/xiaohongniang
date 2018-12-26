@@ -19,4 +19,5 @@ urlpatterns = [
     path('followinglist/', views.MyFollowingList.as_view()),
     path('followerslist/', views.MyFollowersList.as_view()),
     path('lists/', views.CustomerList.as_view()),
+    path('active/lists/', views.ActiveCustomerList.as_view()),
 ]

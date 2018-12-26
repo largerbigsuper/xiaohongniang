@@ -4,7 +4,9 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : middleware.py
+import datetime
 import json
+import time
 
 
 class ResponseFormateMiddleware:
@@ -18,6 +20,18 @@ class ResponseFormateMiddleware:
         # the view (and later middleware) are called.
 
         response = self.get_response(request)
+        # 最近访问更新
+        _now = time.mktime(datetime.datetime.now().timetuple())
+        _last = request.session.get('last_requst_at')
+        if _last:
+            if _last + 5 * 60 < _now:
+                request.session['last_requst_at'] = _now
+                request.user.customer.last_request_at = datetime.datetime.fromtimestamp(_now)
+                request.user.customer.save()
+        else:
+            request.session['last_requst_at'] = _now
+            request.user.customer.last_request_at = datetime.datetime.fromtimestamp(_now)
+            request.user.customer.save()
 
         if response.status_code in [200, 201, 204]:
             if response.status_code in [201, 204]:

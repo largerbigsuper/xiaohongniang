@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -51,6 +52,7 @@ class LoginView(APIView):
                 login(request, user)
                 request.session['user_id'] = user.id
                 request.session['customer_id'] = user.customer.id
+                request.session['last_requst_at'] = datetime.now()
                 data = {
                     'user_id': user.id,
                     'name': user.customer.name,
@@ -120,20 +122,22 @@ class CustomerList(generics.ListAPIView):
         return mm_Customer.all()
 
 
-class CustomerDetail(APIView):
+class ActiveCustomerList(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomerListSerializer
+
+    def get_queryset(self):
+        return mm_Customer.active_customers()
+
+
+class CustomerDetail(generics.RetrieveAPIView):
     """
     Retrieve, update or delete a snippet instance.
-    """
-    def get_object(self, pk):
-        try:
-            return mm_Customer.get(pk=pk)
-        except mm_Customer.model.DoesNotExist:
-            raise DBException('用户不存在')
 
-    def get(self, request, pk, format=None):
-        customer = self.get_object(pk)
-        serializer = CustomerSerializer(customer)
-        return Response(Tool.format_data(serializer.data))
+    """
+    queryset = mm_Customer.all()
+    serializer_class = CustomerListSerializer
 
 
 class MyFollowerView(APIView):

@@ -74,7 +74,7 @@ class NoticeManager(BaseManger):
                             content_object=content_object,
                             content_result=content_result,
                             from_customer_id=content_result.from_customer_id,
-                            to_customer_id=content_object.to_customer_id,
+                            to_customer_id=content_object.customer_id,
                             )
             notice_list.append(notice)
 
