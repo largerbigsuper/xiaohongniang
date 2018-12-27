@@ -21,17 +21,21 @@ class ResponseFormateMiddleware:
 
         response = self.get_response(request)
         # 最近访问更新
-        _now = time.mktime(datetime.datetime.now().timetuple())
-        _last = request.session.get('last_requst_at')
-        if _last:
-            if _last + 5 * 60 < _now:
+        if request.user.is_authenticated:
+            _now = time.mktime(datetime.datetime.now().timetuple())
+            _last = request.session.get('last_requst_at')
+            if isinstance(_last, datetime.datetime):# 数据库中读取的session是datetime格式，需进行转化；redis中不能存储datetime格式数据
+                _last = time.mktime(_last.timetuple())
+                request.session['last_requst_at'] = _last
+            if _last:
+                if _last + 5 * 60 < _now:
+                    request.session['last_requst_at'] = _now
+                    request.user.customer.last_request_at = datetime.datetime.fromtimestamp(_now)
+                    request.user.customer.save()
+            else:
                 request.session['last_requst_at'] = _now
                 request.user.customer.last_request_at = datetime.datetime.fromtimestamp(_now)
                 request.user.customer.save()
-        else:
-            request.session['last_requst_at'] = _now
-            request.user.customer.last_request_at = datetime.datetime.fromtimestamp(_now)
-            request.user.customer.save()
 
         if response.status_code in [200, 201, 204]:
             if response.status_code in [201, 204]:
