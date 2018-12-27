@@ -1,8 +1,10 @@
 import logging
+import time
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -52,7 +54,10 @@ class LoginView(APIView):
                 login(request, user)
                 request.session['user_id'] = user.id
                 request.session['customer_id'] = user.customer.id
-                request.session['last_requst_at'] = datetime.now()
+                last_requst_at = time.mktime(datetime.now().timetuple())
+                request.session['last_requst_at'] = last_requst_at
+                key = mm_Customer.customer_last_request % user.customer.id
+                cache.set(key, last_requst_at, 2 * 7 * 24 * 60 * 60)
                 data = {
                     'user_id': user.id,
                     'name': user.customer.name,

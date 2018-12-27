@@ -4,8 +4,9 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : serializers.py
-from django.contrib.auth.models import User
-from django.db import transaction
+from datetime import datetime
+
+from django.core.cache import cache
 from rest_framework import serializers
 
 from datamodels.role.models import Customer, RelationShip, mm_RelationShip
@@ -20,13 +21,22 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
                   'wechat_id', 'intro', 'address_home', 'address_company', 'im_token',
-                  'following_count', 'followers_count', 'blocked_count')
+                  'following_count', 'followers_count', 'blocked_count',
+                  'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut'
+                  )
         read_only_fields = ('account', 'user', 'id', 'im_token')
 
 
 class CustomerListSerializer(serializers.ModelSerializer):
     relation_status = serializers.SerializerMethodField()
     is_myself = serializers.SerializerMethodField()
+    last_request_at = serializers.SerializerMethodField()
+
+
+    def get_last_request_at(self, obj):
+        key = mm_RelationShip.customer_last_request % obj.id
+        t = cache.get(key)
+        return datetime.fromtimestamp(t) if t else obj.last_request_at
 
     def get_relation_status(self, obj):
         customer_id = self.context['request'].session['customer_id']
@@ -40,17 +50,21 @@ class CustomerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url',
-                  'account', 'wechat_id', 'intro', 'im_token',
+                  'wechat_id', 'intro', 'im_token',
                   'address_company', 'address_home', 'relation_status',
-                  'following_count', 'followers_count', 'blocked_count', 'is_myself')
+                  'following_count', 'followers_count', 'blocked_count', 'is_myself',
+                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at'
+                  )
 
 
 class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = (
-            'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'address_home',
-            'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count')
+            'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
+            'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count',
+            'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut'
+        )
 
 
 class NormalCoustomerSerializer(serializers.ModelSerializer):
@@ -69,15 +83,16 @@ class NormalCoustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = (
-            'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'wechat_id', 'intro', 'address_home',
+            'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
-            'is_myself')
+            'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut')
 
 
 class CustomerSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'im_token',)
+        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'im_token',
+                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut')
 
 
 class BaseRelationShipSerializer(serializers.ModelSerializer):

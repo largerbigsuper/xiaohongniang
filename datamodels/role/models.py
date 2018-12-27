@@ -32,6 +32,11 @@ class BaseRole(models.Model):
     following_count = models.PositiveIntegerField('我的关注总数', default=0)
     followers_count = models.PositiveIntegerField('关注总数', default=0)
     blocked_count = models.PositiveIntegerField('屏蔽总数', default=0)
+    is_manager = models.BooleanField('管理员', default=False)
+    is_shop_keeper = models.BooleanField('商家', default=False)
+    skills = models.TextField('技能描述', max_length=200, blank=True, null=True)
+    is_show_skill = models.BooleanField('展示技能', default=False)
+    is_rut = models.BooleanField('相亲状态', default=False)
 
     class Meta:
         abstract = True

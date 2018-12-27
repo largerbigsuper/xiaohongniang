@@ -7,5 +7,9 @@
 from django.db.models import Manager
 
 
-class BaseManger(Manager):
+class CacheKey:
+    customer_last_request = 'lq_%s'  # 最后一次请求时间 customer_id
+
+
+class BaseManger(Manager, CacheKey):
     pass

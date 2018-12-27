@@ -22,7 +22,7 @@ class MomentsSerializer(serializers.ModelSerializer):
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at',
-                  'comment_total', 'like_total')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address')
 
 
 class MomentsDetailSerializer(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class MomentsDetailSerializer(serializers.ModelSerializer):
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address')
 
 
 class NormalMomentsDetailSerializer(serializers.ModelSerializer):
@@ -50,7 +50,7 @@ class NormalMomentsDetailSerializer(serializers.ModelSerializer):
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address')
 
 
 class CommentSerializer(serializers.ModelSerializer):

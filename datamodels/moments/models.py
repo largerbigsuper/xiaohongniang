@@ -29,6 +29,8 @@ class Moments(models.Model):
     comment_total = models.PositiveIntegerField(verbose_name='评论总数', default=0)
     like = models.ManyToManyField('moments.Likes', db_table='lv_comment_like')
     like_total = models.PositiveIntegerField(verbose_name='点赞总数', default=0)
+    is_hidden_name = models.BooleanField(verbose_name='匿名', default=False)
+    address = models.CharField(verbose_name='地址', blank=True, max_length=200)
 
     objects = MomentsManager()
 
