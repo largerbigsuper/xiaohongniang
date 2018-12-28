@@ -13,7 +13,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
-    FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer
+    FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
+    CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer
 from datamodels.sms.models import mm_SMSCode
 from lib.common import CacheKey
 from lib.exceptions import LoginException, DBException
@@ -137,6 +138,24 @@ class ActiveCustomerList(generics.ListAPIView):
         return mm_Customer.active_customers()
 
 
+class CustomerWithSkillsList(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomerHasSkillsListSerializer
+
+    def get_queryset(self):
+        return mm_Customer.customers_with_skills()
+
+
+class CustomerSingleList(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomerSingleListSerializer
+
+    def get_queryset(self):
+        return mm_Customer.customers_need_paired()
+
+
 class CustomerDetail(generics.RetrieveAPIView):
     """
     Retrieve, update or delete a snippet instance.
@@ -184,5 +203,16 @@ class MyFollowingList(generics.ListAPIView):
         return self.request.user.customer.get_following_recoreds()
 
     serializer_class = FollowingRelationShipSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class UnfollowingList(generics.ListAPIView):
+    """
+    未关注列表
+    """
+    def get_queryset(self):
+        return self.request.user.customer.get_unfollowing_customers()
+
+    serializer_class = NormalCoustomerSerializer
     permission_classes = (IsAuthenticated,)
 

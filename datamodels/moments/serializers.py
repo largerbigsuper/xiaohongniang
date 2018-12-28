@@ -13,47 +13,47 @@ from datamodels.role.serializers import CoustomerBaseInfoSerializer, CustomerSim
 from lib.fields import JsonField
 
 
-class MomentsSerializer(serializers.ModelSerializer):
+class BaseMomentSerializer(serializers.ModelSerializer):
     images = JsonField(required=False)
+
+
+class MomentsSerializer(BaseMomentSerializer):
 
     class Meta:
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
 
 
-class MomentsCreateSerializer(serializers.ModelSerializer):
-    images = JsonField(required=False)
+class MomentsCreateSerializer(BaseMomentSerializer):
     customer_id = serializers.IntegerField()
 
     class Meta:
         model = Moments
         fields = ('id', 'customer_id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
 
 
-class MomentsDetailSerializer(serializers.ModelSerializer):
+class MomentsDetailSerializer(BaseMomentSerializer):
     customer = CoustomerBaseInfoSerializer()
-    images = JsonField(required=False)
 
     class Meta:
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
 
 
-class NormalMomentsDetailSerializer(serializers.ModelSerializer):
+class NormalMomentsDetailSerializer(BaseMomentSerializer):
     customer = NormalCoustomerSerializer()
-    images = JsonField(required=False)
 
     class Meta:
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
 
 
 class CommentSerializer(serializers.ModelSerializer):

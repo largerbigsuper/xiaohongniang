@@ -37,6 +37,7 @@ class BaseRole(models.Model):
     skills = models.TextField('技能描述', max_length=200, blank=True, null=True)
     is_show_skill = models.BooleanField('展示技能', default=False)
     is_rut = models.BooleanField('相亲状态', default=False)
+    expect_desc = models.CharField('异性要求', blank=True, null=True, max_length=200)
 
     class Meta:
         abstract = True
@@ -85,6 +86,12 @@ class CustomerManager(BaseManger):
 
     def active_customers(self):
         return self.all().order_by('-last_request_at')
+
+    def customers_with_skills(self):
+        return self.all().filter(skills__isnull=False).order_by('-last_request_at')
+
+    def customers_need_paired(self):
+        return self.all().filter(is_rut=True).order_by('-last_request_at')
 
 
 class Customer(BaseRole):
@@ -138,6 +145,9 @@ class Customer(BaseRole):
 
     def get_following_ids(self):
         return self.get_following_recoreds().values_list('to_customer_id', flat=True)
+
+    def get_unfollowing_customers(self):
+        return mm_Customer.all().exclude(pk__in=self.get_following_ids()).order_by('-last_request_at')
 
 
 RELATIONSHIP_BLOCKED = 0

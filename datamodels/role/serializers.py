@@ -32,11 +32,14 @@ class CustomerListSerializer(serializers.ModelSerializer):
     is_myself = serializers.SerializerMethodField()
     last_request_at = serializers.SerializerMethodField()
 
-
     def get_last_request_at(self, obj):
         key = mm_RelationShip.customer_last_request % obj.id
-        t = cache.get(key)
-        return datetime.fromtimestamp(t) if t else obj.last_request_at
+        v = cache.get(key)
+        t = datetime.fromtimestamp(v) if v else obj.last_request_at
+        if t:
+            return t.isoformat()
+        else:
+            return None
 
     def get_relation_status(self, obj):
         customer_id = self.context['request'].session['customer_id']
@@ -54,6 +57,74 @@ class CustomerListSerializer(serializers.ModelSerializer):
                   'address_company', 'address_home', 'relation_status',
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at'
+                  )
+
+
+class CustomerHasSkillsListSerializer(serializers.ModelSerializer):
+    relation_status = serializers.SerializerMethodField()
+    is_myself = serializers.SerializerMethodField()
+    last_request_at = serializers.SerializerMethodField()
+
+    def get_last_request_at(self, obj):
+        key = mm_RelationShip.customer_last_request % obj.id
+        v = cache.get(key)
+        t = datetime.fromtimestamp(v) if v else obj.last_request_at
+        if t:
+            return t.isoformat()
+        else:
+            return None
+
+    def get_relation_status(self, obj):
+        customer_id = self.context['request'].session['customer_id']
+        if not hasattr(self, '_relation_map'):
+            self._relation_map = mm_RelationShip.get_following_customer_ids_map(customer_id)
+        return self._relation_map.get(obj.id, -1)
+
+    def get_is_myself(self, obj):
+        return obj.id == self.context['request'].session['customer_id']
+
+    class Meta:
+        model = Customer
+        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url',
+                  'wechat_id', 'intro', 'im_token',
+                  'address_company', 'address_home', 'relation_status',
+                  'following_count', 'followers_count', 'blocked_count', 'is_myself',
+                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
+                  'skills',
+                  )
+
+
+class CustomerSingleListSerializer(serializers.ModelSerializer):
+    relation_status = serializers.SerializerMethodField()
+    is_myself = serializers.SerializerMethodField()
+    last_request_at = serializers.SerializerMethodField()
+
+    def get_last_request_at(self, obj):
+        key = mm_RelationShip.customer_last_request % obj.id
+        v = cache.get(key)
+        t = datetime.fromtimestamp(v) if v else obj.last_request_at
+        if t:
+            return t.isoformat()
+        else:
+            return None
+
+    def get_relation_status(self, obj):
+        customer_id = self.context['request'].session['customer_id']
+        if not hasattr(self, '_relation_map'):
+            self._relation_map = mm_RelationShip.get_following_customer_ids_map(customer_id)
+        return self._relation_map.get(obj.id, -1)
+
+    def get_is_myself(self, obj):
+        return obj.id == self.context['request'].session['customer_id']
+
+    class Meta:
+        model = Customer
+        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url',
+                  'wechat_id', 'intro', 'im_token',
+                  'address_company', 'address_home', 'relation_status',
+                  'following_count', 'followers_count', 'blocked_count', 'is_myself',
+                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
+                  'expect_desc',
                   )
 
 

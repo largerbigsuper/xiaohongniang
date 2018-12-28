@@ -20,4 +20,7 @@ urlpatterns = [
     path('followerslist/', views.MyFollowersList.as_view()),
     path('lists/', views.CustomerList.as_view()),
     path('active/lists/', views.ActiveCustomerList.as_view()),
+    path('has_skills/lists/', views.CustomerWithSkillsList.as_view()),
+    path('single/lists/', views.CustomerSingleList.as_view()),
+    path('unknown/lists/', views.UnfollowingList.as_view()),
 ]

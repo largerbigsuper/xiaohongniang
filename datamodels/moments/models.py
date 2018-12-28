@@ -17,6 +17,19 @@ class MomentsManager(BaseManger):
         return self.all().order_by('-create_at')
 
 
+class FunctionType:
+    FUNCTION_TYPE_NORMAL = 1
+    FUNCTION_TYPE_ADS = 2
+    FUNCTION_TYPE_NOTICES = 2
+
+
+FUNCTION_TYPE_CHOICE = (
+    (1, '动态'),
+    (2, '广告'),
+    (3, '通知'),
+)
+
+
 class Moments(models.Model):
     customer = models.ForeignKey(Customer, related_name='moments', on_delete=models.CASCADE)
     text = models.TextField(verbose_name='正文', max_length=1500, null=True, blank=True)
@@ -31,6 +44,7 @@ class Moments(models.Model):
     like_total = models.PositiveIntegerField(verbose_name='点赞总数', default=0)
     is_hidden_name = models.BooleanField(verbose_name='匿名', default=False)
     address = models.CharField(verbose_name='地址', blank=True, max_length=200)
+    function_type = models.PositiveIntegerField(verbose_name='功能', choices=FUNCTION_TYPE_CHOICE, default=1)
 
     objects = MomentsManager()
 
