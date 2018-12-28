@@ -15,6 +15,7 @@ from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer
 from datamodels.sms.models import mm_SMSCode
+from lib.common import CacheKey
 from lib.exceptions import LoginException, DBException
 from lib.im import IMServe
 from lib.qiniucloud import QiniuServe
@@ -56,7 +57,7 @@ class LoginView(APIView):
                 request.session['customer_id'] = user.customer.id
                 last_requst_at = time.mktime(datetime.now().timetuple())
                 request.session['last_requst_at'] = last_requst_at
-                key = mm_Customer.customer_last_request % user.customer.id
+                key = CacheKey.customer_last_request % user.customer.id
                 cache.set(key, last_requst_at, 2 * 7 * 24 * 60 * 60)
                 data = {
                     'user_id': user.id,

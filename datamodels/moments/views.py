@@ -5,7 +5,8 @@ from rest_framework.response import Response
 
 from datamodels.moments.models import mm_Moments, mm_Comments, mm_Likes
 from datamodels.moments.serializers import MomentsSerializer, MomentsDetailSerializer, CommentSerializer, \
-    CommentListSerializer, LikeListSerialzier, LikeCreateSerializer, NormalMomentsDetailSerializer
+    CommentListSerializer, LikeListSerialzier, LikeCreateSerializer, NormalMomentsDetailSerializer, \
+    MomentsCreateSerializer
 from datamodels.notices.models import mm_Notice, Action
 from lib.exceptions import DBException
 from lib.tools import Tool
@@ -24,12 +25,11 @@ class MomentsListView(generics.ListCreateAPIView):
         return self.request.user.customer.moments.prefetch_related('comment').all()
 
     def create(self, request, *args, **kwargs):
-        Tool.param_is_json(request, 'images')
         data = request.data.dict()
-        data['customer'] = request.user.customer
-        moment = mm_Moments.model(**data)
-        moment.save()
-        serializer = self.serializer_class(moment)
+        data['customer_id'] = request.user.customer.id
+        serializer = MomentsCreateSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(Tool.format_data(serializer.data))
 
 

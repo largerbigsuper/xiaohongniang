@@ -8,6 +8,10 @@ import datetime
 import json
 import time
 
+from django.core.cache import cache
+
+from lib.common import CacheKey
+
 
 class ResponseFormateMiddleware:
 
@@ -24,6 +28,8 @@ class ResponseFormateMiddleware:
         if request.user.is_authenticated:
             _now = time.mktime(datetime.datetime.now().timetuple())
             _last = request.session.get('last_requst_at')
+            key = CacheKey.customer_last_request % request.session['customer_id']
+            cache.set(key, _now, 2 * 7 * 24 * 60 * 60)
             if isinstance(_last, datetime.datetime):# 数据库中读取的session是datetime格式，需进行转化；redis中不能存储datetime格式数据
                 _last = time.mktime(_last.timetuple())
                 request.session['last_requst_at'] = _last
