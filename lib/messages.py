@@ -20,3 +20,5 @@ ADD_LIKE_OK = '点赞成功'
 ADD_LIKE_FAILED = '点赞失败'
 DELETE_LIKE_OK = '取消点赞成功'
 DELETE_LIKE_FAILED = '取消点赞失败'
+
+ADD_FEEDBACK_OK = '反馈成功'

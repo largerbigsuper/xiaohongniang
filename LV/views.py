@@ -35,4 +35,15 @@ class ImTokenView(APIView):
         return Response(Tool.format_data(data))
 
 
+class APPConfigView(APIView):
+
+    def get(self, request):
+        app_config = {
+            'version': '1.0.2',
+            'url': '',
+            'desc': '最新版本'
+
+        }
+        return Response(Tool.format_data(app_config))
+
 

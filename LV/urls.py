@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from LV.views import UploadTokenView, ImTokenView
+from LV.views import UploadTokenView, ImTokenView, APPConfigView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +25,8 @@ urlpatterns = [
     path('customer/', include('datamodels.role.urls')),
     path('moments/', include('datamodels.moments.urls')),
     path('notices/', include('datamodels.notices.urls')),
+    path('feedback/', include('datamodels.feedback.urls')),
     path('token/', UploadTokenView.as_view()),
     path('im/', ImTokenView.as_view()),
+    path('appconfig/', APPConfigView.as_view()),
 ]
