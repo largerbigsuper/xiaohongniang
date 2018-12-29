@@ -41,7 +41,8 @@ class APPConfigView(APIView):
         app_config = {
             'version': '1.0.2',
             'url': '',
-            'desc': '最新版本'
+            'desc': '最新版本',
+            'music': 'http://oys4026ng.bkt.clouddn.com/musiclight.mp3'
 
         }
         return Response(Tool.format_data(app_config))
