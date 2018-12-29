@@ -21,3 +21,8 @@ class CustomPagination(pagination.PageNumberPagination):
             ('page_count', self.page.paginator.num_pages),
             ('results', data)
         ])))
+
+
+class ReturnTwentyPagination(CustomPagination):
+    page_size = 20
+
