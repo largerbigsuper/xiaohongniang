@@ -13,9 +13,11 @@ from datamodels.role.serializers import CustomerSerializer, FollowingRelationShi
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
     CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer
 from datamodels.sms.models import mm_SMSCode
+from datamodels.stats.models import mm_OperationRecord
 from lib import customer_login
 from lib.exceptions import LoginException, DBException
 from lib.im import IMServe
+from lib.pagination import ReturnTwentyPagination
 from lib.qiniucloud import QiniuServe
 from lib.tools import Tool
 
@@ -143,6 +145,7 @@ class CustomerSingleList(generics.ListAPIView):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = CustomerSingleListSerializer
+    pagination_class = ReturnTwentyPagination
 
     def get_queryset(self):
         return mm_Customer.customers_need_paired()
@@ -155,6 +158,12 @@ class CustomerDetail(generics.RetrieveAPIView):
     """
     queryset = mm_Customer.all()
     serializer_class = CustomerListSerializer
+
+    def get(self, request, *args, **kwargs):
+        to_customer = self.get_object()
+        if not to_customer.id == request.session['customer_id']:
+            mm_OperationRecord.add_opreation_record(request.session['customer_id'], to_customer)
+        return super().get(request, *args, **kwargs)
 
 
 class MyFollowerView(APIView):
@@ -204,6 +213,40 @@ class UnfollowingList(generics.ListAPIView):
     """
     def get_queryset(self):
         return self.request.user.customer.get_unfollowing_customers()
+
+    serializer_class = NormalCoustomerSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class CustomerSearchView(generics.ListAPIView):
+    """
+    用户搜索
+    """
+
+    def get_queryset(self):
+        allowed_search_keys = ['gender', 'name', 'age', 'is_shop_keeper', 'is_show_skill', 'is_rut']
+        params = dict()
+        gender = self.request.query_params.get('gender')
+        name = self.request.query_params.get('name')
+        age = self.request.query_params.get('age')
+        is_shop_keeper = self.request.query_params.get('is_shop_keeper')
+        is_show_skill = self.request.query_params.get('is_show_skill')
+        is_rut = self.request.query_params.get('is_rut')
+        if gender:
+            params['gender'] = int(gender)
+        if name:
+            params['name__icontains'] = name
+        if age:
+            params['age'] = int(age)
+        if is_shop_keeper:
+            params['is_shop_keeper'] = int(is_shop_keeper)
+        if is_show_skill:
+            params['is_show_skill'] = int(is_show_skill)
+        if is_rut:
+            params['is_rut'] = int(is_rut)
+        if gender:
+            params['gender'] = int(gender)
+        return mm_Customer.filter(**params)
 
     serializer_class = NormalCoustomerSerializer
     permission_classes = (IsAuthenticated,)

@@ -26,6 +26,7 @@ urlpatterns = [
     path('moments/', include('datamodels.moments.urls')),
     path('notices/', include('datamodels.notices.urls')),
     path('feedback/', include('datamodels.feedback.urls')),
+    path('stats/', include('datamodels.stats.urls')),
     path('token/', UploadTokenView.as_view()),
     path('im/', ImTokenView.as_view()),
     path('appconfig/', APPConfigView.as_view()),

@@ -23,4 +23,5 @@ urlpatterns = [
     path('has_skills/lists/', views.CustomerWithSkillsList.as_view()),
     path('single/lists/', views.CustomerSingleList.as_view()),
     path('unknown/lists/', views.UnfollowingList.as_view()),
+    path('search/', views.CustomerSearchView.as_view()),
 ]
