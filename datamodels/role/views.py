@@ -1,10 +1,7 @@
 import logging
-import time
-from datetime import datetime
 
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
-from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -16,7 +13,7 @@ from datamodels.role.serializers import CustomerSerializer, FollowingRelationShi
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
     CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer
 from datamodels.sms.models import mm_SMSCode
-from lib.common import CacheKey
+from lib import customer_login
 from lib.exceptions import LoginException, DBException
 from lib.im import IMServe
 from lib.qiniucloud import QiniuServe
@@ -36,7 +33,7 @@ class RegisterView(APIView):
         password = request.data.get('password')
         mm_SMSCode.is_effective(account, code)
         customer = mm_Customer.add(account, password)
-        login(request, customer.user)
+        customer_login.login(request, customer.user)
         data = dict(account=account, id=customer.id, user_id=customer.user.id)
         return Response(Tool.format_data(data), status=status.HTTP_200_OK)
 
@@ -53,14 +50,9 @@ class LoginView(APIView):
         try:
             user = authenticate(self.request, username=username, password=password)
             if user:
-                login(request, user)
-                request.session['user_id'] = user.id
-                request.session['customer_id'] = user.customer.id
-                last_requst_at = time.mktime(datetime.now().timetuple())
-                request.session['last_requst_at'] = last_requst_at
-                key = CacheKey.customer_last_request % user.customer.id
-                cache.set(key, last_requst_at, 2 * 7 * 24 * 60 * 60)
+                customer_login.login(request, user)
                 data = {
+                    'id': user.customer.id,
                     'user_id': user.id,
                     'name': user.customer.name,
                     'im_token': user.customer.im_token,

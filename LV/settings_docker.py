@@ -43,6 +43,7 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'init_command': 'SET CHARACTER SET utf8mb4',
+            'charset': 'utf8mb4',
         }
     }
 }

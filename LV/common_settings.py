@@ -33,12 +33,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
-        'NAME': 'lv',
+        'NAME': 'lv_web',
         'PASSWORD': 'Password123/',
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'OPTIONS': {
             'init_command': 'SET CHARACTER SET utf8mb4',
+            'charset': 'utf8mb4',
         }
     }
 }

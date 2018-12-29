@@ -15,7 +15,7 @@ import os
 ENV = os.getenv('DJANGO_RUN_ENV', 'DEV')
 if ENV == 'TEST':
     from .settings_docker import *
-    DEBUG = False
+    DEBUG = True
 else:
     from .common_settings import *
     DEBUG = True
