@@ -180,7 +180,7 @@ class MyFollowerView(APIView):
         return Response(Tool.format_data(serializer.data))
 
     def delete(self, request, format=None):
-        customer_id = request.data['coustomer_id']
+        customer_id = request.query_params.get('customer_id', 0)
         request.user.customer.remove_relationship(customer_id)
         return Response(Tool.format_data())
 
