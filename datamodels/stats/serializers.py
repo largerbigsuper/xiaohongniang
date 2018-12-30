@@ -6,12 +6,12 @@
 # @File    : serializers.py
 from rest_framework import serializers
 
-from datamodels.role.serializers import CustomerSimpleSerializer
+from datamodels.role.serializers import NormalCoustomerSerializer
 from datamodels.stats.models import OperationRecord
 
 
 class OpreationRecordListSerilizer(serializers.ModelSerializer):
-    customer = CustomerSimpleSerializer(source='from_customer')
+    customer = NormalCoustomerSerializer(source='from_customer')
 
     class Meta:
         model = OperationRecord

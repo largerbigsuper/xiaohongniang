@@ -173,8 +173,8 @@ class MyFollowerView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
-        customer_id = request.data['coustomer_id']
-        relationship_status = request.data.get('status', RELATIONSHIP_FOLLOWING)
+        customer_id = request.data['customer_id']
+        relationship_status = int(request.data.get('status', RELATIONSHIP_FOLLOWING))
         relationship = request.user.customer.add_relationship(customer_id, relationship_status)
         serializer = BaseRelationShipSerializer(relationship)
         return Response(Tool.format_data(serializer.data))
