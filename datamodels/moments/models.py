@@ -3,6 +3,7 @@ from django.db.models import F
 
 from datamodels.role.models import Customer
 from lib.common import BaseManger
+from lib.im import IMServe
 
 
 class MomentsManager(BaseManger):
@@ -117,14 +118,18 @@ class Likes(models.Model):
 
 class TopicManager(BaseManger):
 
-    def get_toptics(self, name, customer_id):
-        topic, _ = self.get_or_create(name=name, defaults={'customer_id': customer_id})
+    def get_toptics(self, name, customer_id, user_id, logo_url=None):
+        topic, created = self.get_or_create(name=name, defaults={'customer_id': customer_id, 'logo_url': logo_url})
+        if created:
+            group_id = topic.id
+            IMServe.create_group(user_id, group_id=group_id, group_name=name)
         return topic
 
 
 class Topic(models.Model):
     name = models.CharField(verbose_name='话题', max_length=20, db_index=True, unique=True)
     customer = models.ForeignKey(Customer, verbose_name='发起人', null=True, blank=True, on_delete=models.DO_NOTHING)
+    logo_url = models.CharField('背景图', max_length=120, blank=True, null=True)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     objects = TopicManager()
