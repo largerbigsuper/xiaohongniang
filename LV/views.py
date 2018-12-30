@@ -4,10 +4,13 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : views.py
+from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
+from datamodels.role.models import mm_Customer
+from lib.common import CacheKey
 from lib.im import IMServe
 from lib.qiniucloud import QiniuServe
 from lib.tools import Tool
@@ -38,11 +41,19 @@ class ImTokenView(APIView):
 class APPConfigView(APIView):
 
     def get(self, request):
+        
+        BASE_USER_COUNT = 1000
+        user_total = cache.get(CacheKey.user_total)
+        if user_total is None:
+            user_total = mm_Customer.all().count()
+            cache.set(CacheKey.user_total, user_total, 60 * 5)
+        user_total += BASE_USER_COUNT
         app_config = {
             'version': '1.0.2',
             'url': '',
             'desc': '最新版本',
-            'music': 'http://oys4026ng.bkt.clouddn.com/musiclight.mp3'
+            'music': 'http://oys4026ng.bkt.clouddn.com/musiclight.mp3',
+            'user_total': user_total,
 
         }
         return Response(Tool.format_data(app_config))
