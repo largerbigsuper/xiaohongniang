@@ -11,6 +11,7 @@ from datamodels.moments.serializers import MomentsSerializer, MomentsDetailSeria
     MomentsCreateSerializer, TopicSerializer
 from datamodels.notices.models import mm_Notice, Action
 from lib.exceptions import DBException
+from lib.im import IMServe
 from lib.tools import Tool
 from lib import messages
 
@@ -34,7 +35,7 @@ class MomentsListView(generics.ListCreateAPIView):
             topic_tags = re.findall(r'#.*?#', topics_str)
             for tag in topic_tags:
                 name = tag.replace('#', '')
-                topic = mm_Topic.get_toptics(name, request.user.customer.id)
+                topic = mm_Topic.get_toptics(name, request.user.customer.id, request.user.id)
                 topic_list.append(topic)
             data['topic'] = topic_list
         data['customer_id'] = request.user.customer.id
@@ -221,8 +222,25 @@ class LikesView(generics.CreateAPIView, generics.DestroyAPIView, generics.ListAP
 """
 
 
-class TopicListView(generics.ListAPIView):
+class TopicListView(generics.ListCreateAPIView):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = TopicSerializer
     queryset = mm_Topic.all()
+
+    def post(self, request, *args, **kwargs):
+        topic = mm_Topic.get_toptics(kwargs.get('name'), request.session['customer_id'], request.user.id, kwargs.get('logo_url'))
+        serializer = self.serializer_class(topic)
+        return Response(Tool.format_data(serializer.data))
+
+
+class TopicView(generics.RetrieveUpdateDestroyAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TopicSerializer
+    queryset = mm_Topic.all()
+
+    def delete(self, request, *args, **kwargs):
+        topic = self.get_object()
+        IMServe.destory_group(topic.customer.user.id, topic.id)
+        return super().delete(request, *args, **kwargs)

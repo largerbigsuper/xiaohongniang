@@ -19,5 +19,6 @@ urlpatterns = [
     path('<int:pk>/comment/', views.CommentView.as_view(), name='add-lists-comment'),
     path('comment/<int:pk>/', views.ReplyOrDeleteCommentView.as_view(), name='reply-comment'),
     path('<int:pk>/likes/', views.LikesView.as_view(), name='add-lists-destory-likes'),
-    path('topic/lists/', views.TopicListView.as_view(), name='topic-lists')
+    path('topic/', views.TopicListView.as_view(), name='create-lists-topic'),
+    path('topic/<int:pk>/', views.TopicView.as_view(), name='get-update-delete-topic'),
 ]
