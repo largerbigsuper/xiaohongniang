@@ -15,4 +15,4 @@ class OpreationRecordListSerilizer(serializers.ModelSerializer):
 
     class Meta:
         model = OperationRecord
-        fields = ('customer',)
+        fields = ('customer', 'create_at')

@@ -16,6 +16,13 @@ class OpreationRecordListView(generics.ListAPIView):
     def get_queryset(self):
         return mm_OperationRecord.my_visitors(self.request.session['customer_id'])
 
+    def paginate_queryset(self, queryset):
+        # 拉去消息列表后，将未读状态设置为已读状态
+        q = super().paginate_queryset(queryset)
+        record_ids = [record.id for record in q]
+        mm_OperationRecord.filter(pk__in=record_ids).update(read_status=True)
+        return q
+
 
 class UnreadTotalOpreationRecordView(APIView):
 
@@ -23,6 +30,6 @@ class UnreadTotalOpreationRecordView(APIView):
 
     def get(self, request):
         data = {
-            'total': mm_OperationRecord.my_visitors(self.request.session['customer_id']).count()
+            'total': mm_OperationRecord.my_visitors(self.request.session['customer_id']).filter(read_status=False).count()
         }
         return Response(Tool.format_data(data))
