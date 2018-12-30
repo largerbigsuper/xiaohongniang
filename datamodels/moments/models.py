@@ -11,10 +11,10 @@ class MomentsManager(BaseManger):
         if customer_list is None:
             return []
         else:
-            return self.filter(customer_id__in=customer_list).select_related('customer').order_by('-create_at')
+            return self.filter(customer_id__in=customer_list).select_related('customer').prefetch_related('topic').order_by('-create_at')
 
     def latest_moments(self):
-        return self.all().order_by('-create_at')
+        return self.all().select_related('customer').prefetch_related('topic').order_by('-create_at')
 
 
 class FunctionType:
@@ -45,6 +45,7 @@ class Moments(models.Model):
     is_hidden_name = models.BooleanField(verbose_name='匿名', default=False)
     address = models.CharField(verbose_name='地址', blank=True, max_length=200)
     function_type = models.PositiveIntegerField(verbose_name='功能', choices=FUNCTION_TYPE_CHOICE, default=1)
+    topic = models.ManyToManyField('moments.Topic', db_table='lv_moments_topics', related_name='moments')
 
     objects = MomentsManager()
 
@@ -114,6 +115,25 @@ class Likes(models.Model):
         ordering = ['-create_at']
 
 
+class TopicManager(BaseManger):
+
+    def get_toptics(self, name, customer_id):
+        topic, _ = self.get_or_create(name=name, defaults={'customer_id': customer_id})
+        return topic
+
+
+class Topic(models.Model):
+    name = models.CharField(verbose_name='话题', max_length=20, db_index=True, unique=True)
+    customer = models.ForeignKey(Customer, verbose_name='发起人', null=True, blank=True, on_delete=models.DO_NOTHING)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = TopicManager()
+
+    class Meta:
+        db_table = 'lv_topics'
+
+
 mm_Moments = Moments.objects
 mm_Comments = Comments.objects
 mm_Likes = Likes.objects
+mm_Topic = Topic.objects

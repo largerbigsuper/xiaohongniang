@@ -1,12 +1,14 @@
+import re
+
 from django.db import transaction, IntegrityError
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from datamodels.moments.models import mm_Moments, mm_Comments, mm_Likes
+from datamodels.moments.models import mm_Moments, mm_Comments, mm_Likes, mm_Topic
 from datamodels.moments.serializers import MomentsSerializer, MomentsDetailSerializer, CommentSerializer, \
     CommentListSerializer, LikeListSerialzier, LikeCreateSerializer, NormalMomentsDetailSerializer, \
-    MomentsCreateSerializer
+    MomentsCreateSerializer, TopicSerializer
 from datamodels.notices.models import mm_Notice, Action
 from lib.exceptions import DBException
 from lib.tools import Tool
@@ -22,14 +24,25 @@ class MomentsListView(generics.ListCreateAPIView):
     serializer_class = MomentsSerializer
 
     def get_queryset(self):
-        return self.request.user.customer.moments.prefetch_related('comment').all()
+        return self.request.user.customer.moments.prefetch_related('topic').all()
 
     def create(self, request, *args, **kwargs):
         data = request.data.dict()
+        topics_str = data.pop('topics', '')
+        topic_list = []
+        if topics_str:
+            topic_tags = re.findall(r'#.*?#', topics_str)
+            for tag in topic_tags:
+                name = tag.replace('#', '')
+                topic = mm_Topic.get_toptics(name, request.user.customer.id)
+                topic_list.append(topic)
+            data['topic'] = topic_list
         data['customer_id'] = request.user.customer.id
         serializer = MomentsCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        moment = serializer.save()
+        for t in topic_list:
+            moment.topic.add(t)
         return Response(Tool.format_data(serializer.data))
 
 
@@ -54,7 +67,7 @@ class CustomerMomentsListView(generics.ListAPIView):
     serializer_class = MomentsSerializer
 
     def get_queryset(self):
-        return mm_Moments.filter(customer_id=self.kwargs['pk']).all()
+        return mm_Moments.filter(customer_id=self.kwargs['pk']).all().prefetch_related('topic')
 
 
 class MomentsDetailView(generics.RetrieveAPIView):
@@ -63,7 +76,7 @@ class MomentsDetailView(generics.RetrieveAPIView):
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = MomentsDetailSerializer
-    queryset = mm_Moments.all()
+    queryset = mm_Moments.all().prefetch_related('topic')
 
 
 class FollowingMomentsListView(generics.ListAPIView):
@@ -201,3 +214,15 @@ class LikesView(generics.CreateAPIView, generics.DestroyAPIView, generics.ListAP
             like.moment.modify_like_total(-1)
             like.delete()
             return Response(Tool.format_data(msg=messages.DELETE_LIKE_OK))
+
+
+"""
+话题相关
+"""
+
+
+class TopicListView(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TopicSerializer
+    queryset = mm_Topic.all()

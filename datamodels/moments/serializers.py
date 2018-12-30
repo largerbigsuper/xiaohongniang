@@ -8,13 +8,21 @@ import json
 
 from rest_framework import serializers
 
-from datamodels.moments.models import Moments, Comments, Likes
+from datamodels.moments.models import Moments, Comments, Likes, Topic
 from datamodels.role.serializers import CoustomerBaseInfoSerializer, CustomerSimpleSerializer, NormalCoustomerSerializer
 from lib.fields import JsonField
 
 
+class TopicSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Topic
+        fields = ('id', 'name', 'create_at')
+
+
 class BaseMomentSerializer(serializers.ModelSerializer):
     images = JsonField(required=False)
+    topic = TopicSerializer(many=True, read_only=True)
 
 
 class MomentsSerializer(BaseMomentSerializer):
@@ -23,7 +31,7 @@ class MomentsSerializer(BaseMomentSerializer):
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
 
 
 class MomentsCreateSerializer(BaseMomentSerializer):
@@ -33,7 +41,7 @@ class MomentsCreateSerializer(BaseMomentSerializer):
         model = Moments
         fields = ('id', 'customer_id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
 
 
 class MomentsDetailSerializer(BaseMomentSerializer):
@@ -43,7 +51,7 @@ class MomentsDetailSerializer(BaseMomentSerializer):
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
 
 
 class NormalMomentsDetailSerializer(BaseMomentSerializer):
@@ -53,7 +61,7 @@ class NormalMomentsDetailSerializer(BaseMomentSerializer):
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
 
 
 class CommentSerializer(serializers.ModelSerializer):

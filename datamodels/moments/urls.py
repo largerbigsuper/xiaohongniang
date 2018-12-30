@@ -18,5 +18,6 @@ urlpatterns = [
     path('following/lists/', views.FollowingMomentsListView.as_view(), name='following-list-momemts'),
     path('<int:pk>/comment/', views.CommentView.as_view(), name='add-lists-comment'),
     path('comment/<int:pk>/', views.ReplyOrDeleteCommentView.as_view(), name='reply-comment'),
-    path('<int:pk>/likes/', views.LikesView.as_view(), name='add-lists-destory-likes')
+    path('<int:pk>/likes/', views.LikesView.as_view(), name='add-lists-destory-likes'),
+    path('topic/lists/', views.TopicListView.as_view(), name='topic-lists')
 ]
