@@ -17,7 +17,7 @@ class TopicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Topic
-        fields = ('id', 'name', 'logo_url', 'create_at')
+        fields = ('id', 'name', 'logo_url', 'create_at', 'order_num')
 
 
 class BaseMomentSerializer(serializers.ModelSerializer):

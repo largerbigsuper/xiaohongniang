@@ -130,12 +130,18 @@ class Topic(models.Model):
     name = models.CharField(verbose_name='话题', max_length=20, db_index=True, unique=True)
     customer = models.ForeignKey(Customer, verbose_name='发起人', null=True, blank=True, on_delete=models.DO_NOTHING)
     logo_url = models.CharField('背景图', max_length=120, blank=True, null=True)
+    desc = models.CharField(verbose_name='描述', max_length=200, blank=True, null=True)
+    order_num = models.PositiveIntegerField(verbose_name='排序', default=100)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     objects = TopicManager()
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = 'lv_topics'
+        ordering = ['order_num', 'id']
 
 
 mm_Moments = Moments.objects
