@@ -23,15 +23,10 @@ class TopicSerializer(serializers.ModelSerializer):
 class BaseMomentSerializer(serializers.ModelSerializer):
     images = JsonField(required=False)
     topic = TopicSerializer(many=True, read_only=True)
+    is_like = serializers.SerializerMethodField()
 
-
-class MomentsSerializer(BaseMomentSerializer):
-
-    class Meta:
-        model = Moments
-        fields = ('id', 'text', 'images', 'latitude', 'longitude',
-                  'create_at', 'update_at',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
+    def get_is_like(self, obj):
+        return getattr(obj, 'is_like', False)
 
 
 class MomentsCreateSerializer(BaseMomentSerializer):
@@ -41,17 +36,7 @@ class MomentsCreateSerializer(BaseMomentSerializer):
         model = Moments
         fields = ('id', 'customer_id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
-
-
-class MomentsDetailSerializer(BaseMomentSerializer):
-    customer = CoustomerBaseInfoSerializer()
-
-    class Meta:
-        model = Moments
-        fields = ('id', 'text', 'images', 'latitude', 'longitude',
-                  'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic', 'is_like')
 
 
 class NormalMomentsDetailSerializer(BaseMomentSerializer):
@@ -61,7 +46,7 @@ class NormalMomentsDetailSerializer(BaseMomentSerializer):
         model = Moments
         fields = ('id', 'text', 'images', 'latitude', 'longitude',
                   'create_at', 'update_at', 'customer',
-                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic')
+                  'comment_total', 'like_total', 'is_hidden_name', 'address', 'function_type', 'topic', 'is_like')
 
 
 class CommentSerializer(serializers.ModelSerializer):

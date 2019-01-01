@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from datamodels.moments.models import mm_Moments, mm_Comments, mm_Likes, mm_Topic
-from datamodels.moments.serializers import MomentsSerializer, MomentsDetailSerializer, CommentSerializer, \
+from datamodels.moments.serializers import CommentSerializer, \
     CommentListSerializer, LikeListSerialzier, LikeCreateSerializer, NormalMomentsDetailSerializer, \
     MomentsCreateSerializer, TopicSerializer
 from datamodels.notices.models import mm_Notice, Action
@@ -22,10 +22,19 @@ class MomentsListView(generics.ListCreateAPIView):
     动态列表
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = MomentsSerializer
+    serializer_class = MomentsCreateSerializer
 
     def get_queryset(self):
         return self.request.user.customer.moments.prefetch_related('topic').all()
+
+    def paginate_queryset(self, queryset):
+        customer_id = self.request.session['customer_id']
+        q = super().paginate_queryset(queryset)
+        moment_ids = [moment.id for moment in q]
+        likes = mm_Likes.filter(moment_id__in=moment_ids, customer_id=customer_id).values_list('moment_id', flat=True)
+        for moment in q:
+            moment.is_like = moment.id in likes
+        return q
 
     def create(self, request, *args, **kwargs):
         data = request.data.dict()
@@ -54,7 +63,7 @@ class MomentModifyView(generics.RetrieveUpdateDestroyAPIView):
     删除一条动态
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = MomentsSerializer
+    serializer_class = MomentsCreateSerializer
 
     def get_queryset(self):
         return self.request.user.customer.moments.all()
@@ -65,10 +74,20 @@ class CustomerMomentsListView(generics.ListAPIView):
     获取其他人的动态列表
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = MomentsSerializer
+    serializer_class = NormalMomentsDetailSerializer
 
     def get_queryset(self):
         return mm_Moments.filter(customer_id=self.kwargs['pk']).all().prefetch_related('topic')
+
+    def paginate_queryset(self, queryset):
+        customer_id = self.request.session['customer_id']
+        q = super().paginate_queryset(queryset)
+        moment_ids = [moment.id for moment in q]
+        likes = mm_Likes.filter(moment_id__in=moment_ids, customer_id=customer_id).values_list('moment_id', flat=True)
+        for moment in q:
+            moment.is_like = moment.id in likes
+        return q
+
 
 
 class MomentsDetailView(generics.RetrieveAPIView):
@@ -76,8 +95,14 @@ class MomentsDetailView(generics.RetrieveAPIView):
     获取其他人一条动态详情
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = MomentsDetailSerializer
+    serializer_class = NormalMomentsDetailSerializer
     queryset = mm_Moments.all().prefetch_related('topic')
+
+    def get_object(self):
+        obj = super().get_object()
+        customer_id = self.request.session['customer_id']
+        obj.is_like = mm_Likes.filter(moment_id=obj.id, customer_id=customer_id).exists()
+        return obj
 
 
 class FollowingMomentsListView(generics.ListAPIView):
@@ -86,10 +111,19 @@ class FollowingMomentsListView(generics.ListAPIView):
     """
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = MomentsDetailSerializer
+    serializer_class = NormalMomentsDetailSerializer
 
     def get_queryset(self):
         return mm_Moments.get_customer_moments(self.request.user.customer.get_following_ids())
+
+    def paginate_queryset(self, queryset):
+        customer_id = self.request.session['customer_id']
+        q = super().paginate_queryset(queryset)
+        moment_ids = [moment.id for moment in q]
+        likes = mm_Likes.filter(moment_id__in=moment_ids, customer_id=customer_id).values_list('moment_id', flat=True)
+        for moment in q:
+            moment.is_like = moment.id in likes
+        return q
 
 
 class LatestMomentsListView(generics.ListAPIView):
@@ -99,6 +133,15 @@ class LatestMomentsListView(generics.ListAPIView):
 
     def get_queryset(self):
         return mm_Moments.latest_moments()
+
+    def paginate_queryset(self, queryset):
+        customer_id = self.request.session['customer_id']
+        q = super().paginate_queryset(queryset)
+        moment_ids = [moment.id for moment in q]
+        likes = mm_Likes.filter(moment_id__in=moment_ids, customer_id=customer_id).values_list('moment_id', flat=True)
+        for moment in q:
+            moment.is_like = moment.id in likes
+        return q
 
 
 """
