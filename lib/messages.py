@@ -24,4 +24,4 @@ DELETE_LIKE_FAILED = '取消点赞失败'
 ADD_FEEDBACK_OK = '反馈成功'
 
 JOIN_GROUP_OK = '加群成功'
-LEAVE_GROUP_OK = '加群成功'
+LEAVE_GROUP_OK = '退群成功'
