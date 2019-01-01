@@ -144,6 +144,25 @@ class LatestMomentsListView(generics.ListAPIView):
         return q
 
 
+class MomentSearchView(generics.ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = NormalMomentsDetailSerializer
+
+    def get_queryset(self):
+        topic_id = self.request.query_params.get('topic_id', 0)
+        return mm_Moments.filter(topic__id=topic_id).order_by('-create_at')
+
+    def paginate_queryset(self, queryset):
+        customer_id = self.request.session['customer_id']
+        q = super().paginate_queryset(queryset)
+        moment_ids = [moment.id for moment in q]
+        likes = mm_Likes.filter(moment_id__in=moment_ids, customer_id=customer_id).values_list('moment_id', flat=True)
+        for moment in q:
+            moment.is_like = moment.id in likes
+        return q
+
+
 """
 评论相关
 """

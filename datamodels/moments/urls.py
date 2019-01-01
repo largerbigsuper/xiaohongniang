@@ -16,6 +16,7 @@ urlpatterns = [
     path('detail/<int:pk>/', views.MomentsDetailView.as_view(), name='detail-moments'),
     path('customer/<int:pk>/lists/', views.CustomerMomentsListView.as_view(), name='list-momemts'),
     path('following/lists/', views.FollowingMomentsListView.as_view(), name='following-list-momemts'),
+    path('search/', views.MomentSearchView.as_view(), name='search-momemts'),
     path('<int:pk>/comment/', views.CommentView.as_view(), name='add-lists-comment'),
     path('comment/<int:pk>/', views.ReplyOrDeleteCommentView.as_view(), name='reply-comment'),
     path('<int:pk>/likes/', views.LikesView.as_view(), name='add-lists-destory-likes'),
