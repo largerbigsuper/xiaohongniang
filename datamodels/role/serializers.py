@@ -22,7 +22,8 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
                   'wechat_id', 'intro', 'address_home', 'address_company', 'im_token',
                   'following_count', 'followers_count', 'blocked_count',
-                  'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut'
+                  'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
+                  'expect_desc'
                   )
         read_only_fields = ('account', 'user', 'id', 'im_token')
 
