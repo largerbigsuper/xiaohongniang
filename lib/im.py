@@ -51,4 +51,14 @@ class IMServe:
     def destory_group(cls, user_id, group_id):
         cls.server.Group.dismiss(user_id, group_id)
 
+    @classmethod
+    def join_group(cls, user_id, group_id, group_name):
+        response = cls.server.Group.join(user_id, group_id, group_name)
+        if not response.status == 200:
+            raise APIException(response.result['errorMessage'])
 
+    @classmethod
+    def leave_group(cls, user_id, group_id):
+        response = cls.server.Group.quit(user_id, group_id)
+        if not response.status == 200:
+            raise APIException(response.result['errorMessage'])

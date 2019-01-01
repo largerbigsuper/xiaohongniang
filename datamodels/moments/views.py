@@ -306,3 +306,20 @@ class TopicView(generics.RetrieveUpdateDestroyAPIView):
         topic = self.get_object()
         IMServe.destory_group(topic.customer.user.id, topic.id)
         return super().delete(request, *args, **kwargs)
+
+
+class TopicChatGroupView(generics.RetrieveDestroyAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TopicSerializer
+    queryset = mm_Topic.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        obj = self.get_object()
+        IMServe.join_group(request.user.id, obj.id, obj.name)
+        return Response(Tool.format_data(msg=messages.JOIN_GROUP_OK))
+
+    def destroy(self, request, *args, **kwargs):
+        obj = self.get_object()
+        IMServe.leave_group(request.user.id, obj.id)
+        return Response(Tool.format_data(msg=messages.LEAVE_GROUP_OK))

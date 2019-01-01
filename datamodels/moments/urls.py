@@ -22,4 +22,6 @@ urlpatterns = [
     path('<int:pk>/likes/', views.LikesView.as_view(), name='add-lists-destory-likes'),
     path('topic/', views.TopicListView.as_view(), name='create-lists-topic'),
     path('topic/<int:pk>/', views.TopicView.as_view(), name='get-update-delete-topic'),
+    path('topic/<int:pk>/', views.TopicView.as_view(), name='get-update-delete-topic'),
+    path('topic/<int:pk>/chatgroup/', views.TopicChatGroupView.as_view(), name='topic-chat-group'),
 ]
