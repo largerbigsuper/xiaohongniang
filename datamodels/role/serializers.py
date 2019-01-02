@@ -182,7 +182,7 @@ class CoustomerDistanceSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
-            'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut', 'distance')
+            'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut', 'distance', 'last_request_at')
 
 
 class CustomerSimpleSerializer(serializers.ModelSerializer):
