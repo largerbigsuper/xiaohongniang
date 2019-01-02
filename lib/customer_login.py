@@ -10,7 +10,7 @@ from datetime import datetime
 from django.contrib.auth import login as system_login
 from django.core.cache import cache
 
-from lib.common import CacheKey
+from lib.common import CacheKey, HeadersKey
 
 
 def login(request, user):
@@ -21,3 +21,9 @@ def login(request, user):
     request.session['last_requst_at'] = last_requst_at
     key = CacheKey.customer_last_request % user.customer.id
     cache.set(key, last_requst_at, 2 * 7 * 24 * 60 * 60)
+    latitude = float(request.META.get(HeadersKey.HTTP_LATITUDE, 0))
+    longitude = float(request.META.get(HeadersKey.HTTP_LONGITUDE, 0))
+    user.customer.latitude = latitude
+    user.customer.longitude = longitude
+    user.customer.save()
+

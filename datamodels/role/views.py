@@ -16,6 +16,7 @@ from datamodels.role.serializers import CustomerSerializer, FollowingRelationShi
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_OperationRecord
 from lib import customer_login
+from lib.common import HeadersKey
 from lib.exceptions import LoginException, DBException
 from lib.im import IMServe
 from lib.pagination import ReturnTwentyPagination
@@ -138,8 +139,8 @@ class AroundCustomerView(generics.ListAPIView):
     附近的人
     """
     def get_queryset(self):
-        latitude = float(self.request.META.get('HTTP_LATITUDE', 0))
-        longitude = float(self.request.META.get('HTTP_LONGITUDE', 0))
+        latitude = float(self.request.META.get(HeadersKey.HTTP_LATITUDE, 0))
+        longitude = float(self.request.META.get(HeadersKey.HTTP_LONGITUDE, 0))
         return mm_Customer.customer_around(latitude, longitude)
 
     serializer_class = CoustomerDistanceSerializer

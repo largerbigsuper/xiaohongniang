@@ -7,6 +7,11 @@
 from django.db.models import Manager
 
 
+class HeadersKey:
+    HTTP_LATITUDE = 'HTTP_LATITUDE'
+    HTTP_LONGITUDE = 'HTTP_LONGITUDE'
+
+
 class CacheKey:
     customer_last_request           = 'lq_%s'  # 最后一次请求时间 customer_id
     user_total                      = 'user_total'  # 用户总数

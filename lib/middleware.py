@@ -10,7 +10,7 @@ import time
 
 from django.core.cache import cache
 
-from lib.common import CacheKey
+from lib.common import CacheKey, HeadersKey
 
 
 class ResponseFormateMiddleware:
@@ -41,6 +41,10 @@ class ResponseFormateMiddleware:
             else:
                 request.session['last_requst_at'] = _now
                 request.user.customer.last_request_at = datetime.datetime.fromtimestamp(_now)
+                latitude = float(request.META.get(HeadersKey.HTTP_LATITUDE, 0))
+                longitude = float(request.META.get(HeadersKey.HTTP_LONGITUDE, 0))
+                request.user.customer.latitude = latitude
+                request.user.customer.longitude = longitude
                 request.user.customer.save()
 
         if response.status_code in [200, 201, 204]:
