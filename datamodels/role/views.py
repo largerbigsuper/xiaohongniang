@@ -97,6 +97,11 @@ class CustomerProfile(APIView):
 
     def get(self, request, format=None):
         serializer = CustomerSerializer(request.user.customer)
+        latitude = float(request.META.get(HeadersKey.HTTP_LATITUDE, 0))
+        longitude = float(request.META.get(HeadersKey.HTTP_LONGITUDE, 0))
+        request.user.customer.latitude = latitude
+        request.user.customer.longitude = longitude
+        request.user.customer.save()
         return Response(Tool.format_data(serializer.data))
 
     def post(self, request, format=None):
