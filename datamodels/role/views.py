@@ -11,7 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
-    CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer
+    CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer, \
+    CoustomerDistanceSerializer
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_OperationRecord
 from lib import customer_login
@@ -130,6 +131,19 @@ class ActiveCustomerList(generics.ListAPIView):
 
     def get_queryset(self):
         return mm_Customer.active_customers()
+
+
+class AroundCustomerView(generics.ListAPIView):
+    """
+    附近的人
+    """
+    def get_queryset(self):
+        latitude = float(self.request.META.get('HTTP_LATITUDE', 0))
+        longitude = float(self.request.META.get('HTTP_LONGITUDE', 0))
+        return mm_Customer.customer_around(latitude, longitude)
+
+    serializer_class = CoustomerDistanceSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class CustomerWithSkillsList(generics.ListAPIView):

@@ -160,6 +160,31 @@ class NormalCoustomerSerializer(serializers.ModelSerializer):
             'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut')
 
 
+class CoustomerDistanceSerializer(serializers.ModelSerializer):
+    relation_status = serializers.SerializerMethodField()
+    is_myself = serializers.SerializerMethodField()
+    distance = serializers.SerializerMethodField()
+
+    def get_relation_status(self, obj):
+        customer_id = self.context['request'].session['customer_id']
+        if not hasattr(self, '_relation_map'):
+            self._relation_map = mm_RelationShip.get_following_customer_ids_map(customer_id)
+        return self._relation_map.get(obj.id, -1)
+
+    def get_is_myself(self, obj):
+        return obj.id == self.context['request'].session['customer_id']
+
+    def get_distance(self, obj):
+        return obj.distance
+
+    class Meta:
+        model = Customer
+        fields = (
+            'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
+            'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
+            'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut', 'distance')
+
+
 class CustomerSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer

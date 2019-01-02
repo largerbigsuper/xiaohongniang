@@ -5,6 +5,7 @@
 # @Email   : zaihuazhao@163.com
 # @File    : tools.py
 import json
+from math import cos, sin, asin, pi
 
 from rest_framework.exceptions import ParseError
 from rest_framework.request import Request
@@ -52,3 +53,24 @@ class Tool:
             'data': data
         }
         return _data
+
+    @staticmethod
+    def get_lon_lat_range(lat, lng, distance):
+        """
+        计算精度，维度范围
+        :param lat: 纬度
+        :param lng: 经度
+        :param distance: 范围距离
+        :return:
+        """
+        r = 6371  # 地球半径千米
+        distance /= 1000
+        dlng = 2 * asin(sin(distance / (2 * r)) / cos(lat * pi / 180))
+        dlng = dlng * 180 / pi
+        dlat = distance/r
+        dlat = dlat * 180 / pi
+        return sorted((lat - dlat, lat + dlat)), sorted((lng - dlng, lng + dlng))
+        # left - top: (lat + dlat, lng - dlng)
+        # right - top: (lat + dlat, lng + dlng)
+        # left - bottom: (lat - dlat, lng - dlng)
+        # right - bottom: (lat - dlat, lng + dlng)

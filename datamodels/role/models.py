@@ -1,4 +1,5 @@
 import traceback
+from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
 from django.db import models, transaction, IntegrityError
@@ -8,6 +9,7 @@ from datamodels.sms.models import mm_SMSCode
 from lib.common import BaseManger
 from lib.exceptions import DBException
 from lib.im import IMServe
+from lib.tools import Tool
 
 
 class BaseRole(models.Model):
@@ -38,6 +40,8 @@ class BaseRole(models.Model):
     is_show_skill = models.BooleanField('展示技能', default=False)
     is_rut = models.BooleanField('相亲状态', default=False)
     expect_desc = models.CharField('异性要求', blank=True, null=True, max_length=200)
+    latitude = models.FloatField(verbose_name='精度', null=True, blank=True)
+    longitude = models.FloatField(verbose_name='维度', null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -92,6 +96,35 @@ class CustomerManager(BaseManger):
 
     def customers_need_paired(self):
         return self.all().filter(is_rut=True).order_by('-last_request_at')
+
+    def active_customer_in_days(self, days=5):
+        last_request_at = datetime.now() - timedelta(days=days)
+        return self.filter(last_request_at__gt=last_request_at)
+
+    def customer_around(self, latitude, longitude, distance=10000):
+        latitude_range, longitude_range = Tool.get_lon_lat_range(latitude, longitude, distance)
+        latitude_low, latitude_heigh = latitude_range
+        longitude_low, longitude_heigh = longitude_range
+        params = {
+            'latitude_low': latitude_low,
+            'latitude_heigh': latitude_heigh,
+            'longitude_low': longitude_low,
+            'longitude_heigh': longitude_heigh,
+            'distance': distance,
+            'latitude': latitude,
+            'longitude': longitude,
+        }
+        sql = '''
+        Select *, 
+        st_distance_sphere(POINT({longitude}, {latitude} ), POINT(lv_customers.longitude, lv_customers.latitude)) AS distance
+        FROM lv_customers
+        WHERE id >= 1
+        AND lv_customers.latitude BETWEEN {latitude_low} AND  {latitude_heigh}
+        AND lv_customers.longitude BETWEEN {longitude_low} AND {longitude_heigh}
+        HAVING distance < {distance}
+        ORDER BY distance;
+        '''.format(**params)
+        return mm_Customer.raw(sql)
 
 
 class Customer(BaseRole):
