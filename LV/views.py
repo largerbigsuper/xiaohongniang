@@ -50,7 +50,7 @@ class APPConfigView(APIView):
         user_total += BASE_USER_COUNT
         app_config = {
             'version': '1.0.2',
-            'url': 'http://pk70bbgoy.bkt.clouddn.com/app-release.apk',
+            'url': 'http://47.111.2.119:8000/media/app/android/app-release.apk',
             'desc': '最新版本',
             'music': 'http://oys4026ng.bkt.clouddn.com/musiclight.mp3',
             'user_total': user_total,
