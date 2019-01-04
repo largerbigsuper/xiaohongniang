@@ -1,8 +1,9 @@
-version: '3.1'
+version: '3'
 services:
   web:
     build: .
     command: ["./run_web.sh"]
+#    command:  uwsgi --ini uwsgi_deploy.ini
     volumes:
       - .:/code
     ports:
@@ -13,6 +14,8 @@ services:
     depends_on:
       - db
       - redis
+    stdin_open: true
+    tty: true
 
   db:
     image: mysql:5.7
