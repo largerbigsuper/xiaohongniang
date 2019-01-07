@@ -15,11 +15,12 @@ class QiNiuSettings:
     ACCESS_KEY = 'YU8-GbpmWJ_8UEdBc7VTv4n_eku3zlgoHuUI2l9D'
     SECRET_KEY = 'Mkms7UphbEH4sWdkWoEnqk0PCjD3V84rIZ3EuL_H'
     BUCKET_NAME_DICT = {
-        'image': 'img-workspace',
+        'image': 'img3-workspace',
     }
     BUCKET_DOMAIN_DICT = {
-        'image': 'http://pj945cdo2.bkt.clouddn.com/'
+        'image': 'http://pkwzlsa8z.bkt.clouddn.com/'
     }
+
 
 class RongYunSettings:
     APP_KEY = 'k51hidwqk404b'
