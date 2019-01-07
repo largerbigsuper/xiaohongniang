@@ -49,9 +49,9 @@ class APPConfigView(APIView):
             cache.set(CacheKey.user_total, user_total, 60 * 5)
         user_total += BASE_USER_COUNT
         app_config = {
-            'version': '1.0.2',
-            'url': 'http://47.111.2.119:8000/media/app/android/app-release.apk',
-            'desc': '最新版本',
+            'version': '1.0.3',
+            'url': 'http://pkqiei3s2.bkt.clouddn.com/app-release.apk',
+            'desc': '修复图片显示问题，更换雪球logo',
             'music': 'http://oys4026ng.bkt.clouddn.com/musiclight.mp3',
             'user_total': user_total,
 
