@@ -6,8 +6,8 @@ services:
 #    command:  uwsgi --ini uwsgi_deploy.ini
     volumes:
       - .:/code
-    ports:
-      - "8000:8000"
+#    ports:
+#      - "8000:8000"
     links:
       - db
       - redis
@@ -49,6 +49,17 @@ services:
     depends_on:
       - db
       - redis
+
+  nginx:
+#    restart: always
+    depends_on:
+      - web
+    build: docker/nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/code
+
 
 
 
