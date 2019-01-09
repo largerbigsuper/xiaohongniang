@@ -56,7 +56,8 @@ services:
       - web
     build: docker/nginx
     ports:
-      - "8000:80"
+#      - "8000:80"
+      - "80:80"
     volumes:
       - .:/code
 
