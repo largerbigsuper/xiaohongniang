@@ -25,3 +25,5 @@ ADD_FEEDBACK_OK = '反馈成功'
 
 JOIN_GROUP_OK = '加群成功'
 LEAVE_GROUP_OK = '退群成功'
+
+NO_DATA = '暂无数据'
