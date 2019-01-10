@@ -57,7 +57,8 @@ services:
     build: docker/nginx
     ports:
 #      - "8000:80"
-      - "8000:443"
+      - "8000:80"
+      - "8443:443"
     volumes:
       - .:/code
 
