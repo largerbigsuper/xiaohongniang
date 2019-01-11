@@ -32,7 +32,7 @@ class BottlePickerRelationManager(BaseManger):
 
 
 class BottlePickerRelation(models.Model):
-    bottle = models.ForeignKey(Bottle, on_delete=models.CASCADE, db_index=False)
+    bottle = models.ForeignKey(Bottle, on_delete=models.CASCADE, db_index=False, unique=True)
     customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, db_index=False)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
@@ -43,10 +43,6 @@ class BottlePickerRelation(models.Model):
         index_together = [
             ('bottle', 'customer')
         ]
-        unique_together = [
-            ('bottle', 'customer')
-        ]
-
 
 mm_Bottles = Bottle.objects
 mm_BottlePickerRelation = BottlePickerRelation.objects
