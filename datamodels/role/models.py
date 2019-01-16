@@ -18,6 +18,44 @@ class BaseRole(models.Model):
         (1, '男'),
         (2, '女'),
     )
+    PROFESSION_CHOICE = (
+        (0, '未知'),
+        (1, '事业单位'),
+        (2, '政府机关'),
+        (3, '私营企业'),
+        (4, '自由职业'),
+        (5, '其他'),
+    )
+    EDUCATION_CHOICE = (
+        (0, '未知'),
+        (1, '初中'),
+        (2, '高中'),
+        (3, '中专'),
+        (4, '大专'),
+        (5, '本科'),
+        (6, '硕士'),
+        (7, '博士'),
+        (8, '院士'),
+    )
+    INCOME_CHOICE = (
+        (0, '未知'),
+        (1, '10万以下'),
+        (2, '10万~20万'),
+        (3, '20万~50万'),
+        (4, '50万以上'),
+    )
+    MARITAL_STATUS_CHOICE = (
+        (0, '未知'),
+        (1, '未婚'),
+        (2, '离异'),
+        (3, '丧偶'),
+    )
+    CHILD_STATUS_CHOICE = (
+        (0, '未知'),
+        (1, '无'),
+        (2, '有，和我在一起'),
+        (3, '有，不和我在一起'),
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField('名称', max_length=20)
     age = models.PositiveSmallIntegerField('年龄', null=True, blank=True)
@@ -42,6 +80,27 @@ class BaseRole(models.Model):
     expect_desc = models.CharField('异性要求', blank=True, null=True, max_length=200)
     latitude = models.FloatField(verbose_name='精度', null=True, blank=True)
     longitude = models.FloatField(verbose_name='维度', null=True, blank=True)
+    birthday = models.DateTimeField(verbose_name='生日', null=True, blank=True)
+    height = models.FloatField(verbose_name='身高', null=True, blank=True)
+    profession = models.PositiveIntegerField(verbose_name='职业', choices=PROFESSION_CHOICE, default=0)
+    education = models.PositiveIntegerField(verbose_name='学历', choices=EDUCATION_CHOICE, default=0)
+    income = models.PositiveIntegerField(verbose_name='收入', choices=INCOME_CHOICE, default=0)
+    marital_status = models.PositiveIntegerField(verbose_name='婚姻状况', choices=MARITAL_STATUS_CHOICE, default=0)
+    child_status = models.PositiveIntegerField(verbose_name='有无小孩', choices=CHILD_STATUS_CHOICE, default=0)
+    years_to_marry = models.PositiveIntegerField(verbose_name='几年内结婚', default=0)
+    score = models.PositiveIntegerField(verbose_name='自评分数', default=0)
+    condition = models.TextField(verbose_name='择偶标准', max_length=1000, blank=True, default='{}')
+    # {
+    #     "age_range": [10, 20],
+    #     "height_range": [180, 190],
+    #     "profession": 1,
+    #     "education": 1,
+    #     "income": 1,
+    #     "marital_status": 1,
+    #     "child_status": 1,
+    #     "years_to_marry": 1,
+    # }
+
 
     class Meta:
         abstract = True

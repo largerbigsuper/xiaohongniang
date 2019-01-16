@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.contrib.auth import authenticate, logout
@@ -12,7 +13,7 @@ from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
     CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer, \
-    CoustomerDistanceSerializer
+    CoustomerDistanceSerializer, NormalCoustomerDetailSerializer
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_OperationRecord
 from lib import customer_login
@@ -107,6 +108,14 @@ class CustomerProfile(APIView):
     def post(self, request, format=None):
         _name = request.user.customer.name
         _avatar_url = request.user.customer.avatar_url
+        if 'condition' in request.data:
+            required_fields = ['age_range', 'height_range', 'profession',
+                               'education', 'income', 'marital_status',
+                               'child_status', 'years_to_marry']
+            for key in required_fields:
+                if key not in json.loads(request.data.get('condition')):
+                    return Response(data={'detail': 'condition缺少字段或格式错误'}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = CustomerSerializer(request.user.customer, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             if 'avatar_url' in serializer.validated_data:
@@ -177,7 +186,7 @@ class CustomerDetail(generics.RetrieveAPIView):
 
     """
     queryset = mm_Customer.all()
-    serializer_class = CustomerListSerializer
+    serializer_class = NormalCoustomerDetailSerializer
 
     def get(self, request, *args, **kwargs):
         to_customer = self.get_object()
