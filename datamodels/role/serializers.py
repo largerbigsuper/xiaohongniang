@@ -18,27 +18,27 @@ CUSTOMER_FIELDS = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'acco
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    profession = serializers.SerializerMethodField()
-    education = serializers.SerializerMethodField()
-    income = serializers.SerializerMethodField()
-    marital_status = serializers.SerializerMethodField()
-    child_status = serializers.SerializerMethodField()
+    # profession = serializers.SerializerMethodField()
+    # education = serializers.SerializerMethodField()
+    # income = serializers.SerializerMethodField()
+    # marital_status = serializers.SerializerMethodField()
+    # child_status = serializers.SerializerMethodField()
     condition = JsonField(required=False)
 
-    def get_profession(self, obj):
-        return obj.get_profession_display()
-
-    def get_education(self, obj):
-        return obj.get_education_display()
-
-    def get_income(self, obj):
-        return obj.get_income_display()
-
-    def get_marital_status(self, obj):
-        return obj.get_marital_status_display()
-
-    def get_child_status(self, obj):
-        return obj.get_child_status_display()
+    # def get_profession(self, obj):
+    #     return obj.get_profession_display()
+    #
+    # def get_education(self, obj):
+    #     return obj.get_education_display()
+    #
+    # def get_income(self, obj):
+    #     return obj.get_income_display()
+    #
+    # def get_marital_status(self, obj):
+    #     return obj.get_marital_status_display()
+    #
+    # def get_child_status(self, obj):
+    #     return obj.get_child_status_display()
 
     class Meta:
         model = Customer
@@ -188,11 +188,11 @@ class NormalCoustomerSerializer(serializers.ModelSerializer):
 class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
     relation_status = serializers.SerializerMethodField()
     is_myself = serializers.SerializerMethodField()
-    profession = serializers.SerializerMethodField()
-    education = serializers.SerializerMethodField()
-    income = serializers.SerializerMethodField()
-    marital_status = serializers.SerializerMethodField()
-    child_status = serializers.SerializerMethodField()
+    # profession = serializers.SerializerMethodField()
+    # education = serializers.SerializerMethodField()
+    # income = serializers.SerializerMethodField()
+    # marital_status = serializers.SerializerMethodField()
+    # child_status = serializers.SerializerMethodField()
     condition = JsonField(required=False)
 
     def get_relation_status(self, obj):
@@ -204,20 +204,20 @@ class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
     def get_is_myself(self, obj):
         return obj.id == self.context['request'].session['customer_id']
 
-    def get_profession(self, obj):
-        return obj.get_profession_display()
-
-    def get_education(self, obj):
-        return obj.get_education_display()
-
-    def get_income(self, obj):
-        return obj.get_income_display()
-
-    def get_marital_status(self, obj):
-        return obj.get_marital_status_display()
-
-    def get_child_status(self, obj):
-        return obj.get_child_status_display()
+    # def get_profession(self, obj):
+    #     return obj.get_profession_display()
+    #
+    # def get_education(self, obj):
+    #     return obj.get_education_display()
+    #
+    # def get_income(self, obj):
+    #     return obj.get_income_display()
+    #
+    # def get_marital_status(self, obj):
+    #     return obj.get_marital_status_display()
+    #
+    # def get_child_status(self, obj):
+    #     return obj.get_child_status_display()
 
     class Meta:
         model = Customer
