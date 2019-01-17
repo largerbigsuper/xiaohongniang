@@ -100,7 +100,7 @@ class BaseRole(models.Model):
     #     "child_status": 1,
     #     "years_to_marry": 1,
     # }
-
+    images = models.TextField(verbose_name='相册', max_length=1000, blank=True, default='[]')
 
     class Meta:
         abstract = True

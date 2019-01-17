@@ -24,6 +24,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     # marital_status = serializers.SerializerMethodField()
     # child_status = serializers.SerializerMethodField()
     condition = JsonField(required=False)
+    images = JsonField(required=False)
 
     # def get_profession(self, obj):
     #     return obj.get_profession_display()
@@ -48,7 +49,7 @@ class CustomerSerializer(serializers.ModelSerializer):
                   'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
                   'expect_desc',
                   'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
-                  'child_status', 'years_to_marry', 'score', 'condition'
+                  'child_status', 'years_to_marry', 'score', 'condition', 'images'
                   )
         read_only_fields = ('account', 'user', 'id', 'im_token')
 
@@ -194,6 +195,7 @@ class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
     # marital_status = serializers.SerializerMethodField()
     # child_status = serializers.SerializerMethodField()
     condition = JsonField(required=False)
+    images = JsonField(required=False)
 
     def get_relation_status(self, obj):
         customer_id = self.context['request'].session['customer_id']
@@ -227,7 +229,7 @@ class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
             'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
             'expect_desc',
             'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
-            'child_status', 'years_to_marry', 'score', 'condition'
+            'child_status', 'years_to_marry', 'score', 'condition', 'images'
         )
 
 
