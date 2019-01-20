@@ -31,4 +31,45 @@ class FeedBack(models.Model):
         db_table = 'lv_feedback'
 
 
+class ReportManager(BaseManger):
+    Report_Type_1 = 1
+    Report_Type_2 = 2
+    Report_Type_3 = 3
+    Report_Type_4 = 4
+    Report_Type_5 = 5
+    Report_Type_6 = 6
+    Report_Type_7 = 7
+
+    Report_Type_Choice = (
+        (Report_Type_1, '虚假信息'),
+        (Report_Type_2, '骚扰、广告'),
+        (Report_Type_3, '辱骂不文明行为'),
+        (Report_Type_4, '色情、暴力'),
+        (Report_Type_5, '酒托、婚托、饭托'),
+        (Report_Type_6, '欺骗行为'),
+        (Report_Type_7, '其他'),
+    )
+
+
+class Report(models.Model):
+    """
+    举报
+    """
+    customer = models.ForeignKey(Customer, related_name='reports', on_delete=models.CASCADE, verbose_name='举报人')
+    to_customer = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='被举报人')
+    report_type = models.PositiveSmallIntegerField(verbose_name='举报类型', choices=ReportManager.Report_Type_Choice,
+                                                   default=1)
+    detail = models.CharField(verbose_name='正文', max_length=1000)
+    images = models.CharField(verbose_name='图片证据', max_length=1000, blank=True, default='[]')
+    deal_status = models.PositiveIntegerField(verbose_name='状态', choices=DEAL_STATUS_CHOICE, default=0)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    objects = ReportManager()
+
+    class Meta:
+        db_table = 'lv_reports'
+        ordering = ['-create_at']
+
+
 mm_FeedBack = FeedBack.objects
+mm_Report = Report.objects
