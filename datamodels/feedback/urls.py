@@ -10,4 +10,5 @@ from datamodels.feedback import views
 
 urlpatterns = [
     path('', views.AddFeedBackView.as_view(), name='add-feedback'),
+    path('reports/', views.AddReportView.as_view(), name='add-report'),
 ]

@@ -6,7 +6,9 @@
 # @File    : serializers.py
 from rest_framework import serializers
 
-from datamodels.feedback.models import FeedBack
+from datamodels.feedback.models import FeedBack, Report
+from datamodels.role.serializers import CustomerSimpleSerializer
+from lib.fields import JsonField
 
 
 class FeedBackSerializer(serializers.ModelSerializer):
@@ -15,3 +17,24 @@ class FeedBackSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedBack
         fields = ('id', 'customer_id', 'content', 'create_at', 'deal_status')
+
+
+class BaseReportSerializer(serializers.ModelSerializer):
+    images = JsonField(required=False)
+
+
+class ReportSerializer(BaseReportSerializer):
+    customer_id = serializers.IntegerField()
+    to_customer_id = serializers.IntegerField()
+
+    class Meta:
+        model = Report
+        fields = ('id', 'customer_id', 'to_customer_id', 'report_type', 'detail', 'images', 'deal_status', 'create_at')
+
+
+class ReportListSerializer(BaseReportSerializer):
+    to_customer = CustomerSimpleSerializer()
+
+    class Meta:
+        model = Report
+        fields = ('id', 'to_customer', 'report_type', 'detail', 'images', 'deal_status', 'create_at')
