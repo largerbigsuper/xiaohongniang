@@ -35,6 +35,7 @@ urlpatterns = [
     path('feedback/', include('datamodels.feedback.urls')),
     path('stats/', include('datamodels.stats.urls')),
     path('bottles/', include('datamodels.bottles.urls')),
+    path('products/', include('datamodels.products.urls')),
     path('token/', UploadTokenView.as_view()),
     path('im/', ImTokenView.as_view()),
     path('appconfig/', APPConfigView.as_view()),

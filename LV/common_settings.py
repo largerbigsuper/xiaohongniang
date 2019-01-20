@@ -27,6 +27,13 @@ class RongYunSettings:
     APP_SECRET = 'JV6ZKZWpM4TZ'
 
 
+class AlipaySettings:
+    APP_PRIVATE_KEY = """
+    """
+    APP_PUBLIC_KEY = """
+    """
+
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 

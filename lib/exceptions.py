@@ -25,3 +25,9 @@ class DBException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = _('数据异常')
     default_code = '数据异常'
+
+
+class ParamException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = _('参数错误')
+    default_code = '参数错误'

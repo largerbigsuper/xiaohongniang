@@ -29,6 +29,14 @@ class RongYunSettings:
     APP_SECRET = 'JV6ZKZWpM4TZ'
 
 
+class AlipaySettings:
+    APP_PRIVATE_KEY = """
+    """
+    APP_PUBLIC_KEY = """
+    """
+    VIRTUAL_SERVICE_NOTIFY_URI = 'https://www.lhxq.top:8443/products/alipay/notify/'
+
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
