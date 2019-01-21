@@ -9,7 +9,7 @@ from datetime import datetime
 from django.core.cache import cache
 from rest_framework import serializers
 
-from datamodels.role.models import Customer, RelationShip, mm_RelationShip
+from datamodels.role.models import Customer, RelationShip, mm_RelationShip, Certification
 from lib.fields import JsonField
 
 CUSTOMER_FIELDS = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
@@ -289,3 +289,24 @@ class FollowersRelationShipSerializer(serializers.ModelSerializer):
     class Meta:
         model = RelationShip
         fields = ('id', 'customer', 'create_at', 'status')
+
+
+class CertificationSerializer(serializers.ModelSerializer):
+    customer_id = serializers.IntegerField()
+    images = JsonField(required=False)
+
+    class Meta:
+        model = Certification
+        fields = ('id', 'customer_id', 'property_type', 'images', 'status', 'modify_at', 'create_at')
+        read_only_fields = ('status', 'modify_at')
+
+
+class AdminCertificationSerializer(serializers.ModelSerializer):
+    customer = CoustomerBaseInfoSerializer()
+    images = JsonField(required=False)
+
+    class Meta:
+        model = Certification
+        fields = '__all__'
+        read_only_fields = ('id', 'customer', 'property_type', 'images', 'create_at')
+        modify_fields = ('status', 'modify_at')

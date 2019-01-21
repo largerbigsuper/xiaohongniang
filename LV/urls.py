@@ -20,6 +20,10 @@ from django.urls import path, include
 
 from LV.views import UploadTokenView, ImTokenView, APPConfigView
 
+admin_urlpatterns = [
+    path('api/admin/customer/', include('datamodels.role.urls_admin'))
+]
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
@@ -33,4 +37,4 @@ urlpatterns = [
     path('token/', UploadTokenView.as_view()),
     path('im/', ImTokenView.as_view()),
     path('appconfig/', APPConfigView.as_view()),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + admin_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

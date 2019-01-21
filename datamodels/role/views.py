@@ -1,22 +1,24 @@
 import json
 import logging
+import traceback
 
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING
+from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING, mm_Certification
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
     CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer, \
-    CoustomerDistanceSerializer, NormalCoustomerDetailSerializer
+    CoustomerDistanceSerializer, NormalCoustomerDetailSerializer, CertificationSerializer, CustomerSimpleSerializer
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_OperationRecord
-from lib import customer_login
+from lib import customer_login, messages
 from lib.common import HeadersKey
 from lib.exceptions import LoginException, DBException
 from lib.im import IMServe
@@ -280,3 +282,44 @@ class CustomerSearchView(generics.ListAPIView):
     serializer_class = NormalCoustomerSerializer
     permission_classes = (IsAuthenticated,)
 
+
+class CustomerCertificationView(generics.ListCreateAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CertificationSerializer
+
+    def get_queryset(self):
+        return mm_Certification.my_certifications(customer_id=self.request.session['customer_id'])
+
+    def post(self, request, *args, **kwargs):
+        data = request.data.dict()
+        data['customer_id'] = self.request.session['customer_id']
+        serializer = self.serializer_class(data=data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+            return Response(Tool.format_data(msg=messages.ADD_OK))
+        except IntegrityError:
+            raise DBException('请勿重复提交')
+        except:
+            msg = traceback.format_exc()
+            raise DBException(msg)
+
+
+class ModifyCertificationView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CertificationSerializer
+
+    def get_queryset(self):
+        return mm_Certification.my_certifications(customer_id=self.request.session['customer_id'])
+
+    def update(self, request, *args, **kwargs):
+        certification = self.get_object()
+        if certification.status == mm_Certification.Status_Verified:
+            data = {'detail': '已通过审核禁止修改'}
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            serializers = self.serializer_class(certification, data=request.data, partial=True)
+            serializers.is_valid(raise_exception=True)
+            serializers.save()
+            return Response(Tool.format_data(data=serializers.data))

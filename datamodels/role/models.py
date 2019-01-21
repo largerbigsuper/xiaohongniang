@@ -345,5 +345,53 @@ class RelationShip(models.Model):
         )
 
 
+class CertificationManager(BaseManger):
+    Property_IDCard = 1
+    Property_Education = 2
+    Property_Premise = 3
+
+    Property_Choice = (
+        (Property_IDCard, '身份证认证'),
+        (Property_Education, '学历认证'),
+        (Property_Premise, '房产认证'),
+    )
+
+    Status_Submited = 1
+    Status_Failed = 2
+    Status_Verified = 3
+
+    Status_Chioce = (
+        (Status_Submited, '已提交'),
+        (Status_Failed, '未通过'),
+        (Status_Verified, '通过'),
+    )
+
+    def my_certifications(self, customer_id):
+        return self.filter(customer_id=customer_id).order_by('property_type')
+
+
+class Certification(models.Model):
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    property_type = models.PositiveSmallIntegerField(verbose_name='认证类型',
+                                                     choices=CertificationManager.Property_Choice,
+                                                     default=CertificationManager.Property_IDCard)
+    images = models.CharField(verbose_name='图片', max_length=500, default='[]')
+    status = models.PositiveSmallIntegerField(verbose_name='认证状态',
+                                              choices=CertificationManager.Status_Chioce,
+                                              default=CertificationManager.Status_Submited)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    modify_at = models.DateTimeField(verbose_name='修改时间', auto_now=True)
+
+    objects = CertificationManager()
+
+    class Meta:
+        db_table = 'lv_certifications'
+        unique_together = [
+            ('customer', 'property_type'),
+        ]
+
+
 mm_Customer = Customer.objects
 mm_RelationShip = RelationShip.objects
+mm_Certification = Certification.objects
