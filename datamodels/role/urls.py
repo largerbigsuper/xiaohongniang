@@ -25,4 +25,6 @@ urlpatterns = [
     path('unknown/lists/', views.UnfollowingList.as_view()),
     path('search/', views.CustomerSearchView.as_view()),
     path('around/', views.AroundCustomerView.as_view()),
+    path('certifications/', views.CustomerCertificationView.as_view()),
+    path('certifications/<int:pk>/', views.ModifyCertificationView.as_view()),
 ]
