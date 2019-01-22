@@ -156,6 +156,11 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticated',
     ),
     # 'EXCEPTION_HANDLER': 'lib.handlers.custom_exception_handler',
+    'DEFAULT_RENDERER_CLASSES': (
+        'lib.render.FormatedJSONRenderer',
+        # 'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
 }
 
 # APPEND_SLASH = False

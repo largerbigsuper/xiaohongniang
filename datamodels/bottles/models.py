@@ -25,6 +25,7 @@ class Bottle(models.Model):
 
     class Meta:
         db_table = 'lv_bottles'
+        ordering = ['-create_at']
 
 
 class BottlePickerRelationManager(BaseManger):
@@ -43,6 +44,8 @@ class BottlePickerRelation(models.Model):
         index_together = [
             ('bottle', 'customer')
         ]
+        ordering = ['-create_at']
+
 
 mm_Bottles = Bottle.objects
 mm_BottlePickerRelation = BottlePickerRelation.objects
