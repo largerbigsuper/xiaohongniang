@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from datamodels.bottles.models import Bottle, BottlePickerRelation
+
+admin.site.register(Bottle)
+admin.site.register(BottlePickerRelation)

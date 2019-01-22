@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from .router import router
 from LV.views import UploadTokenView, ImTokenView, APPConfigView
 
 admin_urlpatterns = [
@@ -37,4 +38,5 @@ urlpatterns = [
     path('token/', UploadTokenView.as_view()),
     path('im/', ImTokenView.as_view()),
     path('appconfig/', APPConfigView.as_view()),
+    path('api/', include(router.urls))
 ] + admin_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

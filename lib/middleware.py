@@ -25,12 +25,17 @@ class ResponseFormateMiddleware:
 
         response = self.get_response(request)
         # 最近访问更新
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and not request.user.is_staff:
+            customer_id = request.session.get('customer_id')
+            if not customer_id:
+                if request.user.customer:
+                    request.session['customer_id'] = request.user.customer.id
             _now = time.mktime(datetime.datetime.now().timetuple())
             _last = request.session.get('last_requst_at')
-            key = CacheKey.customer_last_request % request.session['customer_id']
+            customer_id = request.session['customer_id']
+            key = CacheKey.customer_last_request % customer_id
             cache.set(key, _now, 2 * 7 * 24 * 60 * 60)
-            if isinstance(_last, datetime.datetime):# 数据库中读取的session是datetime格式，需进行转化；redis中不能存储datetime格式数据
+            if isinstance(_last, datetime.datetime):  # 数据库中读取的session是datetime格式，需进行转化；redis中不能存储datetime格式数据
                 _last = time.mktime(_last.timetuple())
                 request.session['last_requst_at'] = _last
             if _last:
@@ -47,23 +52,23 @@ class ResponseFormateMiddleware:
                 request.user.customer.longitude = longitude
                 request.user.customer.save()
 
-        if response.status_code in [200, 201, 204]:
-            if response.status_code in [201, 204]:
-                response.status_code = 200
-            if hasattr(response, 'data'):
-                if not response.data:
-                    response.data = {
-                        'msg': 'OK',
-                        'data': None
-                    }
-                    response.content = bytes(json.dumps(response.data).encode('utf-8'))
-                else:
-                    if 'msg' not in response.data:
-                        response.data = {
-                            'msg': 'OK',
-                            'data': response.data
-                        }
-                        response.content = bytes(json.dumps(response.data).encode('utf-8'))
+        # if response.status_code in [200, 201, 204]:
+        #     if response.status_code in [201, 204]:
+        #         response.status_code = 200
+        #     if hasattr(response, 'data'):
+        #         if not response.data:
+        #             response.data = {
+        #                 'msg': 'OK',
+        #                 'data': None
+        #             }
+        #             response.content = bytes(json.dumps(response.data).encode('utf-8'))
+        #         else:
+        #             if 'msg' not in response.data:
+        #                 response.data = {
+        #                     'msg': 'OK',
+        #                     'data': response.data
+        #                 }
+        #                 response.content = bytes(json.dumps(response.data).encode('utf-8'))
 
         # Code to be executed for each request/response after
         # the view is called.
