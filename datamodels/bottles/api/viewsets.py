@@ -6,12 +6,23 @@
 # @File    : viewsets.py
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from django_filters import rest_framework as filters
 
 from datamodels.bottles.api.serializers import BottleSerializer, BottleDetailSerializer, PickedBottlesSerializer
-from datamodels.bottles.models import mm_Bottles, mm_BottlePickerRelation
+from datamodels.bottles.models import mm_Bottles, mm_BottlePickerRelation, Bottle
 from lib import messages
+from lib.viewsets import AdminViewSet
+
+
+class BottlesFilter(filters.FilterSet):
+    class Meta:
+        model = Bottle
+        fields = {
+            'text': ['icontains'],
+            'create_at': ['iexact', 'gte', 'lte']
+        }
 
 
 class BottlesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -58,3 +69,10 @@ class PickedBottlesViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin,
 
     def get_queryset(self):
         return mm_BottlePickerRelation.filter(customer_id=self.request.session['customer_id'])
+
+
+class AdminBottlesViewSet(AdminViewSet):
+    # permission_classes = (IsAuthenticated, IsAdminUser)
+    serializer_class = BottleDetailSerializer
+    queryset = mm_Bottles.all()
+    filterset_class = BottlesFilter

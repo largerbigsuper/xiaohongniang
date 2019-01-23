@@ -48,6 +48,8 @@ INSTALLED_APPS = [
 
 THIRD_PARTS_APPS = [
     'rest_framework',
+    'django_filters',
+    'crispy_forms',
     # 'rest_framework.authtoken'
 ]
 
@@ -158,9 +160,12 @@ REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'lib.handlers.custom_exception_handler',
     'DEFAULT_RENDERER_CLASSES': (
         'lib.render.FormatedJSONRenderer',
+        # 'lib.render.FormatedBrowsableAPIRenderer',
         # 'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+
 }
 
 # APPEND_SLASH = False
