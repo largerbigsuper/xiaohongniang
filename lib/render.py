@@ -11,9 +11,9 @@ class FormatedJSONRenderer(JSONRenderer):
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response = renderer_context['response']
-        response.status_code = 200
         status_code_str = str(response.status_code)
         if status_code_str.startswith('2'):
+            response.status_code = 200
             if data:
                 if 'msg' not in data:
                     data = {
