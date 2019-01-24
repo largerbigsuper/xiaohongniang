@@ -16,11 +16,11 @@ ENV = os.getenv('DJANGO_RUN_ENV', 'DEV')
 if ENV == 'TEST':
     from .settings_docker import *
     DEBUG = False
-    ALLOWED_HOSTS = ['lhxq.top', 'test.lhxq.top', '*']
+    ALLOWED_HOSTS = ['*']
 
 else:
     from .common_settings import *
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ['*']
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
