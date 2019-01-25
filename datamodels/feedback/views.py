@@ -35,7 +35,7 @@ class AddReportView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data.dict()
         data['customer_id'] = request.session['customer_id']
-        serializer = self.serializer_class(data=data)
+        serializer = self.get_serializer_class()(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(Tool.format_data(serializer.data, msg=messages.ADD_OK))

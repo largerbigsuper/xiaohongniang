@@ -36,7 +36,7 @@ class BottlesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
     @action(methods=['get'], detail=False)
     def pickone(self, request):
         """捡瓶子"""
-        bottle = mm_Bottles.optional_bottles(request.session['customer_id']).first()
+        bottle = mm_Bottles.optional_bottles(request.user.customer.id).first()
         if bottle:
             mm_BottlePickerRelation.create(bottle=bottle, customer=request.user.customer)
             serializer = self.serializer_class(bottle, context={'request': request})
