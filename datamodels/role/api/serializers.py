@@ -59,8 +59,8 @@ class AdminCustomerListSerilizer(BaseCustomerSerialzier):
 
 
 class CustomerLoginSerilizer(serializers.Serializer):
-    account = serializers.CharField(min_length=11)
-    password = serializers.CharField(min_length=6)
+    account = serializers.CharField(min_length=11, help_text='账号')
+    password = serializers.CharField(min_length=6, help_text='密码')
 
 
 class UserSerializer(serializers.ModelSerializer):
