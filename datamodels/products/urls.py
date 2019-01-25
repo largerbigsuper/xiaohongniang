@@ -9,9 +9,5 @@ from django.urls import path
 from datamodels.products import views
 
 urlpatterns = [
-    path('services/', views.VirtualServiceCreateView.as_view()),
-    path('services/<int:pk>/', views.VirtualServiceModifyView.as_view()),
-    path('services/lists/', views.VirtualServiceListView.as_view()),
     path('alipay/notify/', views.AliPayNotifyView.as_view()),
-
 ]
