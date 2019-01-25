@@ -101,6 +101,8 @@ class BaseRole(models.Model):
     #     "years_to_marry": 1,
     # }
     images = models.TextField(verbose_name='相册', max_length=1000, blank=True, default='[]')
+    service_vip_expired_at = models.DateTimeField(verbose_name='会员过期时间', null=True, blank=True)
+    service_show_index_expired_at = models.DateTimeField(verbose_name='置顶有效期', null=True, blank=True)
 
     class Meta:
         abstract = True

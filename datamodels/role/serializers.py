@@ -12,10 +12,6 @@ from rest_framework import serializers
 from datamodels.role.models import Customer, RelationShip, mm_RelationShip, Certification
 from lib.fields import JsonField
 
-CUSTOMER_FIELDS = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
-                   'wechat_id', 'intro', 'address_home', 'address_company', 'im_token',
-                   'following_count', 'followers_count', 'blocked_count')
-
 
 class CustomerSerializer(serializers.ModelSerializer):
     condition = JsonField(required=False)
@@ -29,9 +25,11 @@ class CustomerSerializer(serializers.ModelSerializer):
                   'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
                   'expect_desc',
                   'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
-                  'child_status', 'years_to_marry', 'score', 'condition', 'images'
+                  'child_status', 'years_to_marry', 'score', 'condition', 'images',
+                  'service_vip_expired_at', 'service_show_index_expired_at'
                   )
-        read_only_fields = ('account', 'user', 'id', 'im_token')
+        read_only_fields = ('account', 'user', 'id', 'im_token',
+                            'service_vip_expired_at', 'service_show_index_expired_at')
 
 
 class CustomerListSerializer(serializers.ModelSerializer):
@@ -63,7 +61,8 @@ class CustomerListSerializer(serializers.ModelSerializer):
                   'wechat_id', 'intro', 'im_token',
                   'address_company', 'address_home', 'relation_status',
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
-                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at'
+                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
+                  'service_vip_expired_at',
                   )
 
 
@@ -98,6 +97,7 @@ class CustomerHasSkillsListSerializer(serializers.ModelSerializer):
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
                   'skills',
+                  'service_vip_expired_at',
                   )
 
 
@@ -132,6 +132,7 @@ class CustomerSingleListSerializer(serializers.ModelSerializer):
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
                   'expect_desc',
+                  'service_vip_expired_at',
                   )
 
 
@@ -141,7 +142,8 @@ class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count',
-            'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut'
+            'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut',
+            'service_vip_expired_at',
         )
 
 
@@ -163,17 +165,14 @@ class NormalCoustomerSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
-            'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut')
+            'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
+            'service_vip_expired_at',
+        )
 
 
 class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
     relation_status = serializers.SerializerMethodField()
     is_myself = serializers.SerializerMethodField()
-    # profession = serializers.SerializerMethodField()
-    # education = serializers.SerializerMethodField()
-    # income = serializers.SerializerMethodField()
-    # marital_status = serializers.SerializerMethodField()
-    # child_status = serializers.SerializerMethodField()
     condition = JsonField(required=False)
     images = JsonField(required=False)
 
@@ -186,21 +185,6 @@ class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
     def get_is_myself(self, obj):
         return obj.id == self.context['request'].session['customer_id']
 
-    # def get_profession(self, obj):
-    #     return obj.get_profession_display()
-    #
-    # def get_education(self, obj):
-    #     return obj.get_education_display()
-    #
-    # def get_income(self, obj):
-    #     return obj.get_income_display()
-    #
-    # def get_marital_status(self, obj):
-    #     return obj.get_marital_status_display()
-    #
-    # def get_child_status(self, obj):
-    #     return obj.get_child_status_display()
-
     class Meta:
         model = Customer
         fields = (
@@ -209,7 +193,8 @@ class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
             'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
             'expect_desc',
             'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
-            'child_status', 'years_to_marry', 'score', 'condition', 'images'
+            'child_status', 'years_to_marry', 'score', 'condition', 'images',
+            'service_vip_expired_at',
         )
 
 
@@ -236,7 +221,8 @@ class CoustomerDistanceSerializer(serializers.ModelSerializer):
             'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
             'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut', 'distance',
-            'last_request_at'
+            'last_request_at',
+            'service_vip_expired_at',
         )
 
 
@@ -244,7 +230,9 @@ class CustomerSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'im_token',
-                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut')
+                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut',
+                  'service_vip_expired_at',
+                  )
 
 
 class BaseRelationShipSerializer(serializers.ModelSerializer):

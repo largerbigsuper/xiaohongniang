@@ -4,6 +4,7 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : messages.py
+FAILED = '未知错误'
 
 ADD_OK = '创建成功'
 DELETE_OK = '删除成功'

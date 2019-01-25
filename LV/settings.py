@@ -63,6 +63,7 @@ CUSTOM_APPS = [
     'datamodels.feedback',
     'datamodels.stats',
     'datamodels.bottles',
+    'datamodels.products',
 ]
 
 INSTALLED_APPS += THIRD_PARTS_APPS
