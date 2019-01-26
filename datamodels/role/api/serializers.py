@@ -68,3 +68,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ('password', )
+
+
+class CustomerWithDrawSerializer(serializers.ModelSerializer):
+
+    amount = serializers.IntegerField()
+
+    class Meta:
+        model = Customer
+        fields = ('id', 'amount')

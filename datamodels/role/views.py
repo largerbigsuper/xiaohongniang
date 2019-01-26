@@ -17,7 +17,7 @@ from datamodels.role.serializers import CustomerSerializer, FollowingRelationShi
     CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer, \
     CoustomerDistanceSerializer, NormalCoustomerDetailSerializer, CertificationSerializer, CustomerSimpleSerializer
 from datamodels.sms.models import mm_SMSCode
-from datamodels.stats.models import mm_OperationRecord
+from datamodels.stats.models import mm_OperationRecord, mm_CustomerPoint
 from lib import customer_login, messages
 from lib.common import HeadersKey
 from lib.exceptions import LoginException, DBException
@@ -64,6 +64,7 @@ class LoginView(APIView):
                     'name': user.customer.name,
                     'im_token': user.customer.im_token,
                 }
+                mm_CustomerPoint.add_action(request.session['customer_id'], mm_CustomerPoint.Action_Login)
                 return Response(Tool.format_data(data))
             else:
                 raise LoginException('账号或密码错误')

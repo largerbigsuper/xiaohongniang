@@ -10,6 +10,7 @@ from datamodels.moments.serializers import CommentSerializer, \
     CommentListSerializer, LikeListSerialzier, LikeCreateSerializer, NormalMomentsDetailSerializer, \
     MomentsCreateSerializer, TopicSerializer
 from datamodels.notices.models import mm_Notice, Action
+from datamodels.stats.models import mm_CustomerPoint
 from lib.exceptions import DBException
 from lib.im import IMServe
 from lib.tools import Tool
@@ -51,6 +52,7 @@ class MomentsListView(generics.ListCreateAPIView):
         serializer = MomentsCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         moment = serializer.save()
+        mm_CustomerPoint.add_action(request.session['customer_id'], mm_CustomerPoint.Action_Add_Moment)
         for t in topic_list:
             moment.topic.add(t)
         return Response(Tool.format_data(serializer.data))
@@ -192,6 +194,7 @@ class CommentView(generics.ListCreateAPIView):
                 comment.moment.comment.add(comment)
                 comment.moment.modify_comment_total()
                 mm_Notice.add_notice(comment.moment, comment, Action.ACTION_TYPE_ADD_COMMENT)
+                mm_CustomerPoint.add_action(request.session['customer_id'], mm_CustomerPoint.Action_Add_Comment)
             return Response(Tool.format_data(msg=messages.ADD_COMMENT_OK))
 
 
@@ -268,6 +271,7 @@ class LikesView(generics.CreateAPIView, generics.DestroyAPIView, generics.ListAP
             if created:
                 like.moment.modify_like_total()
                 mm_Notice.add_notice(like.moment, like, Action.ACTION_TYPE_ADD_LIKE)
+                mm_CustomerPoint.add_action(request.session['customer_id'], mm_CustomerPoint.Action_Add_Like)
             serializer = LikeCreateSerializer(like)
             return Response(Tool.format_data(serializer.data, msg=messages.ADD_LIKE_OK))
 
