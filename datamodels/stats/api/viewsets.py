@@ -21,7 +21,8 @@ class PointFilter(filters.FilterSet):
             'customer_id': ['exact'],
             'customer__name': ['icontains'],
             'create_at': ['lte', 'gte'],
-            'action': ['exact']
+            'action': ['exact'],
+            'in_or_out': ['exact']
         }
 
 
