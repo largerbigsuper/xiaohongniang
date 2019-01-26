@@ -68,7 +68,7 @@ class BaseRole(models.Model):
     address_company = models.CharField('公司地址', max_length=100, blank=True)
     im_token = models.CharField('融云token', max_length=100, blank=True)
     relationships = models.ManyToManyField('self', through='RelationShip', symmetrical=False, related_name='relations')
-    last_request_at = models.DateTimeField(null=True, blank=True)
+    last_request_at = models.DateTimeField(verbose_name='最后请求时间', null=True, blank=True)
     following_count = models.PositiveIntegerField('我的关注总数', default=0)
     followers_count = models.PositiveIntegerField('关注总数', default=0)
     blocked_count = models.PositiveIntegerField('屏蔽总数', default=0)
@@ -186,6 +186,14 @@ class CustomerManager(BaseManger):
         ORDER BY distance;
         '''.format(**params)
         return mm_Customer.raw(sql)
+
+    def show_in_home_page(self):
+        return self.filter(service_show_index_expired_at__gt=datetime.now()).order_by('?')[:3]
+
+    def recommend_customers(self, customer):
+        timelimit = datetime.now() - timedelta(days=5)
+        return self.filter(last_request_at__gte=timelimit).exclude(
+            gender=customer.gender).order_by('-last_request_at', 'id')
 
 
 class Customer(BaseRole):

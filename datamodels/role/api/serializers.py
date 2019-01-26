@@ -23,7 +23,8 @@ Customer_Fields = ['id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'acco
                    'images'
                    ]
 
-Base_Info_fields = ['id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account', 'im_token',]
+Base_Info_fields = ['id', 'name', 'age', 'gender', 'avatar_url']
+Recommend_Info_fields = Base_Info_fields + ['height']
 Admin_Info_Fields = ['id', 'user_id', 'name', 'gender', 'account']
 
 
@@ -50,6 +51,13 @@ class CustomerBaseInfoSerializer(BaseCustomerSerialzier):
     class Meta:
         model = Customer
         fields = tuple(Base_Info_fields)
+
+
+class RecommedCustomerSerializer(BaseCustomerSerialzier):
+
+    class Meta:
+        model = Customer
+        fields = Recommend_Info_fields
 
 
 class AdminCustomerListSerilizer(BaseCustomerSerialzier):
