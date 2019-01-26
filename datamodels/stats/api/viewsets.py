@@ -7,9 +7,22 @@
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
+from django_filters import rest_framework as filters
 
 from datamodels.stats.api.serializers import PointSerializer, AdminPointSerializer
-from datamodels.stats.models import mm_CustomerPoint
+from datamodels.stats.models import mm_CustomerPoint, CustomerPoint
+
+
+class PointFilter(filters.FilterSet):
+
+    class Meta:
+        model = CustomerPoint
+        fields = {
+            'customer_id': ['exact'],
+            'customer__name': ['icontains'],
+            'create_at': ['lte', 'gte'],
+            'action': ['exact']
+        }
 
 
 class PointViewSet(mixins.ListModelMixin,
@@ -26,4 +39,5 @@ class AdminPointViewSet(mixins.ListModelMixin, GenericViewSet):
 
     permission_classes = (IsAuthenticated, IsAdminUser)
     serializer_class = AdminPointSerializer
+    filter_class = PointFilter
     queryset = mm_CustomerPoint.all()
