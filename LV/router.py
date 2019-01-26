@@ -12,7 +12,7 @@ from datamodels.feedback.api.viewsets import AdminReportViewSet, AdminFeedBackVi
 from datamodels.moments.api.viewsets import AdminTopicViewSet, AdminMomentsViewSet
 from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, CustomerVirtualServiceViewSet, \
     AdminServiceCertificationViewSet
-from datamodels.role.api.veiwsets import AdminCustomerViewSet, AdminOpreationViewSet
+from datamodels.role.api.veiwsets import AdminCustomerViewSet, AdminOpreationViewSet, CustomerViewSet
 from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet
 
 router = routers.DefaultRouter()
@@ -22,6 +22,7 @@ router.register('bottles-picked', PickedBottlesViewSet, base_name='bottles-picke
 router.register('virtual-services', CustomerVirtualServiceViewSet, base_name='virtual-services')
 router.register('articles', ArticleViewSet, base_name='article')
 router.register('points', PointViewSet, base_name='point')
+router.register('customers', CustomerViewSet, base_name='customer')
 
 router.register('admin/op', AdminOpreationViewSet, base_name='admin-op')
 router.register('admin/customers', AdminCustomerViewSet, base_name='admin-customers')

@@ -8,13 +8,14 @@ from django.contrib.auth import authenticate, logout as system_logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django_filters import rest_framework as filters
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 from datamodels.role.api.serializers import AdminCustomerListSerilizer, CustomerLoginSerilizer, UserSerializer, \
-    CustomerWithDrawSerializer
+    CustomerWithDrawSerializer, CustomerBaseInfoSerializer, RecommedCustomerSerializer
 from datamodels.role.models import mm_Customer, Customer
 from datamodels.stats.models import mm_CustomerPoint
 from lib import customer_login
@@ -84,3 +85,20 @@ class AdminOpreationViewSet(viewsets.ModelViewSet):
         return Response()
 
 
+class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
+
+    permission_classes = (IsAuthenticated,)
+    queryset = mm_Customer.all()
+    serializer_class = CustomerBaseInfoSerializer
+
+    @action(detail=False)
+    def service_top(self, request):
+        """置顶人员"""
+        self.queryset = mm_Customer.show_in_home_page()
+        return super().list(request)
+
+    @action(detail=False, serializer_class=RecommedCustomerSerializer)
+    def recommend(self, request):
+        """新人推荐"""
+        self.queryset = mm_Customer.recommend_customers(request.user.customer)
+        return super().list(request)
