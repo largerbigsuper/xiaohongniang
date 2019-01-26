@@ -12,6 +12,7 @@ from django_filters import rest_framework as filters
 
 from datamodels.bottles.api.serializers import BottleSerializer, BottleDetailSerializer, PickedBottlesSerializer
 from datamodels.bottles.models import mm_Bottles, mm_BottlePickerRelation, Bottle
+from datamodels.stats.models import mm_CustomerPoint
 from lib import messages
 from lib.viewsets import AdminViewSet
 
@@ -40,6 +41,7 @@ class BottlesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
         if bottle:
             mm_BottlePickerRelation.create(bottle=bottle, customer=request.user.customer)
             serializer = self.serializer_class(bottle, context={'request': request})
+            mm_CustomerPoint.add_action(self.request.user.customer.id, mm_CustomerPoint.Action_Pick_Bottle)
             return Response(serializer.data)
         else:
             return Response(data={'detail': messages.NO_DATA}, status=status.HTTP_400_BAD_REQUEST)
@@ -58,6 +60,7 @@ class MyBottlesViewSet(viewsets.ModelViewSet):
             return self.serializer_class
 
     def perform_create(self, serializer):
+        mm_CustomerPoint.add_action(self.request.user.customer.id, mm_CustomerPoint.Action_Add_Bottle)
         serializer.save(customer=self.request.user.customer)
 
 

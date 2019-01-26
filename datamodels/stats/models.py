@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -35,7 +36,7 @@ class OperationRecordManager(BaseManger):
 
 class OperationRecord(models.Model):
     operation_type = models.PositiveIntegerField(verbose_name='类型', choices=Operation_Type_Choice, default=1)
-    from_customer = models.ForeignKey(Customer, verbose_name='发起人', on_delete=models.CASCADE, db_index=False, related_name='records')
+    from_customer = models.ForeignKey('role.Customer', verbose_name='发起人', on_delete=models.CASCADE, db_index=False, related_name='records')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -51,4 +52,139 @@ class OperationRecord(models.Model):
         ]
 
 
+class CustomerPointManager(BaseManger):
+    In = 1
+    Out = 0
+    In_Or_Out = (
+        (Out, '减少'),
+        (In, '增加'),
+    )
+
+    Action_Withdraw = 0
+    Action_Login = 1
+    Action_Add_Like = 2
+    Action_Add_Comment = 3
+    Action_Add_Moment = 4
+    Action_Add_Bottle = 5
+    Action_Pick_Bottle = 5
+
+    Action_Choice = (
+        (Action_Withdraw, '兑换'),
+        (Action_Login, '登录'),
+        (Action_Add_Like, '点赞动态'),
+        (Action_Add_Comment, '添加评论'),
+        (Action_Add_Moment, '发动态'),
+        (Action_Add_Bottle, '发漂流瓶'),
+        (Action_Pick_Bottle, '捡漂流瓶'),
+    )
+
+    Action_Point_Mapping = {
+        Action_Login: 20,
+        Action_Add_Like: 10,
+        Action_Add_Comment: 20,
+        Action_Add_Moment: 20,
+        Action_Add_Bottle: 20,
+        Action_Pick_Bottle: 10,
+    }
+
+    Action_Desc = {action: msg for action, msg in Action_Choice}
+
+    Action_Per_Day_Limit_Setting = {
+        Action_Login: 1,
+        Action_Add_Like: 10,
+        Action_Add_Comment: 10,
+        Action_Add_Moment: 5,
+        Action_Add_Bottle: 5,
+        Action_Pick_Bottle: 10,
+    }
+
+    def get_total_point(self, customer_id):
+        record = self.filter(customer_id=customer_id).first()
+        if record:
+            return record.total_left
+        else:
+            return 0
+
+    def is_limited(self, customer_id, action):
+        if action == self.Action_Withdraw:
+            return False
+        else:
+            action_count_today = self.filter(customer_id=customer_id,
+                                             create_at__date=datetime.now().date()).count()
+            return action_count_today >= self.Action_Per_Day_Limit_Setting[action]
+
+    def _add_action(self, customer_id, action, amount, total_left, operator_id=None):
+        """
+        积分记录
+        :param customer_id: 用户id
+        :param amount: 操作总量
+        :param action: 行为
+        :param operator_id: 操作人auth_user.id
+        :return:
+        """
+        in_or_out = self.In
+        if action == self.Action_Withdraw:
+            in_or_out = self.Out
+        if not self.is_limited(customer_id, action):
+            self.create(customer_id=customer_id,
+                        in_or_out=in_or_out,
+                        amount=amount,
+                        total_left=total_left,
+                        action=action,
+                        desc=self.Action_Desc[action],
+                        operator_id=operator_id,
+                        )
+
+    def add_action(self, customer_id, action):
+        """
+        增加积分记录
+        :param customer_id:
+        :param action:
+        :return:
+        """
+        amount = self.Action_Point_Mapping[action]
+        total_left = self.get_total_point(customer_id) + amount
+        self._add_action(customer_id=customer_id,
+                         action=action,
+                         amount=amount,
+                         total_left=total_left,
+                         )
+
+    def withdraw(self, customer_id, operator_id, amount):
+        """兑换积分"""
+        total_left = self.get_total_point(customer_id) - amount
+        if total_left < 0:
+            data = {'detail': '积分数量不足'}
+            return data
+        self._add_action(customer_id=customer_id,
+                         action=self.Action_Withdraw,
+                         amount=amount,
+                         total_left=total_left,
+                         operator_id=operator_id
+                         )
+        return
+
+
+class CustomerPoint(models.Model):
+
+    customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE)
+    in_or_out = models.PositiveSmallIntegerField(verbose_name='增加/减少',
+                                                 choices=CustomerPointManager.In_Or_Out,
+                                                 default=CustomerPointManager.In)
+    amount = models.PositiveSmallIntegerField(verbose_name='数量', default=0)
+    total_left = models.PositiveIntegerField(verbose_name='剩余数量', default=0)
+    action = models.PositiveSmallIntegerField(verbose_name='原因', default=0, choices=CustomerPointManager.Action_Choice)
+    desc = models.CharField(verbose_name='描述', max_length=48)
+    operator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                 null=True, blank=True, verbose_name='操作人')
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='记录时间')
+
+    objects = CustomerPointManager()
+
+    class Meta:
+        db_table = 'lv_customer_points'
+        ordering = ['-create_at']
+
+
 mm_OperationRecord = OperationRecord.objects
+mm_CustomerPoint = CustomerPoint.objects
