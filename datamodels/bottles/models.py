@@ -26,6 +26,9 @@ class Bottle(models.Model):
     class Meta:
         db_table = 'lv_bottles'
         ordering = ['-create_at']
+        verbose_name = '漂流瓶'
+        verbose_name_plural = '漂流瓶管理'
+
 
 
 class BottlePickerRelationManager(BaseManger):
@@ -45,6 +48,8 @@ class BottlePickerRelation(models.Model):
             ('bottle', 'customer')
         ]
         ordering = ['-create_at']
+        verbose_name = '漂流瓶与用户关系管理'
+        verbose_name_plural = '漂流瓶与用户关系管理'
 
 
 mm_Bottles = Bottle.objects

@@ -2,7 +2,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from datamodels.moments.models import Comments
+from datamodels.moments.models import Comments, Likes, Moments
 from datamodels.role.models import Customer
 from lib.common import BaseManger
 
@@ -90,11 +90,21 @@ class NoticeManager(BaseManger):
 
 
 class Notice(models.Model):
+    content_type_choice = (
+        (ContentType.objects.get_for_model(Moments), '动态相关'),
+    )
+    content_type_result_choice = (
+        (ContentType.objects.get_for_model(Likes), '点赞'),
+        (ContentType.objects.get_for_model(Comments), '评论和回复'),
+    )
     action_type = models.PositiveIntegerField(verbose_name='类型', choices=ACTION_CHOICE, default=1)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False, related_name='actions')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False, related_name='actions',
+                                     choices=content_type_choice, default=content_type_choice[0][0])
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    content_type_result = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False, related_name='results')
+    content_type_result = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False,
+                                            related_name='results', choices=content_type_result_choice,
+                                            default=content_type_result_choice[0][0])
     result_id = models.PositiveIntegerField()
     content_result = GenericForeignKey('content_type_result', 'result_id')
     from_customer = models.ForeignKey(Customer, verbose_name='发起人', on_delete=models.CASCADE, db_index=False, related_name='sender')
@@ -110,6 +120,8 @@ class Notice(models.Model):
             ('action_type', 'status', 'content_type', 'to_customer')
         ]
         ordering = ['-create_at']
+        verbose_name = '消息管理'
+        verbose_name_plural = '消息管理'
 
 
 mm_Notice = Notice.objects

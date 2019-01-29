@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class ArticlesConfig(AppConfig):
-    name = 'articles'
+    name = 'datamodels.articles'
+    verbose_name = '文章|广告管理'

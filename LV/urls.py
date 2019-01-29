@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.models import User
 from django.urls import path, include
 
 from .router import router
@@ -41,3 +42,8 @@ urlpatterns = [
     path('appconfig/', APPConfigView.as_view()),
     path('api/', include(router.urls))
 ] + admin_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# admin.site.site_header = '邯郸小红娘'
+admin.site.site_header = '雪球项目管理平台'
+admin.site.unregister(User)

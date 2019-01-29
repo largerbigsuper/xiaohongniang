@@ -70,6 +70,19 @@ class VirtualService(models.Model):
 
     class Meta:
         db_table = 'lv_virtual_service'
+        verbose_name = '付费服务'
+        verbose_name_plural = '付费服务'
+
+    def pricelist_admin(self):
+        price_str = ''
+        for p in json.loads(self.pricelist):
+            price_str += '{}-{}天-{}元'.format(p['name'], p['days'], p['price'])
+        return price_str
+
+    pricelist_admin.short_description = '价格套餐'
+
+    def __str__(self):
+        return self.name
 
 
 class ServiceCertificationManager(BaseManger):
@@ -111,6 +124,8 @@ class ServiceCertification(models.Model):
         index_together = [
             ('customer', 'virtual_service')
         ]
+        verbose_name = '付费服务统计'
+        verbose_name_plural = '付费服务统计'
 
     @property
     def expired(self):
@@ -118,31 +133,6 @@ class ServiceCertification(models.Model):
             return self.expired_at < datetime.now()
         else:
             return True
-
-
-class CustomerOrderManager(BaseManger):
-    pass
-
-
-class CustomerOrder(models.Model):
-    PAY_TYPE_CHOICE = (
-        (1, '支付宝'),
-    )
-    customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='购买人')
-    pay_type = models.PositiveSmallIntegerField(verbose_name='支付方式', choices=PAY_TYPE_CHOICE, default=1)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-    union_trade_no = models.CharField(verbose_name='内部订单号', max_length=100, unique=True, blank=True)
-    service_name = models.CharField(verbose_name='服务名称', max_length=100)
-    price_index_name = models.CharField(verbose_name='套餐名称', max_length=100)
-    total_amount = models.FloatField(verbose_name='总额', default=0)
-    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
-
-    objects = CustomerOrderManager()
-
-    class Meta:
-        db_table = 'lv_customer_orders'
 
 
 class AlipayOrderManager(BaseManger):
@@ -208,6 +198,42 @@ class AlipayOrder(models.Model):
 
     class Meta:
         db_table = 'lv_alipay_orders'
+        verbose_name = '支付宝订单管理'
+        verbose_name_plural = '支付宝订单管理'
+
+    def __str__(self):
+        return '<AlipayOrder: {}>'. format(self.id)
+
+
+class CustomerOrderManager(BaseManger):
+    pass
+
+
+class CustomerOrder(models.Model):
+    PAY_TYPE_CHOICE = (
+        (1, '支付宝'),
+    )
+    Content_Type_Choice = (
+        (ContentType.objects.get_for_model(AlipayOrder), '支付宝'),
+    )
+    customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='购买人')
+    pay_type = models.PositiveSmallIntegerField(verbose_name='支付方式', choices=PAY_TYPE_CHOICE, default=1)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False,
+                                     choices=Content_Type_Choice, default=Content_Type_Choice[0][0])
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    union_trade_no = models.CharField(verbose_name='内部订单号', max_length=100, unique=True, blank=True)
+    service_name = models.CharField(verbose_name='服务名称', max_length=100)
+    price_index_name = models.CharField(verbose_name='套餐名称', max_length=100)
+    total_amount = models.FloatField(verbose_name='总额', default=0)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = CustomerOrderManager()
+
+    class Meta:
+        db_table = 'lv_customer_orders'
+        verbose_name = '订单管理'
+        verbose_name_plural = '订单管理'
 
 
 mm_VirtualService = VirtualService.objects

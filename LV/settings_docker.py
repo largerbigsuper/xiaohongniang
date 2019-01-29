@@ -23,6 +23,12 @@ class QiNiuSettings:
         'image': 'http://pkwzlsa8z.bkt.clouddn.com/'
     }
 
+QINIU_ACCESS_KEY = QiNiuSettings.ACCESS_KEY
+QINIU_SECRET_KEY = QiNiuSettings.SECRET_KEY
+QINIU_BUCKET_NAME = QiNiuSettings.BUCKET_NAME_DICT['image']
+QINIU_BUCKET_DOMAIN = QiNiuSettings.BUCKET_DOMAIN_DICT['image']
+QINIU_SECURE_URL = False
+
 
 class RongYunSettings:
     APP_KEY = 'k51hidwqk404b'
