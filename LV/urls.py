@@ -40,7 +40,8 @@ urlpatterns = [
     path('token/', UploadTokenView.as_view()),
     path('im/', ImTokenView.as_view()),
     path('appconfig/', APPConfigView.as_view()),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ] + admin_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

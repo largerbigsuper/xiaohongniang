@@ -74,3 +74,7 @@ class Tool:
         # right - top: (lat + dlat, lng + dlng)
         # left - bottom: (lat - dlat, lng - dlng)
         # right - bottom: (lat - dlat, lng + dlng)
+
+
+def get_filename(filename):
+    return filename.upper()

@@ -25,7 +25,8 @@ class ServiceCertificationAdmin(admin.ModelAdmin):
 @admin.register(CustomerOrder)
 class CustomerOrderAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'customer', 'pay_type', 'union_trade_no', 'service_name', 'total_amount', 'create_at', 'content_object')
+    list_display = ('id', 'customer', 'pay_type', 'union_trade_no', 'service_name', 'total_amount', 'create_at',
+                    'content_object')
     fields = ('customer', 'pay_type', 'union_trade_no', 'service_name', 'total_amount', 'content_type', 'object_id')
     list_filter = ('pay_type', 'create_at')
     search_fields = ('customer__name',)

@@ -1,3 +1,5 @@
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 
 from lib.common import BaseManger
@@ -47,7 +49,7 @@ class Article(models.Model):
                                                 choices=ArticleManager.Category_Ad_Choice, default=1)
     tag = models.ForeignKey(Tag, verbose_name='标签', null=True, blank=True, on_delete=models.DO_NOTHING)
     headline = models.CharField(verbose_name='标题', max_length=200, db_index=True)
-    content = models.TextField(verbose_name='正文', max_length=10000)
+    content = RichTextUploadingField(verbose_name='正文', max_length=10000)
     editor = models.ForeignKey('role.Customer', verbose_name='创建人', on_delete=models.DO_NOTHING)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     is_published = models.BooleanField(verbose_name='是否发布', choices= ArticleManager.Publish_Status, default=False)

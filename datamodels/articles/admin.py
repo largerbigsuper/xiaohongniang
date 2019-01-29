@@ -3,14 +3,13 @@ from django.contrib import admin
 from datamodels.articles.models import Tag, Article
 
 
+@admin.register(Tag)
 class TadAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'level')
 
 
-admin.site.register(Tag)
-
-
+@admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
 
     list_display = ('category', 'tag', 'headline', 'editor', 'create_at', 'is_published')
@@ -18,6 +17,8 @@ class ArticleAdmin(admin.ModelAdmin):
     list_filter = ('category', 'tag', 'is_published', 'create_at')
     search_fields = ('headline', )
 
+    exclude = ('editor',)
 
-admin.site.register(Article, ArticleAdmin)
-
+    def save_model(self, request, obj, form, change):
+        obj.editor = request.user.customer
+        super().save_model(request, obj, form, change)

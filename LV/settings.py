@@ -23,6 +23,10 @@ else:
     DEBUG = True
     ALLOWED_HOSTS = ['*']
 
+# ckeditor settings
+from .settings_ckeditor import *
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -52,6 +56,8 @@ THIRD_PARTS_APPS = [
     'rest_framework',
     'django_filters',
     'crispy_forms',
+    'ckeditor',
+    'ckeditor_uploader',
     # 'rest_framework.authtoken'
 ]
 
@@ -320,4 +326,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Shanghai'
 CELERY_ENABLE_UTC = True
 
-DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
+# DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
+DEFAULT_FILE_STORAGE = 'lib.storages.StorageObject'
+
+
