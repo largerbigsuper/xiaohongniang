@@ -56,6 +56,8 @@ class Moments(models.Model):
             ('latitude', 'longitude')
         ]
         ordering = ['-create_at']
+        verbose_name = '动态管理'
+        verbose_name_plural = '动态管理'
 
     def limited_comment(self):
         return self.comment.all()[:3]
@@ -92,6 +94,8 @@ class Comments(models.Model):
             ('from_customer', 'moment', 'reply_to', 'to_customer')
         ]
         ordering = ['-create_at']
+        verbose_name = '评论和回复管理'
+        verbose_name_plural = '评论和回复管理'
 
 
 class LikesManager(BaseManger):
@@ -114,6 +118,8 @@ class Likes(models.Model):
             ('customer', 'moment')
         ]
         ordering = ['-create_at']
+        verbose_name = '点赞管理'
+        verbose_name_plural = '点赞管理'
 
 
 class TopicManager(BaseManger):
@@ -142,6 +148,8 @@ class Topic(models.Model):
     class Meta:
         db_table = 'lv_topics'
         ordering = ['order_num', 'id']
+        verbose_name = '话题管理'
+        verbose_name_plural = '话题管理'
 
 
 mm_Moments = Moments.objects

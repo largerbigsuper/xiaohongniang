@@ -1,4 +1,7 @@
+import json
+
 from django.db import models
+from django.utils.html import format_html
 
 from datamodels.role.models import Customer
 from lib.common import BaseManger
@@ -29,6 +32,8 @@ class FeedBack(models.Model):
 
     class Meta:
         db_table = 'lv_feedback'
+        verbose_name = '反馈管理'
+        verbose_name_plural = '反馈管理'
 
 
 class ReportManager(BaseManger):
@@ -69,6 +74,17 @@ class Report(models.Model):
     class Meta:
         db_table = 'lv_reports'
         ordering = ['-create_at']
+        verbose_name = '举报管理'
+        verbose_name_plural = '举报管理'
+
+    def images_html(self):
+        images = json.loads(self.images)
+        if images:
+            html = ''
+            for img in images:
+                html += '<img src="%s" height="150">' % img
+            return format_html(html)
+    images_html.short_description = '图片'
 
 
 mm_FeedBack = FeedBack.objects

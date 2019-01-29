@@ -1,5 +1,7 @@
 from django.apps import AppConfig
 
 
-class StatsConfig(AppConfig):
-    name = 'notices'
+class NoticesConfig(AppConfig):
+    name = 'datamodels.notices'
+    verbose_name = '消息'
+

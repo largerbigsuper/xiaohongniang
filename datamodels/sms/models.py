@@ -27,9 +27,9 @@ class SMSCodeManager(BaseManger):
 
 
 class SMSCode(models.Model):
-    tel = models.CharField(max_length=11)
-    code = models.CharField(max_length=4)
-    expire_at = models.DateTimeField()
+    tel = models.CharField(verbose_name='手机号', max_length=11)
+    code = models.CharField(verbose_name='验证码', max_length=4)
+    expire_at = models.DateTimeField(verbose_name='过期时间')
 
     objects = SMSCodeManager()
 
@@ -38,6 +38,11 @@ class SMSCode(models.Model):
         index_together = [
             ('tel', 'code', 'expire_at')
         ]
+        verbose_name = '验证码管理'
+        verbose_name_plural = '验证码管理'
+
+    def __str__(self):
+        return self.tel + ': ' + self.code
 
 
 mm_SMSCode = SMSCode.objects
