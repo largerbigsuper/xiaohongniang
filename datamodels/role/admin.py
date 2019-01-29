@@ -44,10 +44,10 @@ class CustomerAdmin(admin.ModelAdmin):
     #     models.TextField: {'widget': RichTextEditorWidget},
     # }
 
-    list_display = ('account', 'name', 'age', 'gender', 'avatar')
+    list_display = ('account', 'name', 'age', 'gender', 'avatar_url')
     list_filter = (VipFilter, 'gender')
     # fields = ('account', 'name', 'age', 'gender', 'avatar')
-    readonly_fields = ('avatar', )
+    # readonly_fields = ('avatar', )
 
     def avatar(self, obj):
         if obj.id:
