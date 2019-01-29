@@ -214,7 +214,7 @@ class CustomerOrder(models.Model):
         (1, '支付宝'),
     )
     Content_Type_Choice = (
-        (ContentType.objects.get_for_model(AlipayOrder), '支付宝'),
+        (ContentType.objects.get_for_model(AlipayOrder).id, '支付宝'),
     )
     customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='购买人')
     pay_type = models.PositiveSmallIntegerField(verbose_name='支付方式', choices=PAY_TYPE_CHOICE, default=1)

@@ -91,11 +91,11 @@ class NoticeManager(BaseManger):
 
 class Notice(models.Model):
     content_type_choice = (
-        (ContentType.objects.get_for_model(Moments), '动态相关'),
+        (ContentType.objects.get_for_model(Moments).id, '动态相关'),
     )
     content_type_result_choice = (
-        (ContentType.objects.get_for_model(Likes), '点赞'),
-        (ContentType.objects.get_for_model(Comments), '评论和回复'),
+        (ContentType.objects.get_for_model(Likes).id, '点赞'),
+        (ContentType.objects.get_for_model(Comments).id, '评论和回复'),
     )
     action_type = models.PositiveIntegerField(verbose_name='类型', choices=ACTION_CHOICE, default=1)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False, related_name='actions',
