@@ -17,7 +17,8 @@ call(['pip', 'install', '-r', 'requirements.txt',
 # call(['pip', 'install', 'git+https://github.com/rongcloud/server-sdk-python.git'])
 aliyun_python_sdk_core = 'python-lib/aliyun-python-sdk-core'
 aliyun_python_sdk_dysmsapi = 'python-lib/aliyun-python-sdk-dysmsapi'
-call(['pip', 'install', 'aliyun_python_sdk_dysmsapi'])
 call(['pip', 'install', 'aliyun_python_sdk_core'])
+call(['pip', 'install', 'aliyun_python_sdk_dysmsapi'])
+
 
 
