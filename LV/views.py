@@ -5,6 +5,7 @@
 # @Email   : zaihuazhao@163.com
 # @File    : views.py
 from django.core.cache import cache
+from django.views import View
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated

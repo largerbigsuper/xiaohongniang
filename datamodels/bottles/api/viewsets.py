@@ -10,7 +10,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
 
-from datamodels.bottles.api.serializers import BottleSerializer, BottleDetailSerializer, PickedBottlesSerializer
+from datamodels.bottles.api.serializers import BottleSerializer, BottleDetailSerializer, PickedBottlesSerializer, \
+    AdminBottleSerializer
 from datamodels.bottles.models import mm_Bottles, mm_BottlePickerRelation, Bottle
 from datamodels.stats.models import mm_CustomerPoint
 from lib import messages
@@ -76,6 +77,6 @@ class PickedBottlesViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin,
 
 class AdminBottlesViewSet(AdminViewSet):
     # permission_classes = (IsAuthenticated, IsAdminUser)
-    serializer_class = BottleDetailSerializer
+    serializer_class = AdminBottleSerializer
     queryset = mm_Bottles.all()
     filterset_class = BottlesFilter

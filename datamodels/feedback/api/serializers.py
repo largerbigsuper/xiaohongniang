@@ -12,6 +12,7 @@ from lib.fields import JsonField
 
 
 class AdminFeedBackSerializer(serializers.ModelSerializer):
+    customer = AdminCustomerListSerilizer()
 
     class Meta:
         model = FeedBack
@@ -19,8 +20,8 @@ class AdminFeedBackSerializer(serializers.ModelSerializer):
 
 
 class AdminReportSerializer(serializers.ModelSerializer):
-    customer = AdminCustomerListSerilizer
-    to_customer = AdminCustomerListSerilizer
+    customer = AdminCustomerListSerilizer()
+    to_customer = AdminCustomerListSerilizer()
     images = JsonField()
 
     class Meta:
