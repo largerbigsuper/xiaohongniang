@@ -1,3 +1,5 @@
+import random
+import string
 import traceback
 from datetime import datetime, timedelta
 
@@ -105,6 +107,7 @@ class BaseRole(models.Model):
     service_vip_expired_at = models.DateTimeField(verbose_name='会员过期时间', null=True, blank=True)
     service_show_index_expired_at = models.DateTimeField(verbose_name='置顶有效期', null=True, blank=True)
     invitecode = models.CharField(verbose_name='邀请码', max_length=8, null=True, blank=True)
+    mini_openid = models.CharField(verbose_name='小程序openid', max_length=60, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -112,18 +115,41 @@ class BaseRole(models.Model):
 
 class CustomerManager(BaseManger):
 
-    def add(self, account, password):
+    Default_Password = '888888'
+
+    def add(self, account, password, **kwargs):
         try:
             with transaction.atomic():
                 user = self._add_user(account, password)
                 im_token = IMServe.gen_token(user.id, account)['token']
-                customer = self.create(user=user, account=account, im_token=im_token)
+                customer = self.create(user=user, account=account, im_token=im_token, **kwargs)
                 return customer
         except IntegrityError:
             raise DBException('账号已注册')
         except:
             msg = traceback.format_exc()
             raise DBException(msg)
+
+    def _create_miniprogram_account(self, mini_openid):
+        account = 'mp_' + ''.join([random.choice(string.ascii_lowercase) for _ in range(6)])
+        password = self.Default_Password
+        customer = self.add(account, password, mini_openid=mini_openid)
+        return customer
+
+    def get_customer_by_miniprogram(self, mini_openid):
+        """通过小程序获取customer"""
+        customer = self.filter(mini_openid=mini_openid).first()
+        if customer:
+            return customer
+        else:
+            for _ in range(3):
+                try:
+                    customer = self._create_miniprogram_account(mini_openid)
+                    return customer
+                except:
+                    pass
+            else:
+                raise DBException('注册用户失败')
 
     def reset_password_by_login(self, user_id, raw_password, new_password):
             user = User.objects.get(id=user_id)
