@@ -23,6 +23,7 @@ class QiNiuSettings:
         'image': 'http://pkwzlsa8z.bkt.clouddn.com/'
     }
 
+
 QINIU_ACCESS_KEY = QiNiuSettings.ACCESS_KEY
 QINIU_SECRET_KEY = QiNiuSettings.SECRET_KEY
 QINIU_BUCKET_NAME = QiNiuSettings.BUCKET_NAME_DICT['image']
@@ -41,6 +42,13 @@ class AlipaySettings:
     APP_PUBLIC_KEY = """
     """
     VIRTUAL_SERVICE_NOTIFY_URI = 'https://www.lhxq.top:8443/products/alipay/notify/'
+
+
+class MinprogramSettings:
+    APP_ID = 'f439732d65b949dba943f0eaf809ba50'
+    APP_SECRET = 'wxf54e0eb3b0c3695d'
+    LOGIN_URL = 'https://api.weixin.qq.com/sns/jscode2session' \
+                '?appid={}&secret={}&grant_type=authorization_code&js_code='.format(APP_ID, APP_SECRET)
 
 
 # Database

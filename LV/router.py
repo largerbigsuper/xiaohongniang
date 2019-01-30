@@ -12,7 +12,7 @@ from datamodels.feedback.api.viewsets import AdminReportViewSet, AdminFeedBackVi
 from datamodels.moments.api.viewsets import AdminTopicViewSet, AdminMomentsViewSet
 from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, CustomerVirtualServiceViewSet, \
     AdminServiceCertificationViewSet
-from datamodels.role.api.veiwsets import  CustomerViewSet, InviteRecordViewSet
+from datamodels.role.api.viewsets import  CustomerViewSet, InviteRecordViewSet
 from datamodels.role.api.viewset_admin import AdminInviteRecordViewSet, AdminOpreationViewSet, AdminCustomerViewSet
 from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet
 

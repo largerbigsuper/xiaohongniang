@@ -95,6 +95,11 @@ class CustomerRegisterSerializer(serializers.Serializer):
     # invitecode = serializers.CharField(required=False)
 
 
+class MiniprogramLoginSerializer(serializers.Serializer):
+
+    code = serializers.CharField()
+
+
 class InviteRecordSerializer(serializers.ModelSerializer):
 
     invited = CustomerBaseInfoSerializer()
