@@ -15,7 +15,7 @@ from rest_framework.response import Response
 
 from datamodels.role.api.serializers import AdminInviteRecordSerializer, AdminCustomerListSerilizer, \
     CustomerWithDrawSerializer, UserSerializer, CustomerLoginSerilizer
-from datamodels.role.models import mm_InviteRecord, Customer, mm_Customer
+from datamodels.role.models import mm_InviteRecord, Customer, mm_Customer, InviteRecord
 from datamodels.stats.models import mm_CustomerPoint
 from lib import customer_login
 from lib.exceptions import LoginException
@@ -32,6 +32,19 @@ class CustomerFilter(filters.FilterSet):
             'age': ['exact', 'gte', 'lte'],
             'gender': ['exact'],
             'account': ['icontains'],
+        }
+
+
+class InviteRecordFilter(filters.FilterSet):
+
+    class Meta:
+        model = InviteRecord
+        fields = {
+            'inviter': ['exact'],
+            'invited': ['exact'],
+            'inviter__name': ['icontains'],
+            'invited__name': ['icontains'],
+            'create_at': ['gt', 'lt']
         }
 
 
@@ -89,3 +102,4 @@ class AdminInviteRecordViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, IsAdminUser)
     serializer_class = AdminInviteRecordSerializer
     queryset = mm_InviteRecord.all()
+    filter_class = InviteRecordFilter
