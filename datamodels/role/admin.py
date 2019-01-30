@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
@@ -31,9 +33,9 @@ class VipFilter(admin.SimpleListFilter):
         # Compare the requested value (either '80s' or '90s')
         # to decide how to filter the queryset.
         if self.value() == 'Normal':
-            return queryset.exclude(service_vip_expired_at=None)
+            return queryset.exclude(service_vip_expired_at__lt=datetime.now())
         if self.value() == 'Vip':
-            return queryset.filter(service_vip_expired_at=None)
+            return queryset.filter(service_vip_expired_at__lt=datetime.now())
 
 
 class CustomerAdmin(admin.ModelAdmin):

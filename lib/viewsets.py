@@ -10,5 +10,8 @@ from rest_framework.viewsets import GenericViewSet
 
 
 class AdminViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
-                   mixins.DestroyModelMixin, GenericViewSet):
+                   mixins.DestroyModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.CreateModelMixin,
+                   GenericViewSet):
     permission_classes = (IsAuthenticated, IsAdminUser)

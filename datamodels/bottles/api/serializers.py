@@ -7,7 +7,7 @@
 from rest_framework import serializers
 
 from datamodels.bottles.models import Bottle, BottlePickerRelation
-from datamodels.role.api.serializers import CustomerBaseInfoSerializer
+from datamodels.role.api.serializers import CustomerBaseInfoSerializer, AdminCustomerListSerilizer
 
 
 class BottleSerializer(serializers.ModelSerializer):
@@ -31,3 +31,11 @@ class PickedBottlesSerializer(serializers.ModelSerializer):
     class Meta:
         model = BottlePickerRelation
         fields = ('id', 'bottle', 'create_at')
+
+
+class AdminBottleSerializer(serializers.ModelSerializer):
+    customer = AdminCustomerListSerilizer()
+
+    class Meta:
+        model = Bottle
+        fields = ('id', 'text', 'create_at', 'customer')
