@@ -25,7 +25,7 @@ class ResponseFormateMiddleware:
 
         response = self.get_response(request)
         # 最近访问更新
-        if request.user.is_authenticated and not request.user.is_staff:
+        if request.user.is_authenticated:
             customer_id = request.session.get('customer_id')
             if not customer_id:
                 if request.user.customer:

@@ -7,7 +7,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from datamodels.role.models import Customer
+from datamodels.role.models import Customer, InviteRecord
 from lib.fields import JsonField
 
 
@@ -85,3 +85,31 @@ class CustomerWithDrawSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('id', 'amount')
+
+
+class CustomerRegisterSerializer(serializers.Serializer):
+
+    account = serializers.CharField(max_length=11, min_length=11)
+    password = serializers.CharField()
+    code = serializers.CharField(max_length=4)
+    # invitecode = serializers.CharField(required=False)
+
+
+class InviteRecordSerializer(serializers.ModelSerializer):
+
+    invited = CustomerBaseInfoSerializer()
+
+    class Meta:
+        model = InviteRecord
+        fields = ['id', 'invited', 'platform', 'create_at']
+
+
+class AdminInviteRecordSerializer(serializers.ModelSerializer):
+
+    inviter = CustomerBaseInfoSerializer()
+    invited = CustomerBaseInfoSerializer()
+
+    class Meta:
+        model = InviteRecord
+        fields = ['id', 'inviter', 'invited', 'platform', 'create_at']
+

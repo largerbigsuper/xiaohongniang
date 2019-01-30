@@ -4,85 +4,21 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : veiwset.py
-from django.contrib.auth import authenticate, logout as system_logout
-from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
-from django_filters import rest_framework as filters
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from datamodels.role.api.serializers import AdminCustomerListSerilizer, CustomerLoginSerilizer, UserSerializer, \
-    CustomerWithDrawSerializer, CustomerBaseInfoSerializer, RecommedCustomerSerializer
-from datamodels.role.models import mm_Customer, Customer
-from datamodels.stats.models import mm_CustomerPoint
+from LV.settings_lv import Platform
+from datamodels.role.api.serializers import CustomerBaseInfoSerializer, RecommedCustomerSerializer, \
+    InviteRecordSerializer, CustomerRegisterSerializer
+from datamodels.role.models import mm_Customer, mm_InviteRecord
+from datamodels.sms.models import mm_SMSCode
 from lib import customer_login
-from lib.exceptions import LoginException
-from lib.viewsets import AdminViewSet
-
-
-class CustomerFilter(filters.FilterSet):
-
-    class Meta:
-        model = Customer
-        fields = {
-            'id': ['exact'],
-            'name': ['icontains'],
-            'age': ['exact', 'gte', 'lte'],
-            'gender': ['exact'],
-            'account': ['icontains'],
-        }
-
-
-class AdminCustomerViewSet(AdminViewSet):
-    permission_classes = (IsAuthenticated, IsAdminUser)
-    queryset = mm_Customer.all()
-    serializer_class = AdminCustomerListSerilizer
-    filter_class = CustomerFilter
-
-    @action(methods=['post'], detail=True, serializer_class=CustomerWithDrawSerializer)
-    def withdraw(self, request, pk=None):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = mm_CustomerPoint.withdraw(customer_id=pk,
-                                         operator_id=request.user.id,
-                                         amount=serializer.validated_data['amount'])
-        if data:
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response()
-
-
-class AdminOpreationViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, IsAdminUser)
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    @csrf_exempt
-    @action(methods=['post'], detail=False, permission_classes=(), serializer_class=CustomerLoginSerilizer)
-    def login(self, request):
-        login_serializer = CustomerLoginSerilizer(data=request.data)
-        login_serializer.is_valid(raise_exception=True)
-        try:
-            username = login_serializer.validated_data['account']
-            password = login_serializer.validated_data['password']
-            user = authenticate(request=request, username=username, password=password, is_staff=True)
-            if user:
-                customer_login.login(request, user)
-                serializer = UserSerializer(user)
-                return Response(serializer.data)
-            else:
-                raise LoginException('账号或密码错误')
-        except Customer.DoesNotExist:
-            raise LoginException('账号不存在')
-
-    @csrf_exempt
-    @action(detail=False)
-    def logout(self, request):
-        system_logout(request)
-        return Response()
+from lib.common import HeadersKey
+from lib.tools import gen_invite_code, decode_invite_code
 
 
 class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
@@ -102,3 +38,47 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
         """新人推荐"""
         self.queryset = mm_Customer.recommend_customers(request.user.customer)
         return super().list(request)
+
+    @csrf_exempt
+    @action(methods=['post'], detail=False, serializer_class=CustomerRegisterSerializer, permission_classes=[])
+    def enroll(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        account = serializer.validated_data['account']
+        password = serializer.validated_data['password']
+        code = serializer.validated_data['code']
+        mm_SMSCode.is_effective(account, code)
+        customer = mm_Customer.add(account, password)
+        customer_login.login(request, customer.user)
+        invitecode = request.query_params.get('invitecode')
+        platform = request.META.get(HeadersKey.HTTP_OS, Platform.WEB)
+        # TODO 添加邀请关系
+        if invitecode:
+            inviter_id = decode_invite_code(invitecode)
+            mm_InviteRecord.add_record(inviter_id=inviter_id,
+                                       invited_id=customer.id,
+                                       platform=platform)
+        data = dict(account=account, id=customer.id, user_id=customer.user.id)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    @action(detail=False)
+    def invitecode(self, request):
+        if not request.user.customer.invitecode:
+            request.user.customer.invitecode = gen_invite_code(request.user.customer.id)
+            request.user.customer.save()
+        data = {
+            'invitecode': request.user.customer.invitecode
+        }
+        return Response(data=data)
+
+
+class InviteRecordViewSet(mixins.ListModelMixin,
+                          mixins.RetrieveModelMixin,
+                          GenericViewSet):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = InviteRecordSerializer
+
+    def get_queryset(self):
+        return mm_InviteRecord.get_customer_records(self.request.session['customer_id'])
+

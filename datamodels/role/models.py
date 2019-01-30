@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models, transaction, IntegrityError
 from django.db.models import F
 
+from LV.settings_lv import Platform
 from datamodels.sms.models import mm_SMSCode
 from lib.common import BaseManger
 from lib.exceptions import DBException
@@ -103,6 +104,7 @@ class BaseRole(models.Model):
     images = models.TextField(verbose_name='相册', max_length=1000, blank=True, default='[]')
     service_vip_expired_at = models.DateTimeField(verbose_name='会员过期时间', null=True, blank=True)
     service_show_index_expired_at = models.DateTimeField(verbose_name='置顶有效期', null=True, blank=True)
+    invitecode = models.CharField(verbose_name='邀请码', max_length=8, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -405,6 +407,48 @@ class Certification(models.Model):
         ]
 
 
+class InviteRecordManager(BaseManger):
+
+    Platform_Choice = (
+        (Platform.WEB, Platform.Hans_Mapping[Platform.WEB]),
+        (Platform.ANDROID, Platform.Hans_Mapping[Platform.ANDROID]),
+        (Platform.IOS, Platform.Hans_Mapping[Platform.IOS]),
+    )
+
+    def add_record(self, inviter_id, invited_id, platform=Platform.WEB):
+        try:
+            self.create(inviter_id=inviter_id,
+                        invited_id=invited_id,
+                        platform=platform)
+        except:
+            pass
+
+    def get_customer_records(self, customer_id):
+        return self.filter(inviter_id=customer_id)
+
+
+class InviteRecord(models.Model):
+
+    inviter = models.ForeignKey('role.Customer', on_delete=models.DO_NOTHING, verbose_name='邀请人',
+                                db_index=False, related_name='inviter_users')
+    invited = models.ForeignKey('role.Customer', on_delete=models.DO_NOTHING, verbose_name='被邀请人',
+                                db_index=False, related_name='invited_users')
+    platform = models.PositiveSmallIntegerField(verbose_name='来源',
+                                                choices=InviteRecordManager.Platform_Choice,
+                                                default=Platform.WEB)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = InviteRecordManager()
+
+    class Meta:
+        db_table = 'lv_invite_records'
+        ordering = ['-create_at']
+        index_together = [
+            ('inviter', 'invited')
+        ]
+
+
 mm_Customer = Customer.objects
 mm_RelationShip = RelationShip.objects
 mm_Certification = Certification.objects
+mm_InviteRecord = InviteRecord.objects

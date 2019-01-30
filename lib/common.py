@@ -10,6 +10,7 @@ from django.db.models import Manager
 class HeadersKey:
     HTTP_LATITUDE = 'HTTP_LATITUDE'
     HTTP_LONGITUDE = 'HTTP_LONGITUDE'
+    HTTP_OS = 'HTTP_OS'
 
 
 class CacheKey:

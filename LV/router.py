@@ -12,7 +12,8 @@ from datamodels.feedback.api.viewsets import AdminReportViewSet, AdminFeedBackVi
 from datamodels.moments.api.viewsets import AdminTopicViewSet, AdminMomentsViewSet
 from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, CustomerVirtualServiceViewSet, \
     AdminServiceCertificationViewSet
-from datamodels.role.api.veiwsets import AdminCustomerViewSet, AdminOpreationViewSet, CustomerViewSet
+from datamodels.role.api.veiwsets import  CustomerViewSet, InviteRecordViewSet
+from datamodels.role.api.viewset_admin import AdminInviteRecordViewSet, AdminOpreationViewSet, AdminCustomerViewSet
 from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet
 
 router = routers.DefaultRouter()
@@ -23,6 +24,7 @@ router.register('virtual-services', CustomerVirtualServiceViewSet, base_name='vi
 router.register('articles', ArticleViewSet, base_name='article')
 router.register('points', PointViewSet, base_name='point')
 router.register('customers', CustomerViewSet, base_name='customer')
+router.register('invite-records', InviteRecordViewSet, base_name='invite-record')
 
 router.register('admin/op', AdminOpreationViewSet, base_name='admin-op')
 router.register('admin/customers', AdminCustomerViewSet, base_name='admin-customers')
@@ -36,5 +38,6 @@ router.register('admin/customer-services', AdminServiceCertificationViewSet, bas
 router.register('admin/tags', AdminTagViewSet, base_name='admin-tag')
 router.register('admin/articles', AdminArticleViewSet, base_name='admin-article')
 router.register('admin/points', AdminPointViewSet, base_name='admin-point')
+router.register('admin/invite-records', AdminInviteRecordViewSet, base_name='admin-invite-record')
 
 

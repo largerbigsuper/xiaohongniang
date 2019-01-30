@@ -25,6 +25,8 @@ else:
 
 # ckeditor settings
 from .settings_ckeditor import *
+# 平台信息
+from .settings_lv import *
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

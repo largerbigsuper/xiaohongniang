@@ -26,7 +26,7 @@ class CustomerSerializer(serializers.ModelSerializer):
                   'expect_desc',
                   'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
                   'child_status', 'years_to_marry', 'score', 'condition', 'images',
-                  'service_vip_expired_at', 'service_show_index_expired_at'
+                  'service_vip_expired_at', 'service_show_index_expired_at', 'invitecode'
                   )
         read_only_fields = ('account', 'user', 'id', 'im_token',
                             'service_vip_expired_at', 'service_show_index_expired_at')
