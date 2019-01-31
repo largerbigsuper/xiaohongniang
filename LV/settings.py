@@ -331,4 +331,6 @@ CELERY_ENABLE_UTC = True
 # DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
 DEFAULT_FILE_STORAGE = 'lib.storages.StorageObject'
 
+CSRF_TRUSTED_ORIGINS = ['servicewechat.com', 'test.lhxq.top', 'lhxq.top']
+
 
