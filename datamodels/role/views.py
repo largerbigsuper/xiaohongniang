@@ -46,6 +46,8 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    
+    authentication_classes = []
 
     @csrf_exempt
     def post(self, request):
