@@ -46,7 +46,7 @@ class AliPayNotifyView(APIView):
                 if order:
                     order.status = mm_AlipayOrder.ORDER_STATU_DONE
                     order.save()
-                    days = json.loads(order.pricelist)[order.price_index]['days']
+                    days = json.loads(order.virtual_service.pricelist)[order.price_index]['days']
                     mm_ServiceCertification.update_certification(order.customer_id, order.virtual_service, days)
 
                 return Response('success')
