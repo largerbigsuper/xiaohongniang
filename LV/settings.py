@@ -271,6 +271,14 @@ LOGGING = {
             "backupCount": 10,
             "formatter": "verbose"
         },
+        "products_file": {
+            "level": LOG_LEVEL_INFO,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "./log/products.log",
+            "maxBytes": 1024 * 1024 * 10,  # 10MB
+            "backupCount": 10,
+            "formatter": "verbose"
+        },
     },
     'loggers': {
         'django': {
@@ -279,30 +287,32 @@ LOGGING = {
         },
         'django.request': {
             'handlers': ['request_file', 'mail_admins'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': False,
+        },
+        'products': {
+            'handlers': ['products_file'],
+            'level': 'INFO',
         },
     }
 }
 
 
-for app_name in CUSTOM_APPS:
-    handler_name = app_name
-    handler_config = {
-        "level": LOG_LEVEL_INFO,
-        "class": "logging.handlers.RotatingFileHandler",
-        "filename": "./log/" + app_name + ".log",
-        "maxBytes": 1024 * 1024 * 10,  # 10MB
-        "backupCount": 10,
-        "formatter": "verbose"
-    }
-    LOGGING['handlers'][handler_name] = handler_config
-    logger_name = app_name + '.views'
-    logger_config = {
-        'handlers': ['console', handler_name],
-        'level': 'INFO',
-    }
-    LOGGING['loggers'][logger_name] = handler_config
+# for app_name in CUSTOM_APPS:
+#     handler_config = {
+#         "level": LOG_LEVEL_INFO,
+#         "class": "logging.handlers.RotatingFileHandler",
+#         "filename": "./log/" + app_name + ".log",
+#         "maxBytes": 1024 * 1024 * 10,  # 10MB
+#         "backupCount": 10,
+#         "formatter": "verbose"
+#     }
+#     LOGGING['handlers'][app_name] = handler_config
+#     logger_config = {
+#         'handlers': ['console', app_name],
+#         'level': 'INFO',
+#     }
+#     LOGGING['loggers'][app_name] = handler_config
 
 # LOGGING = {
 #     'version': 1,

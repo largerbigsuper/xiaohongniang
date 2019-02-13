@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from datamodels.products.models import mm_AlipayOrder, mm_ServiceCertification
 from lib.pay import alipay_serve
 
-logger = logging.getLogger('datamodel.products')
+logger = logging.getLogger('products')
 
 
 class AliPayNotifyView(APIView):
