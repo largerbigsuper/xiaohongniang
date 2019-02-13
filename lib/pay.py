@@ -29,13 +29,13 @@ def gen_union_trade_no(pay_type=1):
                                                         )
 
 
-# alipay_serve = AliPay(
-#     appid="",
-#     app_notify_url=None,  # 默认回调url
-#     app_private_key_string=AlipaySettings.APP_PRIVATE_KEY,
-#     alipay_public_key_string=AlipaySettings.APP_PUBLIC_KEY,
-#     sign_type="RSA",
-#     debug=False
-# )
+alipay_serve = AliPay(
+    appid="",
+    app_notify_url=None,  # 默认回调url
+    app_private_key_path=AlipaySettings.APP_PRIVATE_KEY,
+    alipay_public_key_path=AlipaySettings.APP_PUBLIC_KEY,
+    sign_type="RSA",
+    debug=True
+)
 
-alipay_serve = None
+# alipay_serve = None
