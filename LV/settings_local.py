@@ -37,8 +37,8 @@ class RongYunSettings:
 class AlipaySettings:
     _root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     APP_ID = '2019013063154821'
-    APP_PRIVATE_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_private.txt')
-    APP_PUBLIC_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_public.txt')
+    APP_PRIVATE_KEY = os.path.join(_root_dir, 'lib/alipay/test_app_private.txt')
+    ALIPAY_PUBLIC_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_public_key_sha256.txt')
     VIRTUAL_SERVICE_NOTIFY_URI = 'https://test.lhxq.top/products/alipay/notify/'
 
 

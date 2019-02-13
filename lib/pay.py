@@ -33,7 +33,7 @@ alipay_serve = AliPay(
     appid=AlipaySettings.APP_ID,
     app_notify_url=None,  # 默认回调url
     app_private_key_path=AlipaySettings.APP_PRIVATE_KEY,
-    alipay_public_key_path=AlipaySettings.APP_PUBLIC_KEY,
+    alipay_public_key_path=AlipaySettings.ALIPAY_PUBLIC_KEY,
     sign_type="RSA2",
     debug=False
 )
