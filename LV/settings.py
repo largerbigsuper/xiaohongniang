@@ -19,7 +19,7 @@ if ENV == 'TEST':
     ALLOWED_HOSTS = ['*']
 
 else:
-    from .common_settings import *
+    from .settings_local import *
     DEBUG = True
     ALLOWED_HOSTS = ['*']
 

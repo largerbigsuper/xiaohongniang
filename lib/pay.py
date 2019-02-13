@@ -30,7 +30,7 @@ def gen_union_trade_no(pay_type=1):
 
 
 alipay_serve = AliPay(
-    appid="",
+    appid=AlipaySettings.APP_ID,
     app_notify_url=None,  # 默认回调url
     app_private_key_path=AlipaySettings.APP_PRIVATE_KEY,
     alipay_public_key_path=AlipaySettings.APP_PUBLIC_KEY,
