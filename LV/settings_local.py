@@ -18,8 +18,9 @@ class QiNiuSettings:
         'image': 'img3-workspace',
     }
     BUCKET_DOMAIN_DICT = {
-        'image': 'http://pkwzlsa8z.bkt.clouddn.com/'
+        'image': 'http://lhxq.top/'
     }
+
 
 QINIU_ACCESS_KEY = QiNiuSettings.ACCESS_KEY
 QINIU_SECRET_KEY = QiNiuSettings.SECRET_KEY

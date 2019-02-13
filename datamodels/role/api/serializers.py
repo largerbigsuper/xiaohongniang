@@ -47,6 +47,31 @@ class CustomerSerializer(BaseCustomerSerialzier):
         read_only_fields = ('account', 'user', 'id', 'im_token')
 
 
+class CustomerProfileSerialier(BaseCustomerSerialzier):
+
+    class Meta:
+        model = Customer
+        fields = ('id', 'user_id', 'account', 'im_token',
+                  'following_count', 'followers_count', 'blocked_count',
+                  'is_manager', 'is_shop_keeper',
+                  'service_vip_expired_at', 'service_show_index_expired_at', 'invitecode',
+                  'name', 'age', 'gender', 'avatar_url',
+                  'wechat_id', 'intro', 'address_home', 'address_company',
+                  'skills', 'is_show_skill', 'is_rut',
+                  'expect_desc',
+                  'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
+                  'child_status', 'years_to_marry', 'score', 'condition', 'images',
+                  )
+
+        read_only_fields = ('id', 'user_id', 'account', 'im_token',
+                            'following_count', 'followers_count', 'blocked_count',
+                            'is_manager', 'is_shop_keeper',
+                            'service_vip_expired_at', 'service_show_index_expired_at', 'invitecode',)
+        extra_kwargs = {name: {'required': False} for name in list(set(fields) - set(read_only_fields))}
+        extra_kwargs['images']['initial'] = '[]'
+        extra_kwargs['condition']['initial'] = '{}'
+
+
 class CustomerBaseInfoSerializer(BaseCustomerSerialzier):
     class Meta:
         model = Customer
