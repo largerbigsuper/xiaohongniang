@@ -4,7 +4,7 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : common_settings.py
-
+import os
 class AliYunSMS:
     ACCESS_KEY_ID = "LTAIPQYeKTLNiPUv"
     ACCESS_KEY_SECRET = "wHBmEIr1YNp6rNr8zrK9cjFK1gJsLa"
@@ -34,10 +34,10 @@ class RongYunSettings:
 
 
 class AlipaySettings:
-    APP_PRIVATE_KEY = """
-    """
-    APP_PUBLIC_KEY = """
-    """
+    _root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    APP_PRIVATE_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_private.txt')
+    APP_PUBLIC_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_public.txt')
+    VIRTUAL_SERVICE_NOTIFY_URI = 'https://test.lhxq.top/products/alipay/notify/'
 
 
 class MinprogramSettings:

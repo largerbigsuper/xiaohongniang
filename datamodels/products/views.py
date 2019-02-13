@@ -1,4 +1,5 @@
 import json
+import logging
 import traceback
 
 from django.db import transaction
@@ -7,6 +8,8 @@ from rest_framework.views import APIView
 
 from datamodels.products.models import mm_AlipayOrder, mm_ServiceCertification
 from lib.pay import alipay_serve
+
+logger = logging.getLogger('datamodel.products')
 
 
 class AliPayNotifyView(APIView):
@@ -17,13 +20,18 @@ class AliPayNotifyView(APIView):
     3. 创建内部订单
     4. 先关权限逻辑
     """
+    authentication_classes = []
+
     @transaction.atomic()
     def post(self, request, format=None):
         data = request.data.dict()
         # sign 不能参与签名验证
         signature = data.pop("sign")
+
         print(json.dumps(data))
         print(signature)
+        logger.info('CallBack Data: %s' % json.dumps(data))
+        logger.info('CallBack signature: %s' % signature)
         # verify
         success = alipay_serve.verify(data, signature)
         if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED"):

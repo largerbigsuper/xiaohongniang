@@ -15,7 +15,7 @@ from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING, mm_Certi
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
     CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer, \
-    CoustomerDistanceSerializer, NormalCoustomerDetailSerializer, CertificationSerializer, CustomerSimpleSerializer
+    CoustomerDistanceSerializer, NormalCoustomerDetailSerializer, CertificationSerializer
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_OperationRecord, mm_CustomerPoint
 from lib import customer_login, messages
@@ -49,7 +49,6 @@ class LoginView(APIView):
     
     authentication_classes = []
 
-    @csrf_exempt
     def post(self, request):
         """登录"""
         required_params = ['account', 'password']

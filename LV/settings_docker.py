@@ -4,6 +4,7 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : settings_docker.py
+import os
 
 
 class AliYunSMS:
@@ -37,11 +38,10 @@ class RongYunSettings:
 
 
 class AlipaySettings:
-    APP_PRIVATE_KEY = """
-    """
-    APP_PUBLIC_KEY = """
-    """
-    VIRTUAL_SERVICE_NOTIFY_URI = 'https://www.lhxq.top:8443/products/alipay/notify/'
+    _root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    APP_PRIVATE_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_private.txt')
+    APP_PUBLIC_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_public.txt')
+    VIRTUAL_SERVICE_NOTIFY_URI = 'https://test.lhxq.top/products/alipay/notify/'
 
 
 class MinprogramSettings:
@@ -85,3 +85,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+if __name__ == '__main__':
+    print(AlipaySettings._root_dir)
+    print(AlipaySettings.APP_PRIVATE_KEY)
+    print(AlipaySettings.APP_PUBLIC_KEY)

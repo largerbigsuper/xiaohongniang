@@ -30,7 +30,6 @@ class Bottle(models.Model):
         verbose_name_plural = '漂流瓶管理'
 
 
-
 class BottlePickerRelationManager(BaseManger):
     pass
 
