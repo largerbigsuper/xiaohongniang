@@ -6,7 +6,7 @@ from django.db import transaction
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from datamodels.products.models import mm_AlipayOrder, mm_ServiceCertification
+from datamodels.products.models import mm_AlipayOrder, mm_ServiceCertification, mm_CustomerOrder
 from lib.pay import alipay_serve
 
 logger = logging.getLogger('products')
@@ -45,8 +45,15 @@ class AliPayNotifyView(APIView):
                                               ).select_related('virtual_service').first()
                 if order:
                     order.status = mm_AlipayOrder.ORDER_STATU_DONE
+                    order.virtual_service.trade_no = data['trade_no']
+                    order.virtual_service.save()
                     order.save()
-                    days = json.loads(order.virtual_service.pricelist)[order.price_index]['days']
+                    price_info = json.loads(order.virtual_service.pricelist)[order.price_index]
+                    days = price_info['days']
+                    service_name = order.virtual_service.name
+                    price_index_name = price_info['name']
+                    mm_CustomerOrder.add_order(order.customer, 1, order, out_trade_no, service_name, price_index_name,
+                                               total_amount)
                     mm_ServiceCertification.update_certification(order.customer_id, order.virtual_service, days)
 
                 return Response('success')

@@ -206,7 +206,16 @@ class AlipayOrder(models.Model):
 
 
 class CustomerOrderManager(BaseManger):
-    pass
+
+    def add_order(self, customer, pay_type, order, union_trade_no, service_name, price_index_name, total_amount):
+        self.create(customer=customer,
+                    pay_type=pay_type,
+                    content_object=order,
+                    union_trade_no=union_trade_no,
+                    service_name=service_name,
+                    price_index_name=price_index_name,
+                    total_amount=total_amount
+                    )
 
 
 class CustomerOrder(models.Model):
