@@ -21,7 +21,7 @@ class QiNiuSettings:
         'image': 'img3-workspace',
     }
     BUCKET_DOMAIN_DICT = {
-        'image': 'http://pkwzlsa8z.bkt.clouddn.com/'
+        'image': 'http://lhxq.top/'
     }
 
 

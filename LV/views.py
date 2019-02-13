@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
+from LV.settings import QiNiuSettings
 from datamodels.role.models import mm_Customer
 from lib.common import CacheKey
 from lib.im import IMServe
@@ -55,6 +56,7 @@ class APPConfigView(APIView):
             'desc': '修复图片显示问题，更换雪球logo',
             'music': 'http://oys4026ng.bkt.clouddn.com/musiclight.mp3',
             'user_total': user_total,
+            'image_domain': QiNiuSettings.BUCKET_DOMAIN_DICT['image']
 
         }
         return Response(Tool.format_data(app_config))
