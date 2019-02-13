@@ -34,6 +34,8 @@ class AliPayNotifyView(APIView):
         logger.info('CallBack signature: %s' % signature)
         # verify
         success = alipay_serve.verify(data, signature)
+        logger.info('CallBack verify result: %s' % success)
+
         if success and data["trade_status"] in ("TRADE_SUCCESS", "TRADE_FINISHED"):
             try:
                 out_trade_no = data['out_trade_no']
