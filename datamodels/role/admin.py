@@ -53,8 +53,7 @@ class CustomerAdmin(admin.ModelAdmin):
 
     def avatar(self, obj):
         if obj.id:
-            src = 'http://lhxq.top/' + obj.avatar_url.name if obj.avatar_url else ''
-            return format_html('<img src="%s" height="150">' % src)
+            return format_html('<img src="%s" height="150">' % obj.avatar_url)
         return ''
 
     avatar.short_description = '头像'
@@ -76,14 +75,11 @@ class VipAdmin(admin.ModelAdmin):
 
     list_display = ('account', 'name', 'age', 'gender', 'avatar')
     list_filter = ('gender',)
-    # fields = ('account', 'name', 'age', 'gender', 'avatar')
     readonly_fields = ('avatar',)
 
     def avatar(self, obj):
         if obj.id:
-            src = 'http://lhxq.top/' + obj.avatar_url.name if obj.avatar_url else ''
-            if src:
-                return format_html('<img src="%s" height="80">' % src)
+            return format_html('<img src="%s" height="150">' % obj.avatar_url)
         return ''
 
     avatar.short_description = '头像'
