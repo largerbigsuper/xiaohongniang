@@ -15,7 +15,7 @@ from rest_framework.viewsets import GenericViewSet
 from LV import settings
 from LV.settings_lv import Platform
 from datamodels.role.api.serializers import CustomerBaseInfoSerializer, RecommedCustomerSerializer, \
-    InviteRecordSerializer, CustomerRegisterSerializer, MiniprogramLoginSerializer
+    InviteRecordSerializer, CustomerRegisterSerializer, MiniprogramLoginSerializer, IndexTopCustomerSerializer
 from datamodels.role.models import mm_Customer, mm_InviteRecord
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_CustomerPoint
@@ -30,7 +30,7 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = mm_Customer.all()
     serializer_class = CustomerBaseInfoSerializer
 
-    @action(detail=False)
+    @action(detail=False, serializer_class=IndexTopCustomerSerializer)
     def service_top(self, request):
         """置顶人员"""
         self.queryset = mm_Customer.show_in_home_page()

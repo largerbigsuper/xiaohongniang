@@ -28,11 +28,11 @@ class AdminArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('category', 'headline', 'content', 'create_at', 'is_published', 'tag')
+        fields = ('category', 'headline', 'content', 'create_at', 'is_published', 'tag', 'bgimage_url')
 
 
 class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('category', 'headline', 'content', 'create_at')
+        fields = ('category', 'headline', 'content', 'create_at', 'bgimage_url')

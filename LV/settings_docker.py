@@ -33,8 +33,8 @@ QINIU_SECURE_URL = False
 
 
 class RongYunSettings:
-    APP_KEY = 'k51hidwqk404b'
-    APP_SECRET = 'JV6ZKZWpM4TZ'
+    APP_KEY = 'mgb7ka1nmdwtg'
+    APP_SECRET = 'yKLJ0i0bmLZP'
 
 
 class AlipaySettings:

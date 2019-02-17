@@ -24,6 +24,7 @@ Customer_Fields = ['id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'acco
                    ]
 
 Base_Info_fields = ['id', 'name', 'age', 'gender', 'avatar_url']
+Index_Top_Info_fields = Base_Info_fields + ['address_home']
 Recommend_Info_fields = Base_Info_fields + ['height']
 Admin_Info_Fields = ['id', 'user_id', 'name', 'gender', 'account']
 
@@ -83,6 +84,13 @@ class RecommedCustomerSerializer(BaseCustomerSerialzier):
     class Meta:
         model = Customer
         fields = Recommend_Info_fields
+
+
+class IndexTopCustomerSerializer(BaseCustomerSerialzier):
+
+    class Meta:
+        model = Customer
+        fields = Index_Top_Info_fields
 
 
 class AdminCustomerListSerilizer(BaseCustomerSerialzier):
