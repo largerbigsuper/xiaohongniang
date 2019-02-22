@@ -35,7 +35,7 @@ class VipFilter(admin.SimpleListFilter):
         if self.value() == 'Normal':
             return queryset.exclude(service_vip_expired_at__lt=datetime.now())
         if self.value() == 'Vip':
-            return queryset.filter(service_vip_expired_at__lt=datetime.now())
+            return queryset.filter(service_vip_expired_at__gt=datetime.now())
 
 
 class CustomerAdmin(admin.ModelAdmin):
@@ -86,7 +86,7 @@ class VipAdmin(admin.ModelAdmin):
     avatar.allow_tags = True
 
     def get_queryset(self, request):
-        return Customer.objects.exclude(service_vip_expired_at=None)
+        return Customer.objects.exclude(service_vip_expired_at__gt=datetime.now())
 
 
 admin.site.register(Vip, VipAdmin)
