@@ -45,6 +45,6 @@ urlpatterns = [
 ] + admin_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-# admin.site.site_header = '邯郸小红娘'
-admin.site.site_header = '雪球项目管理平台'
+admin.site.site_header = '邯郸小红娘'
+# admin.site.site_header = '雪球项目管理平台'
 admin.site.unregister(User)
