@@ -1,7 +1,4 @@
-import json
-
 from django.contrib import admin
-from django.utils.html import format_html
 
 from datamodels.feedback.models import FeedBack, Report
 
@@ -9,6 +6,7 @@ from datamodels.feedback.models import FeedBack, Report
 @admin.register(FeedBack)
 class FeedBackAdmin(admin.ModelAdmin):
 
+    list_per_page = 20
     list_display = ('id', 'customer', 'content', 'create_at', 'deal_status')
     # fields = ('customer', 'content', 'deal_status')
     list_editable = ('deal_status',)
@@ -19,7 +17,7 @@ class FeedBackAdmin(admin.ModelAdmin):
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
-
+    list_per_page = 20
     list_display = ('id', 'customer', 'to_customer', 'report_type', 'detail', 'create_at', 'deal_status', 'images_html')
     list_editable = ('deal_status',)
     list_filter = ('deal_status', 'report_type', 'create_at')

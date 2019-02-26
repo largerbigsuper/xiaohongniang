@@ -4,18 +4,18 @@ from datamodels.articles.models import Tag, Article
 
 
 @admin.register(Tag)
-class TadAdmin(admin.ModelAdmin):
-
+class TagAdmin(admin.ModelAdmin):
+    list_per_page = 20
     list_display = ('name', 'level')
 
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-
+    list_per_page = 20
     list_display = ('category', 'tag', 'headline', 'editor', 'create_at', 'is_published')
     readonly_fields = ('create_at',)
     list_filter = ('category', 'tag', 'is_published', 'create_at')
-    search_fields = ('headline', )
+    search_fields = ('headline', 'customer__account')
 
     exclude = ('editor',)
 

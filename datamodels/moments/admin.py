@@ -14,7 +14,7 @@ class TopicAdmin(admin.ModelAdmin):
 
 @admin.register(Moments)
 class MomentsAdmin(admin.ModelAdmin):
-
+    list_per_page = 20
     list_display = ('id', 'customer', 'text', 'function_type',
                     'create_at', 'comment_total', 'like_total', 'is_hidden_name',
                     'address',)
@@ -28,15 +28,15 @@ class MomentsAdmin(admin.ModelAdmin):
 
 @admin.register(Comments)
 class CommentsAdmin(admin.ModelAdmin):
-
+    list_per_page = 20
     list_display = ('id', 'from_customer', 'to_customer', 'moment', 'text', 'create_at')
     list_filter = ('create_at',)
-    search_fields = ('text',)
+    search_fields = ('text', 'customer__account')
 
 
 @admin.register(Likes)
 class LikesAdmin(admin.ModelAdmin):
-
+    list_per_page = 20
     list_display = ('id', 'customer', 'moment', 'create_at')
     list_filter = ('create_at',)
     search_fields = ('customer__account',)
