@@ -124,4 +124,78 @@ class Notice(models.Model):
         verbose_name_plural = '消息管理'
 
 
+class DemandManager(BaseManger):
+
+    Status_Need_Reply = 0
+    Status_Accepted = 1
+    Status_Refused = 2
+
+    Status_Choice = (
+        (Status_Need_Reply, '未回复'),
+        (Status_Accepted, '接受'),
+        (Status_Refused, '拒绝'),
+    )
+
+    Type_Ask_Wechat = 0
+    Type_Make_Date = 1
+    Type_Choice = (
+        (Type_Ask_Wechat, '请求微信'),
+        (Type_Make_Date, '帮我约她')
+    )
+
+    def received(self, customer_id, status=None, demand_type=None):
+        f = {
+            'to_customer_id': customer_id
+        }
+        if status is not None:
+            f['status'] = status
+        if demand_type is not None:
+            f['demand_type'] = demand_type
+        return self.filter(**f).order_by('-id')
+
+
+class Demand(models.Model):
+
+    demand_type = models.PositiveSmallIntegerField(verbose_name='请求类型',
+                                                   choices=DemandManager.Type_Choice,
+                                                   default=DemandManager.Type_Ask_Wechat)
+    customer = models.ForeignKey('role.Customer', verbose_name='申请人', on_delete=models.CASCADE)
+    to_customer = models.ForeignKey('role.Customer', verbose_name='请求对象', on_delete=models.CASCADE,
+                                    related_name='exchange_user')
+    status = models.PositiveSmallIntegerField(verbose_name='申请状态', choices=DemandManager.Status_Choice,
+                                              default=DemandManager.Status_Need_Reply)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = DemandManager()
+
+    class Meta:
+        db_table = 'lv_demand'
+        verbose_name = verbose_name_plural = '帮我约/微信交换申请'
+
+
+class WechatCardManager(BaseManger):
+
+    def mycards(self, customer_id):
+        return self.filter(customer_id=customer_id).order_by('-id')
+
+    def add_wechat(self, customer_id, accepted_customer_id, wechat):
+
+        return self.get_or_create(customer_id=customer_id, accepted_customer_id=accepted_customer_id, wechat=wechat)
+
+
+class WechatCard(models.Model):
+
+    customer = models.ForeignKey('role.Customer', verbose_name='所有人', on_delete=models.CASCADE)
+    accepted_customer = models.ForeignKey('role.Customer', related_name='accepted_customers', on_delete=models.CASCADE)
+    wechat = models.CharField(max_length=100, verbose_name='微信号')
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+
+    objects = WechatCardManager()
+
+    class Meta:
+        db_table = 'lv_wechat_card'
+
+
 mm_Notice = Notice.objects
+mm_Demand = Demand.objects
+mm_WechatCard = WechatCard.objects
