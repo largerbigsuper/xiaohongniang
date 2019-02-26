@@ -39,55 +39,61 @@ class VipFilter(admin.SimpleListFilter):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    # 字段为空显示内容
-    # empty_value_display = '--'
-    #
-    # formfield_overrides = {
-    #     models.TextField: {'widget': RichTextEditorWidget},
-    # }
 
-    list_display = ('account', 'name', 'age', 'gender', 'avatar_url')
-    list_filter = (VipFilter, 'gender')
+    list_per_page = 20
+
+    def get_queryset(self, request):
+        return super(CustomerAdmin, self).get_queryset(request).select_related('user')
+
+    list_display = ('account', 'name', 'age', 'gender', 'date_joined')
+    list_filter = (VipFilter, 'gender', 'user__date_joined')
     # fields = ('account', 'name', 'age', 'gender', 'avatar')
-    # readonly_fields = ('avatar', )
+    readonly_fields = ('avatar', )
+    search_fields = ('account', 'name')
 
     def avatar(self, obj):
         if obj.id:
-            return format_html('<img src="%s" height="150">' % obj.avatar_url)
+            return format_html('<img src="%s" height="80">' % obj.avatar_url)
         return ''
 
     avatar.short_description = '头像'
     avatar.allow_tags = True
+
+    def date_joined(self, obj):
+        return obj.user.date_joined
+    date_joined.short_description = '注册时间'
+    date_joined.allow_tags = True
 
 
 admin.site.register(Customer, CustomerAdmin)
 
-
-class Vip(Customer):
-
-    class Meta:
-        proxy = True
-        verbose_name = '会员'
-        verbose_name_plural = '会员'
-
-
-class VipAdmin(admin.ModelAdmin):
-
-    list_display = ('account', 'name', 'age', 'gender', 'avatar')
-    list_filter = ('gender',)
-    readonly_fields = ('avatar',)
-
-    def avatar(self, obj):
-        if obj.id:
-            return format_html('<img src="%s" height="150">' % obj.avatar_url)
-        return ''
-
-    avatar.short_description = '头像'
-    avatar.allow_tags = True
-
-    def get_queryset(self, request):
-        return Customer.objects.exclude(service_vip_expired_at__gt=datetime.now())
-
-
-admin.site.register(Vip, VipAdmin)
+#
+# class Vip(Customer):
+#
+#     class Meta:
+#         proxy = True
+#         verbose_name = '会员'
+#         verbose_name_plural = '会员'
+#
+#
+# # class VipAdmin(admin.ModelAdmin):
+#
+#     list_display = ('account', 'name', 'age', 'gender', 'avatar')
+#     list_filter = ('gender', 'user__date_joined')
+#     readonly_fields = ('avatar',)
+#     search_fields = ('account', 'name')
+#
+#     def avatar(self, obj):
+#         if obj.id:
+#             return format_html('<img src="%s" height="80">' % obj.avatar_url)
+#         return ''
+#
+#     avatar.short_description = '头像'
+#     avatar.allow_tags = True
+#
+#     def get_queryset(self, request):
+#         return Customer.objects.exclude(service_vip_expired_at__gt=datetime.now())
+#
+#
+# admin.site.register(Vip, VipAdmin)
 
