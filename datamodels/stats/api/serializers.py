@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 from datamodels.role.api.serializers import AdminCustomerListSerilizer
 from datamodels.role.models import Customer
-from datamodels.stats.models import CustomerPoint
+from datamodels.stats.models import CustomerPoint, MessageTemplate
 
 
 class PointSerializer(serializers.ModelSerializer):
@@ -26,4 +26,8 @@ class AdminPointSerializer(serializers.ModelSerializer):
         fields = ('customer', 'in_or_out', 'amount', 'total_left', 'action', 'desc', 'create_at', )
 
 
+class MessageTempalteSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = MessageTemplate
+        fields = ('id', 'text', 'create_at')

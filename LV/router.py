@@ -15,7 +15,7 @@ from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, Custome
     AdminServiceCertificationViewSet
 from datamodels.role.api.viewsets import  CustomerViewSet, InviteRecordViewSet
 from datamodels.role.api.viewset_admin import AdminInviteRecordViewSet, AdminOpreationViewSet, AdminCustomerViewSet
-from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet
+from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet, MessageTemplateViewSet
 
 router = routers.DefaultRouter()
 router.register('bottles', BottlesViewSet, base_name='bottles')
@@ -28,6 +28,7 @@ router.register('customers', CustomerViewSet, base_name='customer')
 router.register('invite-records', InviteRecordViewSet, base_name='invite-record')
 router.register('demands', DemandViewSet, base_name='demand')
 router.register('wechatcards', MyWechatCardViewSet, base_name='wechatcard')
+router.register('message-templates', MessageTemplateViewSet, base_name='message-tempalte')
 
 router.register('admin/op', AdminOpreationViewSet, base_name='admin-op')
 router.register('admin/customers', AdminCustomerViewSet, base_name='admin-customers')
