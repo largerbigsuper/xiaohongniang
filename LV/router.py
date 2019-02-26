@@ -10,6 +10,7 @@ from datamodels.articles.api.viewsets import AdminArticleViewSet, ArticleViewSet
 from datamodels.bottles.api.viewsets import BottlesViewSet, PickedBottlesViewSet, MyBottlesViewSet, AdminBottlesViewSet
 from datamodels.feedback.api.viewsets import AdminReportViewSet, AdminFeedBackViewSet
 from datamodels.moments.api.viewsets import AdminTopicViewSet, AdminMomentsViewSet
+from datamodels.notices.api.viewsets import DemandViewSet, MyWechatCardViewSet
 from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, CustomerVirtualServiceViewSet, \
     AdminServiceCertificationViewSet
 from datamodels.role.api.viewsets import  CustomerViewSet, InviteRecordViewSet
@@ -25,6 +26,8 @@ router.register('articles', ArticleViewSet, base_name='article')
 router.register('points', PointViewSet, base_name='point')
 router.register('customers', CustomerViewSet, base_name='customer')
 router.register('invite-records', InviteRecordViewSet, base_name='invite-record')
+router.register('demands', DemandViewSet, base_name='demand')
+router.register('wechatcards', MyWechatCardViewSet, base_name='wechatcard')
 
 router.register('admin/op', AdminOpreationViewSet, base_name='admin-op')
 router.register('admin/customers', AdminCustomerViewSet, base_name='admin-customers')
