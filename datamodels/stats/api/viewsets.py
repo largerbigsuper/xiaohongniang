@@ -4,13 +4,13 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : viewsets.py
-from rest_framework import mixins
+from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 from django_filters import rest_framework as filters
 
-from datamodels.stats.api.serializers import PointSerializer, AdminPointSerializer
-from datamodels.stats.models import mm_CustomerPoint, CustomerPoint
+from datamodels.stats.api.serializers import PointSerializer, AdminPointSerializer, MessageTempalteSerializer
+from datamodels.stats.models import mm_CustomerPoint, CustomerPoint, mm_MessageTemplate
 
 
 class PointFilter(filters.FilterSet):
@@ -34,6 +34,18 @@ class PointViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         return mm_CustomerPoint.filter(customer_id=self.request.session['customer_id'])
+
+
+class MessageTemplateViewSet(viewsets.ModelViewSet):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessageTempalteSerializer
+
+    def get_queryset(self):
+        return mm_MessageTemplate.my_templates(self.request.session['customer_id'])
+
+    def perform_create(self, serializer):
+        serializer.save(customer_id=self.request.session['customer_id'])
 
 
 class AdminPointViewSet(mixins.ListModelMixin, GenericViewSet):

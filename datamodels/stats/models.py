@@ -167,7 +167,7 @@ class CustomerPointManager(BaseManger):
 
 class CustomerPoint(models.Model):
 
-    customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE)
+    customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='用户')
     in_or_out = models.PositiveSmallIntegerField(verbose_name='增加/减少',
                                                  choices=CustomerPointManager.In_Or_Out,
                                                  default=CustomerPointManager.In)
@@ -186,5 +186,24 @@ class CustomerPoint(models.Model):
         ordering = ['-create_at']
 
 
+class MessageTemplateManager(BaseManger):
+
+    def my_templates(self, customer_id):
+        return self.filter(customer_id=customer_id).order_by('-id')
+
+
+class MessageTemplate(models.Model):
+
+    customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='用户')
+    text = models.CharField(verbose_name='内容', max_length=200)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = MessageTemplateManager()
+
+    class Meta:
+        db_table = 'lv_message_template'
+
+
 mm_OperationRecord = OperationRecord.objects
 mm_CustomerPoint = CustomerPoint.objects
+mm_MessageTemplate = MessageTemplate.objects
