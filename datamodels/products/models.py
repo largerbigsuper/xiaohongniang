@@ -245,7 +245,65 @@ class CustomerOrder(models.Model):
         verbose_name_plural = '订单管理'
 
 
+class SkuManager(BaseManger):
+    pass
+
+
+class Sku(models.Model):
+
+    name = models.CharField(verbose_name='商品名', max_length=100, db_index=True)
+    cover_image = models.ImageField(verbose_name='封面图')
+    description = models.CharField(verbose_name='产品简介', max_length=200)
+    total = models.PositiveIntegerField(verbose_name='总量', default=0)
+    point = models.PositiveIntegerField(verbose_name='所需积分', default=0)
+    in_sale = models.BooleanField(verbose_name='在售', default=False)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = SkuManager()
+
+    class Meta:
+        db_table = 'lv_sku'
+        verbose_name = verbose_name_plural = '兑换商品管理'
+
+    def __str__(self):
+        return self.name
+
+
+class SkuExchageManager(BaseManger):
+
+    Status_Submited = 0
+    Status_Done = 1
+    Status_Refused = 2
+
+    Status_Choice = (
+        (Status_Submited, '已提交'),
+        (Status_Done, '已兑换'),
+        (Status_Refused, '拒绝兑换'),
+    )
+
+    def exchage(self, customer_id, sku_id):
+        return self.create(customer_id=customer_id, sku_id=sku_id)
+
+
+class SkuExchage(models.Model):
+
+    customer = models.ForeignKey('role.Customer', verbose_name='申请人', on_delete=models.CASCADE)
+    sku = models.ForeignKey(Sku, verbose_name='申请的商品', on_delete=models.CASCADE)
+    status = models.PositiveSmallIntegerField(verbose_name='申请状态',
+                                              choices=SkuExchageManager.Status_Choice,
+                                              default=SkuExchageManager.Status_Submited)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = SkuExchageManager()
+
+    class Meta:
+        db_table = 'lv_sku_exchage'
+        verbose_name = verbose_name_plural = '兑换申请管理'
+
+
 mm_VirtualService = VirtualService.objects
 mm_ServiceCertification = ServiceCertification.objects
 mm_CustomerOrder = CustomerOrder.objects
 mm_AlipayOrder = AlipayOrder.objects
+mm_Sku = Sku.objects
+mm_SkuExchage = SkuExchage.objects

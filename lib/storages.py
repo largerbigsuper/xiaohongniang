@@ -33,7 +33,7 @@ class StorageObject(Storage):
         ret, info = put_data(token, self._new_name(name), file_data.read())
 
         if info.status_code == 200:
-            base_url = '%s/%s' % (QiniuServe.bucket_domain_dict['image'], ret.get("key"))
+            base_url = '%s%s' % (QiniuServe.bucket_domain_dict['image'], ret.get("key"))
             # 表示上传成功, 返回文件名
             return base_url
         else:
