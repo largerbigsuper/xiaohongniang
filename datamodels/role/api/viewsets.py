@@ -6,6 +6,7 @@
 # @File    : veiwset.py
 import requests
 from django.views.decorators.csrf import csrf_exempt
+from django_filters.rest_framework import FilterSet, OrderingFilter, CharFilter, NumberFilter
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -24,11 +25,36 @@ from lib.common import HeadersKey
 from lib.tools import gen_invite_code, decode_invite_code
 
 
+class CustomerFilter(FilterSet):
+
+    o = OrderingFilter(
+        fields={
+            'id': 'id',
+            'last_request_at': 'last_request_at'
+        },
+    )
+
+    class Meta:
+        model = mm_Customer.model
+        fields = {
+            'gender': ['exact'],
+            'age': ['exact', 'gte', 'lte'],
+            'profession': ['exact'],
+            'height': ['gte', 'lte'],
+            'income': ['exact'],
+            'education': ['exact'],
+            'marital_status': ['exact'],
+            'child_status': ['exact'],
+            'years_to_marry': ['exact'],
+        }
+
+
 class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     queryset = mm_Customer.all()
     serializer_class = CustomerBaseInfoSerializer
+    filterset_class = CustomerFilter
 
     @action(detail=False, serializer_class=IndexTopCustomerSerializer)
     def service_top(self, request):
