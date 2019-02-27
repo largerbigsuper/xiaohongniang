@@ -22,7 +22,7 @@ class DemandViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     serializer_class = MyDemandListSerializer
 
     def get_queryset(self):
-        return mm_Demand.received(self.request.session['customer_id'])
+        return mm_Demand.filter(customer_id=self.request.session['customer_id'])
 
     @action(methods=['post'], serializer_class=DemandCreateSerializer, detail=False)
     def ask_wechat(self, request):
@@ -62,7 +62,10 @@ class DemandViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         serializer.save()
         if obj.demand_type == mm_Demand.Type_Ask_Wechat:
             if serializer.validated_data['status'] == mm_Demand.Status_Accepted:
-                mm_WechatCard.add_wechat(obj.customer_id, customer_id, obj.customer.wechat_id)
+                # 更新申请人微信名片
+                mm_WechatCard.add_wechat(obj.customer_id, requset.user.customer.id, requset.user.customer.wechat_id)
+                # 更新被申请人的名片列表
+                mm_WechatCard.add_wechat(requset.user.customer.id, obj.customer_id, obj.customer.wechat_id)
             elif serializer.validated_data['status'] == mm_Demand.Status_Refused:
                 pass
             else:
