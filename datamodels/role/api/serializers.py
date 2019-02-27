@@ -4,10 +4,13 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : serializers.py
+from datetime import datetime
+
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from rest_framework import serializers
 
-from datamodels.role.models import Customer, InviteRecord
+from datamodels.role.models import Customer, InviteRecord, mm_RelationShip
 from lib.fields import JsonField
 
 
@@ -29,23 +32,43 @@ Recommend_Info_fields = Base_Info_fields + ['height']
 Admin_Info_Fields = ['id', 'user_id', 'name', 'gender', 'account']
 
 
+class CustomerListSerializer(serializers.ModelSerializer):
+    relation_status = serializers.SerializerMethodField()
+    is_myself = serializers.SerializerMethodField()
+    last_request_at = serializers.SerializerMethodField()
+
+    def get_last_request_at(self, obj):
+        key = mm_RelationShip.customer_last_request % obj.id
+        v = cache.get(key)
+        t = datetime.fromtimestamp(v) if v else obj.last_request_at
+        if t:
+            return t.isoformat()
+        else:
+            return None
+
+    def get_relation_status(self, obj):
+        customer_id = self.context['request'].session['customer_id']
+        if not hasattr(self, '_relation_map'):
+            self._relation_map = mm_RelationShip.get_following_customer_ids_map(customer_id)
+        return self._relation_map.get(obj.id, -1)
+
+    def get_is_myself(self, obj):
+        return obj.id == self.context['request'].session['customer_id']
+
+    class Meta:
+        model = Customer
+        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url',
+                  'wechat_id', 'intro', 'im_token',
+                  'address_company', 'address_home', 'relation_status',
+                  'following_count', 'followers_count', 'blocked_count', 'is_myself',
+                  'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
+                  'service_vip_expired_at',
+                  )
+
+
 class BaseCustomerSerialzier(serializers.ModelSerializer):
     condition = JsonField(required=False)
     images = JsonField(required=False)
-
-
-class CustomerSerializer(BaseCustomerSerialzier):
-    class Meta:
-        model = Customer
-        fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
-                  'wechat_id', 'intro', 'address_home', 'address_company', 'im_token',
-                  'following_count', 'followers_count', 'blocked_count',
-                  'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
-                  'expect_desc',
-                  'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
-                  'child_status', 'years_to_marry', 'score', 'condition', 'images'
-                  )
-        read_only_fields = ('account', 'user', 'id', 'im_token')
 
 
 class CustomerProfileSerialier(BaseCustomerSerialzier):
