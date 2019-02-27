@@ -20,9 +20,10 @@ class DemandViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
     permission_classes = (IsAuthenticated,)
     serializer_class = MyDemandListSerializer
+    queryset = mm_Demand.all()
 
-    def get_queryset(self):
-        return mm_Demand.filter(customer_id=self.request.session['customer_id'])
+    # def get_queryset(self):
+    #     return mm_Demand.filter(customer_id=self.request.session['customer_id'])
 
     @action(methods=['post'], serializer_class=DemandCreateSerializer, detail=False)
     def ask_wechat(self, request):
