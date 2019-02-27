@@ -178,15 +178,18 @@ class WechatCardManager(BaseManger):
     def mycards(self, customer_id):
         return self.filter(customer_id=customer_id).order_by('-id')
 
-    def add_wechat(self, customer_id, accepted_customer_id, wechat):
+    def add_wechat(self, customer_id, accepted_customer_id, accepted_customer_wechat):
 
-        return self.get_or_create(customer_id=customer_id, accepted_customer_id=accepted_customer_id, wechat=wechat)
+        return self.get_or_create(customer_id=customer_id,
+                                  accepted_customer_id=accepted_customer_id,
+                                  wechat=accepted_customer_wechat)
 
 
 class WechatCard(models.Model):
 
-    customer = models.ForeignKey('role.Customer', verbose_name='所有人', on_delete=models.CASCADE)
-    accepted_customer = models.ForeignKey('role.Customer', related_name='accepted_customers', on_delete=models.CASCADE)
+    customer = models.ForeignKey('role.Customer', verbose_name='申请人', on_delete=models.CASCADE)
+    accepted_customer = models.ForeignKey('role.Customer', related_name='accepted_customers',
+                                          on_delete=models.CASCADE, verbose_name='被申请人')
     wechat = models.CharField(max_length=100, verbose_name='微信号')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
