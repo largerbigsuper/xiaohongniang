@@ -9,9 +9,13 @@ from datetime import datetime
 
 from rest_framework import serializers
 
-from datamodels.products.models import mm_VirtualService, VirtualService, ServiceCertification
+from datamodels.products.models import mm_VirtualService, VirtualService, ServiceCertification, Sku, SkuExchage
 from datamodels.role.api.serializers import AdminCustomerListSerilizer
 from lib.fields import JsonField
+
+
+class NoneParamsSerializer(serializers.Serializer):
+    pass
 
 
 class BaseVirtualServiceSerializer(serializers.ModelSerializer):
@@ -62,3 +66,19 @@ class AdminServiceCertificationSerializer(ServiceCertificationSerializer):
     class Meta:
         model = ServiceCertification
         fields = ('id', 'virtual_service', 'expired_at', 'create_at', 'expired', 'customer')
+
+
+class SkuSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Sku
+        fields = ('id', 'name', 'cover_image', 'description', 'total', 'point')
+
+
+class SkuExchageSerializer(serializers.ModelSerializer):
+
+    sku = SkuSerializer(read_only=True)
+
+    class Meta:
+        model = SkuExchage
+        fields = ('id', 'sku', 'status', 'create_at')

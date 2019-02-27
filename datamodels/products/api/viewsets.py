@@ -13,8 +13,10 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from datamodels.products.api.serialziers import AdminVirtualServiceSerializer, CustomerBuyServiceSerializer, \
-    VirtualServiceSerializer, ServiceCertificationSerializer, AdminServiceCertificationSerializer
-from datamodels.products.models import mm_VirtualService, mm_AlipayOrder, mm_ServiceCertification
+    VirtualServiceSerializer, ServiceCertificationSerializer, AdminServiceCertificationSerializer, SkuSerializer, \
+    SkuExchageSerializer, NoneParamsSerializer
+from datamodels.products.models import mm_VirtualService, mm_AlipayOrder, mm_ServiceCertification, mm_Sku, mm_SkuExchage
+from datamodels.stats.models import mm_CustomerPoint
 
 
 class AdminVirtualServiceViewSet(viewsets.ModelViewSet):
@@ -69,3 +71,37 @@ class AdminServiceCertificationViewSet(viewsets.ModelViewSet):
     queryset = mm_ServiceCertification.all()
 
 
+class SkuViewSet(mixins.ListModelMixin,
+                 mixins.RetrieveModelMixin,
+                 GenericViewSet):
+
+    permission_classes = []
+    serializer_class = SkuSerializer
+
+    def get_queryset(self):
+        return mm_Sku.filter(in_sale=True)
+
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated], serializer_class=NoneParamsSerializer)
+    def exchage(self, request, pk=None):
+        total_point = mm_CustomerPoint.get_total_point(request.session['customer_id'])
+        sku = self.get_object()
+        if sku.point > total_point:
+            data = {
+                'detail': '积分不足'
+            }
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        record = mm_SkuExchage.exchage(request.session['customer_id'], pk)
+        serializer = SkuExchageSerializer(record)
+        return Response(data=serializer.data)
+
+
+class SkuExchageViewSet(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
+                        mixins.DestroyModelMixin,
+                        GenericViewSet):
+
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = SkuExchageSerializer
+
+    def get_queryset(self):
+        return mm_SkuExchage.filter(customer_id=self.request.session['customer_id'])

@@ -12,7 +12,7 @@ from datamodels.feedback.api.viewsets import AdminReportViewSet, AdminFeedBackVi
 from datamodels.moments.api.viewsets import AdminTopicViewSet, AdminMomentsViewSet
 from datamodels.notices.api.viewsets import DemandViewSet, MyWechatCardViewSet
 from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, CustomerVirtualServiceViewSet, \
-    AdminServiceCertificationViewSet
+    AdminServiceCertificationViewSet, SkuViewSet, SkuExchageViewSet
 from datamodels.role.api.viewsets import  CustomerViewSet, InviteRecordViewSet
 from datamodels.role.api.viewset_admin import AdminInviteRecordViewSet, AdminOpreationViewSet, AdminCustomerViewSet
 from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet, MessageTemplateViewSet
@@ -29,6 +29,9 @@ router.register('invite-records', InviteRecordViewSet, base_name='invite-record'
 router.register('demands', DemandViewSet, base_name='demand')
 router.register('wechatcards', MyWechatCardViewSet, base_name='wechatcard')
 router.register('message-templates', MessageTemplateViewSet, base_name='message-tempalte')
+router.register('skus', SkuViewSet, base_name='sku')
+router.register('sku-exchages', SkuExchageViewSet, base_name='sku-exchage')
+
 
 router.register('admin/op', AdminOpreationViewSet, base_name='admin-op')
 router.register('admin/customers', AdminCustomerViewSet, base_name='admin-customers')
