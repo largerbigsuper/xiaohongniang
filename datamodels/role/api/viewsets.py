@@ -16,7 +16,8 @@ from rest_framework.viewsets import GenericViewSet
 from LV import settings
 from LV.settings_lv import Platform
 from datamodels.role.api.serializers import CustomerBaseInfoSerializer, RecommedCustomerSerializer, \
-    InviteRecordSerializer, CustomerRegisterSerializer, MiniprogramLoginSerializer, IndexTopCustomerSerializer
+    InviteRecordSerializer, CustomerRegisterSerializer, MiniprogramLoginSerializer, IndexTopCustomerSerializer, \
+    CustomerListSerializer
 from datamodels.role.models import mm_Customer, mm_InviteRecord
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_CustomerPoint
@@ -53,7 +54,7 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     queryset = mm_Customer.all()
-    serializer_class = CustomerBaseInfoSerializer
+    serializer_class = CustomerListSerializer
     filterset_class = CustomerFilter
 
     @action(detail=False, serializer_class=IndexTopCustomerSerializer)
