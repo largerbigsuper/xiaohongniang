@@ -4,6 +4,7 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : views.py
+from django.conf import settings
 from django.core.cache import cache
 from django.views import View
 from rest_framework.response import Response
@@ -56,7 +57,8 @@ class APPConfigView(APIView):
             'desc': '修复图片显示问题，更换雪球logo',
             'music': 'http://oys4026ng.bkt.clouddn.com/musiclight.mp3',
             'user_total': user_total,
-            'image_domain': QiNiuSettings.BUCKET_DOMAIN_DICT['image']
+            'image_domain': QiNiuSettings.BUCKET_DOMAIN_DICT['image'],
+            'chat_times_limit': settings.NORNAML_CUSTOMER_CHAT_TIMES_LIMIT_PER_DAY,
 
         }
         return Response(Tool.format_data(app_config))

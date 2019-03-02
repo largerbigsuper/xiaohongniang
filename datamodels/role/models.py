@@ -1,3 +1,4 @@
+import json
 import random
 import string
 import traceback
@@ -220,8 +221,30 @@ class CustomerManager(BaseManger):
 
     def recommend_customers(self, customer):
         timelimit = datetime.now() - timedelta(days=5)
-        return self.filter(last_request_at__gte=timelimit).exclude(
-            gender=customer.gender).order_by('-last_request_at', 'id')
+        f = {
+            'last_request_at__gte': timelimit,
+        }
+        #     "age_range": [10, 20],
+        #     "height_range": [180, 190],
+        #     "profession": 1,
+        #     "education": 1,
+        #     "income": 1,
+        #     "marital_status": 1,
+        #     "child_status": 1,
+        #     "years_to_marry": 1,
+        for k, v in customer.condition_json.items():
+            if k in ['age_range', 'height_range']:
+                prefix = k.split('_')[0]
+                heigh, low = v
+                if heigh:
+                    f[prefix + '__gte'] = heigh
+                if low:
+                    f[prefix + '__lte'] = low
+            else:
+                if v:
+                    f[k] = v
+
+        return self.filter(**f).exclude(gender=customer.gender).order_by('-last_request_at', 'id')
 
 
 class Customer(BaseRole):
@@ -234,7 +257,6 @@ class Customer(BaseRole):
         db_table = 'lv_customers'
         verbose_name = '用户'
         verbose_name_plural = '用户'
-
 
     def add_relationship(self, customer_id, status):
 
@@ -281,6 +303,10 @@ class Customer(BaseRole):
 
     def get_unfollowing_customers(self):
         return mm_Customer.all().exclude(pk__in=self.get_following_ids()).order_by('-last_request_at')
+
+    @property
+    def condition_json(self):
+        return json.loads(self.condition)
 
 
 RELATIONSHIP_BLOCKED = 0

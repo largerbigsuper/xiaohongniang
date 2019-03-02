@@ -46,8 +46,8 @@ class AlipaySettings:
 
 
 class MinprogramSettings:
-    APP_ID = 'wxf54e0eb3b0c3695d'
-    APP_SECRET = 'f439732d65b949dba943f0eaf809ba50'
+    APP_ID = 'wxdcbd25406b60939d'
+    APP_SECRET = 'cda1c1d81e62f458256fc142e75d0249'
     LOGIN_URL = 'https://api.weixin.qq.com/sns/jscode2session' \
                 '?appid={}&secret={}&grant_type=authorization_code&js_code='.format(APP_ID, APP_SECRET)
 
