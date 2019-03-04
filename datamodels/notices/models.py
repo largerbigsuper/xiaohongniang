@@ -137,10 +137,12 @@ class DemandManager(BaseManger):
     )
 
     Type_Ask_Wechat = 0
-    Type_Make_Date = 1
+    Type_Make_Date_Online = 1
+    Type_Make_Date_Offline = 2
     Type_Choice = (
         (Type_Ask_Wechat, '请求微信'),
-        (Type_Make_Date, '帮我约她')
+        (Type_Make_Date_Online, '线上约她'),
+        (Type_Make_Date_Offline, '线下约她'),
     )
 
     def received(self, customer_id, status=None, demand_type=None):

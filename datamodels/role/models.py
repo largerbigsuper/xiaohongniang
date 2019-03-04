@@ -109,6 +109,8 @@ class BaseRole(models.Model):
     service_show_index_expired_at = models.DateTimeField(verbose_name='置顶有效期', null=True, blank=True)
     invitecode = models.CharField(verbose_name='邀请码', max_length=8, null=True, blank=True)
     mini_openid = models.CharField(verbose_name='小程序openid', max_length=60, null=True, blank=True)
+    online_card_count = models.PositiveIntegerField(verbose_name='线上服务卡', default=0)
+    offline_card_count = models.PositiveIntegerField(verbose_name='线下服务卡', default=0)
 
     class Meta:
         abstract = True

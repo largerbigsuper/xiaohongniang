@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import F
 
 from LV.settings import AlipaySettings
 from datamodels.role.models import mm_Customer
@@ -16,11 +17,24 @@ from lib.pay import alipay_serve
 class VirtualServiceManager(BaseManger):
     Service_Vip = 1
     Service_Show_Index = 2
+    Service_Online_Card = 3
+    Service_Offline_Card = 4
+
+    Service_Group_Vip = [Service_Vip, Service_Show_Index]
+    Service_Group_Card = [Service_Online_Card, Service_Offline_Card]
 
     SERVICE_TYPE_CHOICE = (
         (Service_Vip, '会员'),
         (Service_Show_Index, '首页显示'),
+        (Service_Online_Card, '红娘线上服务卡'),
+        (Service_Offline_Card, '红娘线下服务卡'),
+
     )
+
+    Demand_Type_2_Service_Type = {
+        1: Service_Online_Card,  # 线下服务卡
+        2: Service_Offline_Card,  # 线上服务卡
+    }
 
     PRICELIST_FIELD_MAPPING = {
         "name": (str,),
@@ -41,6 +55,12 @@ class VirtualServiceManager(BaseManger):
                         raise ParamException(msg)
         except:
             raise ParamException('pricelist 格式应为json')
+
+    def modify_card(self, customer_id, service_type=Service_Online_Card, amount=1):
+        if service_type == self.Service_Online_Card:
+            mm_Customer.filter(pk=customer_id).update(online_card_count=F('online_card_count') + amount)
+        elif service_type == self.Service_Offline_Card:
+            mm_Customer.filter(pk=customer_id).update(offline_card_count=F('offline_card_count') + amount)
 
 
 class VirtualService(models.Model):

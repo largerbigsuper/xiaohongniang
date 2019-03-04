@@ -4,15 +4,17 @@
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : viewsets.py
-from rest_framework import viewsets, mixins
+from django.db import transaction
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from datamodels.notices.api.serializers import MyDemandListSerializer, DemandCreateSerializer, DemandToMeListSrializer, \
-    ReplyDemandSerializer, MyWechatCardSerializer
+from datamodels.notices.api.serializers import MyDemandListSerializer, DemandToMeListSrializer, \
+    ReplyDemandSerializer, MyWechatCardSerializer, DemandSerializer
 from datamodels.notices.models import mm_Demand, mm_WechatCard
+from datamodels.products.models import mm_VirtualService
 
 
 class DemandViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
@@ -25,21 +27,32 @@ class DemandViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     # def get_queryset(self):
     #     return mm_Demand.filter(customer_id=self.request.session['customer_id'])
 
-    @action(methods=['post'], serializer_class=DemandCreateSerializer, detail=False)
-    def ask_wechat(self, request):
-        """申请微信"""
+    @action(methods=['post'], serializer_class=DemandSerializer, detail=False)
+    def add_ask(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(customer=request.user.customer)
-        return Response()
+        demand_type = serializer.validated_data['demand_type']
+        if demand_type == 0:  # 申请微信
+            serializer.save(customer=request.user.customer, demand_type=mm_Demand.Type_Ask_Wechat)
+            return Response()
+        elif demand_type == 1:
 
-    @action(methods=['post'], serializer_class=DemandCreateSerializer, detail=False)
-    def ask_date(self, request):
-        """帮我约"""
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(customer=request.user.customer, demand_type=mm_Demand.Type_Make_Date)
-        return Response()
+            if request.user.customer.online_card_count < 1:
+                data = {
+                    'detail': '无可用线上服务卡'
+                }
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        elif demand_type == 2:
+            if request.user.customer.offline_card_count < 1:
+                data = {
+                    'detail': '无可用线下服务卡'
+                }
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        with transaction.atomic():
+            service_type = mm_VirtualService.Demand_Type_2_Service_Type.get(demand_type, 0)
+            mm_VirtualService.modify_card(request.session['customer_id'], service_type, -1)
+            serializer.save(customer=request.user.customer, demand_type=demand_type)
+            return Response()
 
     @action(detail=False)
     def mine(self, request, *args, **kwargs):

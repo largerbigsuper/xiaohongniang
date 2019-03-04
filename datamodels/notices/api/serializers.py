@@ -19,6 +19,14 @@ class DemandCreateSerializer(serializers.ModelSerializer):
         fields = ('id', 'to_customer_id')
 
 
+class DemandSerializer(serializers.ModelSerializer):
+    to_customer_id = serializers.PrimaryKeyRelatedField(source='to_customer', queryset=mm_Customer.all(),)
+
+    class Meta:
+        model = Demand
+        fields = ('id', 'to_customer_id', 'demand_type')
+
+
 class MyDemandListSerializer(serializers.ModelSerializer):
     to_customer = CustomerBaseInfoSerializer(read_only=True)
 
