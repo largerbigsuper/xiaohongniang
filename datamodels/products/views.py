@@ -48,13 +48,13 @@ class AliPayNotifyView(APIView):
                     order.status = mm_AlipayOrder.ORDER_STATU_DONE
                     order.trade_no = data['trade_no']
                     order.save()
+                    price_info = json.loads(order.virtual_service.pricelist)[order.price_index]
+                    days = price_info['days']
+                    service_name = order.virtual_service.name
+                    price_index_name = price_info['name']
+                    mm_CustomerOrder.add_order(order.customer, 1, order, out_trade_no, service_name,
+                                               price_index_name, total_amount)
                     if order.virtual_service.service_type in mm_VirtualService.Service_Group_Vip:
-                        price_info = json.loads(order.virtual_service.pricelist)[order.price_index]
-                        days = price_info['days']
-                        service_name = order.virtual_service.name
-                        price_index_name = price_info['name']
-                        mm_CustomerOrder.add_order(order.customer, 1, order, out_trade_no, service_name,
-                                                   price_index_name, total_amount)
                         mm_ServiceCertification.update_certification(order.customer_id, order.virtual_service, days)
                     elif order.virtual_service.service_type in mm_VirtualService.Service_Group_Card:
                         mm_VirtualService.modify_card(order.customer_id, order.virtual_service.service_type, 1)
