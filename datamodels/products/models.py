@@ -217,7 +217,7 @@ class OrderManager(BaseManger):
                 trade_type='APP',
                 out_trade_no=out_trade_no,
                 body=subject,
-                total_fee=total_amount * 100
+                total_fee=int(total_amount * 100)
             )
         return order_string
 
