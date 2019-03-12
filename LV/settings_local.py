@@ -49,6 +49,15 @@ class MinprogramSettings:
                 '?appid={}&secret={}&grant_type=authorization_code&js_code='.format(APP_ID, APP_SECRET)
 
 
+class WeChatPaySettings:
+    WEIXIN_APP_ID = 'wx502707dff6e8ce6c'
+    WEIXIN_APP_SECRET = '7968e86926fc96525807d0256edaadff'
+    WEIXIN_MCH_ID = '1527643731'
+    WEIXIN_MCH_KEY = 'handanxiaohongniang1234567890000'
+    WEIXIN_NOTIFY_URL = 'https://test.lhxq.top/products/wechatpay/notify/'
+
+
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 

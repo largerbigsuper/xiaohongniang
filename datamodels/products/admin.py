@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.utils.html import format_html
 
-from datamodels.products.models import VirtualService, ServiceCertification, CustomerOrder, AlipayOrder, Sku, SkuExchage
+from datamodels.products.models import VirtualService, ServiceCertification, CustomerOrder, Order, Sku, SkuExchage
 from datamodels.stats.models import mm_CustomerPoint
 
 
@@ -37,8 +37,8 @@ class CustomerOrderAdmin(admin.ModelAdmin):
     search_fields = ('customer__account',)
 
 
-@admin.register(AlipayOrder)
-class AlipayOrderAdmin(admin.ModelAdmin):
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
 
     list_per_page = 20
     list_display = ('id', 'customer', 'status', 'virtual_service', 'union_trade_no',
