@@ -41,7 +41,6 @@ class VirtualServiceSerializer(BaseVirtualServiceSerializer):
 
 
 class CustomerBuyServiceSerializer(serializers.Serializer):
-    pay_type = serializers.IntegerField(initial=1, default=1, label='pay_type', help_text='支付平台: 支付宝==1',)
     pay_from = serializers.CharField(initial='APP', default='APP', label='pay_from', help_text='支付方式: APP==APP支付')
     price_index = serializers.IntegerField(initial=0, default=0, label='price_index',
                                            help_text='价格套餐: 价格套餐对应index, 默认：0')

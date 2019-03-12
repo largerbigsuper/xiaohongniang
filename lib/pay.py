@@ -9,8 +9,9 @@ from datetime import datetime
 from random import choice
 
 from alipay import AliPay
+from weixin import WeixinPay
 
-from LV.settings import AlipaySettings
+from LV.settings import AlipaySettings, WeChatPaySettings
 
 
 def gen_union_trade_no(pay_type=1):
@@ -18,7 +19,7 @@ def gen_union_trade_no(pay_type=1):
     生成内部订单号
     格式：
     {pay_type}{20190119161237}{0001}
-    :param pay_type:
+    :param pay_type: 1: 支付宝， 2：微信
     :return:
     """
     create_time = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -39,3 +40,10 @@ alipay_serve = AliPay(
 )
 
 # alipay_serve = None
+
+wechatpay_serve = WeixinPay(
+    app_id=WeChatPaySettings.WEIXIN_APP_ID,
+    mch_id=WeChatPaySettings.WEIXIN_MCH_ID,
+    mch_key=WeChatPaySettings.WEIXIN_MCH_KEY,
+    notify_url=WeChatPaySettings.WEIXIN_NOTIFY_URL
+)

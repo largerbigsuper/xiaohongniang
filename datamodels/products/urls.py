@@ -10,4 +10,5 @@ from datamodels.products import views
 
 urlpatterns = [
     path('alipay/notify/', views.AliPayNotifyView.as_view()),
+    path('wechatpay/notify/', views.WechatPayNotifyView.as_view()),
 ]

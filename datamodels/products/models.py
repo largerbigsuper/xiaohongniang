@@ -11,7 +11,7 @@ from datamodels.role.models import mm_Customer
 from lib import pay
 from lib.common import BaseManger
 from lib.exceptions import ParamException
-from lib.pay import alipay_serve
+from lib.pay import alipay_serve, wechatpay_serve
 
 
 class VirtualServiceManager(BaseManger):
@@ -155,7 +155,7 @@ class ServiceCertification(models.Model):
             return True
 
 
-class AlipayOrderManager(BaseManger):
+class OrderManager(BaseManger):
     ORDER_STATU_UNPAY = 0
     ORDER_STATU_DONE = 1
 
@@ -197,12 +197,41 @@ class AlipayOrderManager(BaseManger):
             )
         return order_string
 
+    def create_wechat_order(self, customer_id, service_id, price_index, pay_from='APP'):
+        service = VirtualService.objects.get(pk=service_id)
+        price_info = json.loads(service.pricelist)[price_index]
+        subject = price_info['name']
+        total_amount = price_info['price']
+        out_trade_no = pay.gen_union_trade_no(pay_type=2)
+        order = self.add(customer_id=customer_id,
+                         virtual_service_id=service.id,
+                         union_trade_no=out_trade_no,
+                         service_name=service.name,
+                         price_index_name=subject,
+                         price_index=price_index,
+                         total_amount=total_amount,
+                         )
+        order_string = None
+        if pay_from == 'APP':
+            order_string = wechatpay_serve.unified_order(
+                trade_type='APP',
+                out_trade_no=out_trade_no,
+                body=subject,
+                total_fee=total_amount * 100
+            )
+        return order_string
 
-class AlipayOrder(models.Model):
+
+class Order(models.Model):
     STATUS_CHOICE = (
         (0, '未支付'),
         (1, '已支付'),
     )
+    PAY_TYPE_CHOICE = (
+        (1, '支付宝'),
+        (2, '微信')
+    )
+    pay_type = models.PositiveSmallIntegerField(verbose_name='支付平台', choices=PAY_TYPE_CHOICE, default=1)
     customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='购买人')
     status = models.PositiveSmallIntegerField(verbose_name='订单状态', choices=STATUS_CHOICE, default=0)
     virtual_service = models.ForeignKey('products.VirtualService', on_delete=models.CASCADE, verbose_name='服务')
@@ -214,15 +243,14 @@ class AlipayOrder(models.Model):
     total_amount = models.FloatField(verbose_name='总额', default=0)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
-    objects = AlipayOrderManager()
+    objects = OrderManager()
 
     class Meta:
-        db_table = 'lv_alipay_orders'
-        verbose_name = '支付宝订单管理'
-        verbose_name_plural = '支付宝订单管理'
+        db_table = 'lv_orders'
+        verbose_name = verbose_name_plural = '支付宝/微信订单管理'
 
     def __str__(self):
-        return '<AlipayOrder: {}>'. format(self.id)
+        return '<Order: {}>'. format(self.id)
 
 
 class CustomerOrderManager(BaseManger):
@@ -241,9 +269,10 @@ class CustomerOrderManager(BaseManger):
 class CustomerOrder(models.Model):
     PAY_TYPE_CHOICE = (
         (1, '支付宝'),
+        (2, '微信支付')
     )
     Content_Type_Choice = (
-        (ContentType.objects.get_for_model(AlipayOrder).id, '支付宝'),
+        (ContentType.objects.get_for_model(Order).id, '支付宝/支付宝'),
     )
     customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='购买人')
     pay_type = models.PositiveSmallIntegerField(verbose_name='支付方式', choices=PAY_TYPE_CHOICE, default=1)
@@ -324,6 +353,6 @@ class SkuExchage(models.Model):
 mm_VirtualService = VirtualService.objects
 mm_ServiceCertification = ServiceCertification.objects
 mm_CustomerOrder = CustomerOrder.objects
-mm_AlipayOrder = AlipayOrder.objects
+mm_Order = Order.objects
 mm_Sku = Sku.objects
 mm_SkuExchage = SkuExchage.objects
