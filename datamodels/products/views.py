@@ -77,13 +77,14 @@ class WechatPayNotifyView(APIView):
         """
         微信异步通知
         """
-        data = wechatpay_serve.to_dict(request.data)
-        logger.info('Wechatpay CallBack Data: %s' % json.dumps(data))
+        raw_data = request.body.decode("utf-8")
+        logger.info('Wechatpay CallBack Data: %s' % json.dumps(raw_data))
+        data = wechatpay_serve.to_dict(raw_data)
         if not wechatpay_serve.check(data):
             return wechatpay_serve.reply("签名验证失败", False)
         # 处理业务逻辑
 
-        total_fee = data['total_fee']
+        total_fee = int(data['total_fee'])
         out_trade_no = data['out_trade_no']
         order = mm_Order.filter(union_trade_no=out_trade_no,
                                 total_amount=total_fee/100
