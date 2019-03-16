@@ -197,7 +197,7 @@ class OrderManager(BaseManger):
             )
         return order_string
 
-    def create_wechat_order(self, customer_id, service_id, price_index, pay_from='APP'):
+    def create_wechat_order(self, customer_id, service_id, price_index, pay_from='APP', spbill_create_ip=None):
         service = VirtualService.objects.get(pk=service_id)
         price_info = json.loads(service.pricelist)[price_index]
         subject = price_info['name']
@@ -217,7 +217,8 @@ class OrderManager(BaseManger):
                 trade_type='APP',
                 out_trade_no=out_trade_no,
                 body=subject,
-                total_fee=int(total_amount * 100)
+                total_fee=int(total_amount * 100),
+                spbill_create_ip=spbill_create_ip
             )
         return order_string
 
