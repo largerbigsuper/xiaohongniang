@@ -1,4 +1,5 @@
 import json
+import time
 from datetime import datetime, timedelta
 
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -220,7 +221,16 @@ class OrderManager(BaseManger):
                 total_fee=int(total_amount * 100),
                 spbill_create_ip=spbill_create_ip
             )
-        return order_string
+        data = {}
+        data['appid'] = order_string['appid']
+        data['partnerid'] = order_string['mch_id']
+        data['prepayid'] = order_string['prepay_id']
+        data['noncestr'] = order_string['nonce_str']
+        data['timestamp'] = str(int(time.time()))
+        data['package'] = 'Sign=WXPay'
+        sign = wechatpay_serve.sign(data)
+        data['sign'] = sign
+        return data
 
 
 class Order(models.Model):
