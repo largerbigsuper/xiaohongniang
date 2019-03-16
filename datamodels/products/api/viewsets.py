@@ -65,9 +65,12 @@ class CustomerVirtualServiceViewSet(mixins.ListModelMixin,
         service_id = pk
         customer_id = request.session['customer_id']
         order_string = None
+        spbill_create_ip = request.META.get('HTTP_X_FORWARDED_FOR',
+                                            request.META.get('REMOTE_ADDR', '')).split(',')[-1].strip()
         try:
             if pay_from == 'APP':
-                order_string = mm_Order.create_wechat_order(customer_id, service_id, price_index)
+                order_string = mm_Order.create_wechat_order(customer_id, service_id, price_index, pay_from=pay_from,
+                                                            spbill_create_ip=spbill_create_ip)
             data = {
                 'order_string': order_string
             }
