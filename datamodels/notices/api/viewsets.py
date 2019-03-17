@@ -66,11 +66,13 @@ class DemandViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         self.queryset = mm_Demand.received(request.session['customer_id'], demand_type=demand_type)
         return super().list(request, *args, **kwargs)
 
-    @action(methods=['put'],serializer_class=ReplyDemandSerializer, detail=True)
+    @action(methods=['put'], serializer_class=ReplyDemandSerializer, detail=True)
     def reply(self, requset, pk=None):
         customer_id = requset.session['customer_id']
         self.queryset = mm_Demand.received(customer_id)
         obj = self.get_object()
+        if obj.status == mm_Demand.Status_Refused:
+            return Response()
         serializer = self.serializer_class(obj, data=requset.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -85,7 +87,9 @@ class DemandViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
             else:
                 pass
         else:
-            pass
+            if serializer.validated_data['status'] == mm_Demand.Status_Refused:  # 返回线上或线下服务卡
+                service_type = mm_VirtualService.Demand_Type_2_Service_Type.get(obj.demand_type, 0)
+                mm_VirtualService.modify_card(obj.customer_id, service_type, 1)
 
         return Response()
 
