@@ -8,7 +8,8 @@ from django.db import models
 from django.db.models import F
 
 from LV.settings import AlipaySettings
-from datamodels.role.models import mm_Customer
+from datamodels.role.models import mm_Customer, mm_InviteRecord
+from datamodels.stats.models import mm_CustomerBonusRecord
 from lib import pay
 from lib.common import BaseManger
 from lib.exceptions import ParamException
@@ -275,6 +276,17 @@ class CustomerOrderManager(BaseManger):
                     price_index_name=price_index_name,
                     total_amount=total_amount
                     )
+        inviter = mm_InviteRecord.get_inviter(customer.id)
+        if inviter:
+            # 添加购买返现
+            mm_CustomerBonusRecord.add_record(
+                customer_id=inviter.id,
+                from_customer_id=customer.id,
+                action=mm_CustomerBonusRecord.Action_Buy,
+                amount=mm_CustomerBonusRecord.Award_Mapping[mm_CustomerBonusRecord.Action_Buy],
+                desc=mm_CustomerBonusRecord.template_buy.format(customer.account, service_name)
+            )
+
 
 
 class CustomerOrder(models.Model):

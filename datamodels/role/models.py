@@ -480,6 +480,9 @@ class InviteRecordManager(BaseManger):
     def get_customer_records(self, customer_id):
         return self.filter(inviter_id=customer_id)
 
+    def get_inviter(self, customer_id):
+        return self.filter(invited_id=customer_id).first()
+
 
 class InviteRecord(models.Model):
 

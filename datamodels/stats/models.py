@@ -204,6 +204,129 @@ class MessageTemplate(models.Model):
         db_table = 'lv_message_template'
 
 
+class CustomerBonusRecordManager(BaseManger):
+
+    In = 1
+    Out = 0
+    In_Or_Out = (
+        (Out, '减少'),
+        (In, '增加'),
+    )
+
+    Action_Enroll = 0
+    Action_Buy = 1
+    Action_Withdraw = 2
+
+    Action_Choice = (
+        (Action_Enroll, '邀请注册'),
+        (Action_Buy, '被邀请人购买服务'),
+        (Action_Withdraw, '提现'),
+    )
+
+    template_enroll = '邀请好友{}注册'
+    template_buy = '被邀请人{}购买{}'
+    template_withdraw = '发起提现请求'
+
+    Award_Mapping = {
+        Action_Enroll: 5,
+        Action_Buy: 5,
+    }
+
+    def add_record(self, customer_id, from_customer_id, action, amount, desc, operator_id=None):
+        if action == self.Action_Withdraw:
+            in_or_out = self.Out
+        else:
+            in_or_out = self.In
+
+        total_left = self.get_total_point(customer_id)
+
+        if in_or_out == self.In:
+            total_left += amount
+        else:
+            total_left -= amount
+
+        return self.create(customer_id=customer_id,
+                           from_customer_id=from_customer_id,
+                           in_or_out=in_or_out,
+                           amount=amount,
+                           total_left=total_left,
+                           action=action,
+                           desc=desc,
+                           operator_id=operator_id
+                           )
+
+    def get_buy_customer_count(self, customer_id):
+        return self.filter(customer_id=customer_id,
+                           action=self.Action_Buy).values_list('from_customer_id', flat=True).distinct().count()
+
+    def get_total_point(self, customer_id):
+        record = self.filter(customer_id=customer_id).first()
+        if record:
+            return record.total_left
+        else:
+            return 0
+
+
+class CustomerBonusRecord(models.Model):
+
+    customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='用户')
+    from_customer = models.ForeignKey('role.Customer',
+                                      on_delete=models.CASCADE,
+                                      related_name='invited_customers',
+                                      verbose_name='被邀请人')
+    in_or_out = models.PositiveSmallIntegerField(verbose_name='增加/减少',
+                                                 choices=CustomerBonusRecordManager.In_Or_Out,
+                                                 default=CustomerBonusRecordManager.In)
+    amount = models.PositiveSmallIntegerField(verbose_name='数量', default=0)
+    total_left = models.PositiveIntegerField(verbose_name='剩余数量', default=0)
+    action = models.PositiveSmallIntegerField(verbose_name='原因', default=CustomerBonusRecordManager.Action_Enroll,
+                                              choices=CustomerBonusRecordManager.Action_Choice)
+    desc = models.CharField(verbose_name='描述', max_length=48)
+    operator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                 null=True, blank=True, verbose_name='操作人')
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='记录时间')
+
+    objects = CustomerBonusRecordManager()
+
+    class Meta:
+        db_table = 'lv_customer_bonus_records'
+        ordering = ['-create_at']
+        verbose_name = verbose_name_plural = '奖励记录管理'
+
+
+class WithDrawRecordManager(BaseManger):
+    Status_Submited = 0
+    Status_Done = 1
+    Status_Refused = 2
+
+    Status_Choice = (
+        (Status_Submited, '已提交'),
+        (Status_Done, '已提现'),
+        (Status_Refused, '拒绝提现'),
+    )
+
+
+class WithDrawRecord(models.Model):
+
+    customer = models.ForeignKey('role.Customer', verbose_name='申请人', on_delete=models.CASCADE)
+    status = models.PositiveSmallIntegerField(verbose_name='申请状态',
+                                              choices=WithDrawRecordManager.Status_Choice,
+                                              default=WithDrawRecordManager.Status_Submited)
+    amount = models.PositiveIntegerField(verbose_name='数量', default=0)
+    operator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                 null=True, blank=True, verbose_name='处理人')
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = WithDrawRecordManager()
+
+    class Meta:
+        db_table = 'lv_withdraw_records'
+        ordering = ['-create_at']
+        verbose_name = verbose_name_plural = '提现申请管理'
+
+
 mm_OperationRecord = OperationRecord.objects
 mm_CustomerPoint = CustomerPoint.objects
 mm_MessageTemplate = MessageTemplate.objects
+mm_CustomerBonusRecord = CustomerBonusRecord.objects
+mm_WithDrawRecord = WithDrawRecord.objects

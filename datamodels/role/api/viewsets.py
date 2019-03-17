@@ -20,7 +20,7 @@ from datamodels.role.api.serializers import CustomerBaseInfoSerializer, Recommed
     CustomerListSerializer
 from datamodels.role.models import mm_Customer, mm_InviteRecord
 from datamodels.sms.models import mm_SMSCode
-from datamodels.stats.models import mm_CustomerPoint
+from datamodels.stats.models import mm_CustomerPoint, mm_CustomerBonusRecord
 from lib import customer_login
 from lib.common import HeadersKey
 from lib.tools import gen_invite_code, decode_invite_code
@@ -82,12 +82,20 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
         customer_login.login(request, customer.user)
         invitecode = request.query_params.get('invitecode')
         platform = request.META.get(HeadersKey.HTTP_OS, Platform.WEB)
-        # TODO 添加邀请关系
         if invitecode:
             inviter_id = decode_invite_code(invitecode)
             mm_InviteRecord.add_record(inviter_id=inviter_id,
                                        invited_id=customer.id,
                                        platform=platform)
+            # 添加邀请返现
+            mm_CustomerBonusRecord.add_record(
+                customer_id=inviter_id,
+                from_customer_id=customer.id,
+                action=mm_CustomerBonusRecord.Action_Enroll,
+                amount=mm_CustomerBonusRecord.Award_Mapping[mm_CustomerBonusRecord.Action_Enroll],
+                desc=mm_CustomerBonusRecord.template_enroll.format(customer.account)
+            )
+
         data = dict(account=account, id=customer.id, user_id=customer.user.id)
         return Response(data=data, status=status.HTTP_200_OK)
 
