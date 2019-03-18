@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.conf import settings
@@ -325,8 +326,39 @@ class WithDrawRecord(models.Model):
         verbose_name = verbose_name_plural = '提现申请管理'
 
 
+class CustomerChatRecordManager(BaseManger):
+
+    def add_record(self, customer_id, user_id):
+        record, _ = self.get_or_create(customer_id=customer_id)
+        record_list = json.loads(record.record_list)
+        if customer_id not in record_list:
+            record_list.append(user_id)
+        record.record_list = json.dumps(record_list)
+        record.save()
+
+    def get_record_list(self, customer_id):
+        record = self.filter(customer_id=customer_id).first()
+        if record:
+            return json.loads(record.record_list)
+        else:
+            return []
+
+
+class CustomerChatRecord(models.Model):
+    
+    customer = models.OneToOneField('role.Customer', on_delete=models.CASCADE, verbose_name='用户')
+    record_list = models.TextField(default='[]', verbose_name='记录')
+    
+    objects = CustomerChatRecordManager()
+    
+    class Meta:
+        db_table = 'lv_customer_chat_record'
+        verbose_name = verbose_name_plural = '聊天记录表'
+
+
 mm_OperationRecord = OperationRecord.objects
 mm_CustomerPoint = CustomerPoint.objects
 mm_MessageTemplate = MessageTemplate.objects
 mm_CustomerBonusRecord = CustomerBonusRecord.objects
 mm_WithDrawRecord = WithDrawRecord.objects
+mm_CustomerChatRecord = CustomerChatRecord.objects

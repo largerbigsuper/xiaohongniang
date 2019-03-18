@@ -16,7 +16,7 @@ from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, Custome
 from datamodels.role.api.viewsets import  CustomerViewSet, InviteRecordViewSet
 from datamodels.role.api.viewset_admin import AdminInviteRecordViewSet, AdminOpreationViewSet, AdminCustomerViewSet
 from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet, MessageTemplateViewSet, \
-    CustomerBonusRecordViewSet, WithDrawRecordViewSet
+    CustomerBonusRecordViewSet, WithDrawRecordViewSet, CustomerChatRecordViewSet
 
 router = routers.DefaultRouter()
 router.register('bottles', BottlesViewSet, base_name='bottles')
@@ -34,6 +34,7 @@ router.register('skus', SkuViewSet, base_name='sku')
 router.register('sku-exchages', SkuExchageViewSet, base_name='sku-exchage')
 router.register('bonus', CustomerBonusRecordViewSet, base_name='bonus')
 router.register('withdraw', WithDrawRecordViewSet, base_name='withdraw')
+router.register('chatrecord', CustomerChatRecordViewSet, base_name='chatrecord')
 
 
 router.register('admin/op', AdminOpreationViewSet, base_name='admin-op')

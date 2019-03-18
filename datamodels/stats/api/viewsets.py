@@ -14,9 +14,9 @@ from django_filters import rest_framework as filters
 
 from datamodels.role.models import mm_InviteRecord
 from datamodels.stats.api.serializers import PointSerializer, AdminPointSerializer, MessageTempalteSerializer, \
-    CustomerBonusRecordSerializer, WithDrawRecordSerializer
+    CustomerBonusRecordSerializer, WithDrawRecordSerializer, CustomerChatRecordSerailizer
 from datamodels.stats.models import mm_CustomerPoint, CustomerPoint, mm_MessageTemplate, mm_CustomerBonusRecord, \
-    mm_WithDrawRecord
+    mm_WithDrawRecord, mm_CustomerChatRecord
 
 
 class PointFilter(filters.FilterSet):
@@ -110,3 +110,27 @@ class WithDrawRecordViewSet(viewsets.ModelViewSet):
             'total_changed': total_changed if total_changed else 0,
         }
         return Response(data=data)
+
+
+class CustomerChatRecordViewSet(mixins.ListModelMixin, GenericViewSet):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomerChatRecordSerailizer
+
+    def get_queryset(self):
+        return mm_CustomerChatRecord.filter(customer_id=self.request.session['customer_id'])
+
+    @action(methods=['get'], detail=False)
+    def record_list(self, request):
+        record_list = mm_CustomerChatRecord.get_record_list(self.request.session['customer_id'])
+        data = {
+            'record_list': record_list
+        }
+        return Response(data=data)
+
+    @action(methods=['post'], detail=False)
+    def upload_record(self, request):
+        serailizer = self.serializer_class(data=request.data)
+        serailizer.is_valid(raise_exception=True)
+        mm_CustomerChatRecord.add_record(request.session['customer_id'],  serailizer.validated_data['user_id'])
+        return Response()

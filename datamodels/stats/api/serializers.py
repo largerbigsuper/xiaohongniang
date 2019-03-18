@@ -46,3 +46,8 @@ class WithDrawRecordSerializer(serializers.ModelSerializer):
         model = WithDrawRecord
         fields = ('id', 'amount', 'status', 'create_at')
         read_only_fields = ('status', )
+
+
+class CustomerChatRecordSerailizer(serializers.Serializer):
+
+    user_id = serializers.IntegerField()
