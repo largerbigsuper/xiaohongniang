@@ -317,6 +317,7 @@ class WithDrawRecord(models.Model):
     operator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                  null=True, blank=True, verbose_name='处理人')
     create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    alipay_account = models.CharField(verbose_name='支付宝账号', max_length=20)
 
     objects = WithDrawRecordManager()
 
