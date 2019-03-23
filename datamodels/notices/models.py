@@ -90,21 +90,23 @@ class NoticeManager(BaseManger):
 
 
 class Notice(models.Model):
-    content_type_choice = (
-        (ContentType.objects.get_for_model(Moments).id, '动态相关'),
-    )
-    content_type_result_choice = (
-        (ContentType.objects.get_for_model(Likes).id, '点赞'),
-        (ContentType.objects.get_for_model(Comments).id, '评论和回复'),
-    )
+    # content_type_choice = (
+    #     (ContentType.objects.get_for_model(Moments).id, '动态相关'),
+    # )
+    content_type_choice = []
+    # content_type_result_choice = (
+    #     (ContentType.objects.get_for_model(Likes).id, '点赞'),
+    #     (ContentType.objects.get_for_model(Comments).id, '评论和回复'),
+    # )
+    content_type_result_choice = []
     action_type = models.PositiveIntegerField(verbose_name='类型', choices=ACTION_CHOICE, default=1)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False, related_name='actions',
-                                     choices=content_type_choice, default=content_type_choice[0][0])
+                                     choices=content_type_choice, default=0)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     content_type_result = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False,
                                             related_name='results', choices=content_type_result_choice,
-                                            default=content_type_result_choice[0][0])
+                                            default=0)
     result_id = models.PositiveIntegerField()
     content_result = GenericForeignKey('content_type_result', 'result_id')
     from_customer = models.ForeignKey(Customer, verbose_name='发起人', on_delete=models.CASCADE, db_index=False, related_name='sender')

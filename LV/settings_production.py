@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# @Time    : 2019/3/23 下午6:08
+# @Author  : Frankie
+# @Email   : zaihuazhao@163.com
+# @File    : settiongs_production.py
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # @Time    : 2018/12/4 下午2:54
 # @Author  : Frankie
 # @Email   : zaihuazhao@163.com
 # @File    : settings_docker.py
 import os
+DOMAIN = 'https://www.handanxiaohongniang.com'
 
 
 class AliYunSMS:
@@ -42,7 +49,7 @@ class AlipaySettings:
     APP_ID = '2019013063154821'
     APP_PRIVATE_KEY = os.path.join(_root_dir, 'lib/alipay/test_app_private.txt')
     ALIPAY_PUBLIC_KEY = os.path.join(_root_dir, 'lib/alipay/test_alipay_public_key_sha256.txt')
-    VIRTUAL_SERVICE_NOTIFY_URI = 'https://test.lhxq.top/products/alipay/notify/'
+    VIRTUAL_SERVICE_NOTIFY_URI = DOMAIN + '/products/alipay/notify/'
 
 
 class MinprogramSettings:
@@ -57,7 +64,7 @@ class WeChatPaySettings:
     WEIXIN_APP_SECRET = '7968e86926fc96525807d0256edaadff'
     WEIXIN_MCH_ID = '1527643731'
     WEIXIN_MCH_KEY = 'handanxiaohongniang1234567890000'
-    WEIXIN_NOTIFY_URL = 'https://test.lhxq.top/products/wechatpay/notify/'
+    WEIXIN_NOTIFY_URL = DOMAIN + '/products/wechatpay/notify/'
 
 
 
@@ -96,4 +103,4 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-CSRF_TRUSTED_ORIGINS = ['servicewechat.com', 'test.lhxq.top', 'lhxq.top']
+CSRF_TRUSTED_ORIGINS = ['servicewechat.com', 'handanxiaohongniang.com']

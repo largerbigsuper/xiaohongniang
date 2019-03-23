@@ -294,13 +294,14 @@ class CustomerOrder(models.Model):
         (1, '支付宝'),
         (2, '微信支付')
     )
-    Content_Type_Choice = (
-        (ContentType.objects.get_for_model(Order).id, '支付宝/支付宝'),
-    )
+    # Content_Type_Choice = (
+    #     (ContentType.objects.get_for_model(Order).id, '支付宝/支付宝'),
+    # )
+    Content_Type_Choice = []
     customer = models.ForeignKey('role.Customer', on_delete=models.CASCADE, verbose_name='购买人')
     pay_type = models.PositiveSmallIntegerField(verbose_name='支付方式', choices=PAY_TYPE_CHOICE, default=1)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, db_index=False,
-                                     choices=Content_Type_Choice, default=Content_Type_Choice[0][0])
+                                     choices=Content_Type_Choice, default=0)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     union_trade_no = models.CharField(verbose_name='内部订单号', max_length=100, unique=True, blank=True)

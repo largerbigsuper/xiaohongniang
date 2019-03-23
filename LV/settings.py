@@ -13,7 +13,12 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 ENV = os.getenv('DJANGO_RUN_ENV', 'DEV')
-if ENV == 'TEST':
+if ENV == 'PRODUCTION':
+    from .settings_production import *
+    DEBUG = False
+    ALLOWED_HOSTS = ['*']
+
+elif ENV == 'TEST':
     from .settings_docker import *
     DEBUG = True
     ALLOWED_HOSTS = ['*']
@@ -313,7 +318,7 @@ LOGGING = {
 #         'level': 'INFO',
 #     }
 #     LOGGING['loggers'][app_name] = handler_config
-
+#
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
@@ -341,6 +346,6 @@ CELERY_ENABLE_UTC = True
 # DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
 DEFAULT_FILE_STORAGE = 'lib.storages.StorageObject'
 
-CSRF_TRUSTED_ORIGINS = ['servicewechat.com', 'test.lhxq.top', 'lhxq.top']
+
 
 

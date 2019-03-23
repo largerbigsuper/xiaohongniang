@@ -44,7 +44,7 @@ class WithDrawRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WithDrawRecord
-        fields = ('id', 'amount', 'status', 'create_at')
+        fields = ('id', 'amount', 'status', 'create_at', 'alipay_account')
         read_only_fields = ('status', )
 
 

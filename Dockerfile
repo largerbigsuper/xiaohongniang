@@ -9,6 +9,5 @@ COPY requirements.txt /code/
 RUN python /code/built_env.py
 
 ADD . /code/
-ENV DJANGO_RUN_ENV TEST
 
 EXPOSE 8000

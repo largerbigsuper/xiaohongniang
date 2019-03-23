@@ -86,3 +86,5 @@ CACHES = {
         }
     }
 }
+
+CSRF_TRUSTED_ORIGINS = ['servicewechat.com', 'test.lhxq.top', 'lhxq.top', 'handanxiaohongniang.com']
