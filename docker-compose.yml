@@ -16,6 +16,9 @@ services:
       - redis
     stdin_open: true
     tty: true
+    environment:
+      - DJANGO_RUN_ENV=TEST
+
 
   db:
     image: mysql:5.7

@@ -4,7 +4,7 @@ services:
     build: .
     command: ["./run_web.sh"]
     volumes:
-      - service-web:/code
+      - .:/code
     links:
       - db
       - redis
@@ -38,7 +38,7 @@ services:
     build: .
     command: celery -A LV worker -l info -f log/celery.log
     volumes:
-      - service-web:/code
+      - .:/code
     depends_on:
       - db
       - redis
@@ -46,7 +46,7 @@ services:
     build: .
     command: celery -A LV beat -l info -f log/celery_beat.log
     volumes:
-      - service-web:/code
+      - .:/code
     depends_on:
       - db
       - redis
@@ -65,7 +65,6 @@ services:
       - service-web:/code
 
 volumes:
-  service-web:
   service-db:
 
 

@@ -20,7 +20,7 @@ from django.contrib.auth.models import User
 from django.urls import path, include
 
 from .router import router
-from LV.views import UploadTokenView, ImTokenView, APPConfigView
+from LV.views import UploadTokenView, ImTokenView, APPConfigView, protocol
 
 admin_urlpatterns = [
     path('api/admin/customer/', include('datamodels.role.urls_admin'))
@@ -42,6 +42,7 @@ urlpatterns = [
     path('appconfig/', APPConfigView.as_view()),
     path('api/', include(router.urls)),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('protocol/', protocol),
 ] + admin_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
