@@ -15,10 +15,10 @@ DOMAIN = 'https://www.handanxiaohongniang.com'
 
 
 class AliYunSMS:
-    ACCESS_KEY_ID = "LTAIPQYeKTLNiPUv"
-    ACCESS_KEY_SECRET = "wHBmEIr1YNp6rNr8zrK9cjFK1gJsLa"
-    SMS_TEMPLATE_NAME = '正能科技'
-    SMS_TEMPLATE_ID = 'SMS_152210626'
+    ACCESS_KEY_ID = "LTAILW2rTviNT3NS"
+    ACCESS_KEY_SECRET = "exfqW4cxb7QrE3CExWqF4B7TKzifxr"
+    SMS_TEMPLATE_NAME = '邯郸小红娘'
+    SMS_TEMPLATE_ID = 'SMS_160861562'
 
 
 class QiNiuSettings:
@@ -40,8 +40,8 @@ QINIU_SECURE_URL = False
 
 
 class RongYunSettings:
-    APP_KEY = 'mgb7ka1nmdwtg'
-    APP_SECRET = 'yKLJ0i0bmLZP'
+    APP_KEY = 'x18ywvqfxcc6c'
+    APP_SECRET = 'gf9ljiy4YQ'
 
 
 class AlipaySettings:

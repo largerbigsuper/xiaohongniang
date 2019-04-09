@@ -6,6 +6,7 @@
 # @File    : views.py
 from django.conf import settings
 from django.core.cache import cache
+from django.shortcuts import render
 from django.views import View
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -62,5 +63,9 @@ class APPConfigView(APIView):
 
         }
         return Response(Tool.format_data(app_config))
+
+
+def protocol(request):
+    return render(request, 'protocol.html')
 
 
