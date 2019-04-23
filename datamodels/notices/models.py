@@ -157,6 +157,12 @@ class DemandManager(BaseManger):
             f['demand_type'] = demand_type
         return self.filter(**f).order_by('-id')
 
+    def get_new_wechat_demand_count(self, customer_id):
+        return self.received(customer_id, status=self.Status_Need_Reply, demand_type=self.Type_Ask_Wechat).count()
+
+    def get_new_date_online_count(self, customer_id):
+        return self.received(customer_id, status=self.Status_Need_Reply, demand_type=self.Type_Make_Date_Online).count()
+
 
 class Demand(models.Model):
 
@@ -175,6 +181,7 @@ class Demand(models.Model):
     class Meta:
         db_table = 'lv_demand'
         verbose_name = verbose_name_plural = '帮我约/微信交换申请'
+        ordering = ['-create_at']
 
 
 class WechatCardManager(BaseManger):

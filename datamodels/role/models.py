@@ -74,6 +74,7 @@ class BaseRole(models.Model):
     relationships = models.ManyToManyField('self', through='RelationShip', symmetrical=False, related_name='relations')
     last_request_at = models.DateTimeField(verbose_name='最后请求时间', null=True, blank=True)
     following_count = models.PositiveIntegerField('我的关注总数', default=0)
+    following_both_count = models.PositiveIntegerField('相互关注总数', default=0)
     followers_count = models.PositiveIntegerField('关注总数', default=0)
     blocked_count = models.PositiveIntegerField('屏蔽总数', default=0)
     is_manager = models.BooleanField('管理员', default=False)
@@ -300,6 +301,9 @@ class Customer(BaseRole):
     def get_follower_recoreds(self):
         return self.get_related_to_records(RELATIONSHIP_FOLLOWING)
 
+    def get_both_following_recoreds(self):
+        return self.get_relationship_records(RELATIONSHIP_BOTH_FOLLOWING)
+
     def get_following_ids(self):
         return self.get_following_recoreds().values_list('to_customer_id', flat=True)
 
@@ -335,9 +339,6 @@ class RelationShipManager(BaseManger):
         if status == RELATIONSHIP_FOLLOWING:
             if _relation:
                 if _relation.status == RELATIONSHIP_BLOCKED:
-                    mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') - 1,
-                                                                   following_count=F('following_count') + 1)
-                    mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') + 1)
                     relaton_tome = self.filter(from_customer_id=to_customer_id,
                                                to_customer_id=from_customer_id).filter()
                     if relaton_tome:
@@ -346,34 +347,59 @@ class RelationShipManager(BaseManger):
                             _relation.save()
                             relaton_tome.status = RELATIONSHIP_BOTH_FOLLOWING
                             relaton_tome.save()
+                            mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') - 1,
+                                                                           following_count=F('following_count') + 1,
+                                                                           following_both_count=F(
+                                                                               'following_both_count') + 1
+                                                                           )
+                            mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') + 1,
+                                                                         following_both_count=F(
+                                                                             'following_both_count') + 1)
+                    else:
+                        mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') - 1,
+                                                                       following_count=F('following_count') + 1)
+                        mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') + 1)
 
                 return _relation
             else:
-                mm_Customer.filter(id=from_customer_id).update(following_count=F('following_count') + 1)
-                mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') + 1)
+
                 relaton_tome = self.filter(from_customer_id=to_customer_id, to_customer_id=from_customer_id).first()
                 if relaton_tome:
                     if relaton_tome.status == RELATIONSHIP_FOLLOWING:
                         status = RELATIONSHIP_BOTH_FOLLOWING
                         relaton_tome.status = RELATIONSHIP_BOTH_FOLLOWING
                         relaton_tome.save()
+                        mm_Customer.filter(id=from_customer_id).update(following_count=F('following_count') + 1,
+                                                                       following_both_count=F(
+                                                                           'following_both_count') + 1)
+                        mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') + 1,
+                                                                     following_both_count=F('following_both_count') + 1)
+                else:
+                    mm_Customer.filter(id=from_customer_id).update(following_count=F('following_count') + 1)
+                    mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') + 1)
                 relation = self.create(from_customer_id=from_customer_id, to_customer_id=to_customer_id, status=status)
                 return relation
         else:# 屏蔽
             if _relation:
-                if _relation.status != RELATIONSHIP_BLOCKED:
+                _relation.status = RELATIONSHIP_BLOCKED
+                _relation.save()
+                if _relation.status == RELATIONSHIP_FOLLOWING:
                     mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') + 1,
                                                                    following_count=F('following_count') - 1)
-                    _relation.status = RELATIONSHIP_BLOCKED
-                    _relation.save()
-                    if _relation.status == RELATIONSHIP_BOTH_FOLLOWING:
-                        relaton_tome = self.filter(from_customer_id=to_customer_id,
-                                                   to_customer_id=from_customer_id).first()
-                        relaton_tome.status = RELATIONSHIP_FOLLOWING
-                        relaton_tome.save()
+
+                elif _relation.status == RELATIONSHIP_BOTH_FOLLOWING:
+                    mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') + 1,
+                                                                   following_count=F('following_count') - 1,
+                                                                   following_both_count=F('following_both_count') - 1)
+                    mm_Customer.filter(id=to_customer_id).update(following_both_count=F('following_both_count') - 1)
+                    relaton_tome = self.filter(from_customer_id=to_customer_id,
+                                               to_customer_id=from_customer_id).first()
+                    relaton_tome.status = RELATIONSHIP_FOLLOWING
+                    relaton_tome.save()
                 return _relation
             else:
                 relation = self.create(from_customer_id=from_customer_id, to_customer_id=to_customer_id, status=status)
+                mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') + 1)
                 return relation
 
     def remove_relation(self, from_customer_id, to_customer_id):
@@ -384,12 +410,20 @@ class RelationShipManager(BaseManger):
                             to_customer_id=from_customer_id,
                             status=RELATIONSHIP_BOTH_FOLLOWING
                             ).update(status=RELATIONSHIP_FOLLOWING)
-
-            if relation.status == RELATIONSHIP_BLOCKED:
-                mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') - 1)
-            else:
+                mm_Customer.filter(id=from_customer_id).update(following_count=F('following_count') - 1,
+                                                               following_both_count=F('following_both_count') - 1
+                                                               )
+                mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') - 1,
+                                                             following_both_count=F('following_both_count') - 1)
+            elif relation.status == RELATIONSHIP_FOLLOWING:
                 mm_Customer.filter(id=from_customer_id).update(following_count=F('following_count') - 1)
                 mm_Customer.filter(id=to_customer_id).update(followers_count=F('followers_count') - 1)
+
+            elif relation.status == RELATIONSHIP_BLOCKED:
+                mm_Customer.filter(id=from_customer_id).update(blocked_count=F('blocked_count') - 1)
+            else:
+                pass
+
             relation.delete()
 
     def get_following_customer_ids_map(self, from_customer_id):

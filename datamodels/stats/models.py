@@ -24,6 +24,9 @@ class OperationRecordManager(BaseManger):
     def my_visitors(self, customer_id):
         return self.filter(object_id=customer_id).order_by('-create_at')
 
+    def my_new_visitors_count(self, customer_id):
+        return self.my_visitors(customer_id).filter(read_status=False).count()
+
     def add_opreation_record(self, from_customer_id, content_object, operation_type=1):
         content_type = ContentType.objects.get_for_model(content_object)
         record, created = self.update_or_create(operation_type=operation_type,
