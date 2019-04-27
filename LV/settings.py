@@ -65,6 +65,7 @@ THIRD_PARTS_APPS = [
     'crispy_forms',
     'ckeditor',
     'ckeditor_uploader',
+    'django_extensions',
     # 'rest_framework.authtoken'
 ]
 
