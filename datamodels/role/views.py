@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from datamodels.notices.models import mm_Demand
-from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING, mm_Certification
+from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING, mm_Certification, mm_Picture
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
     CustomerHasSkillsListSerializer, CustomerSingleListSerializer, NormalCoustomerSerializer, \
@@ -139,7 +139,8 @@ class CustomerProfile(APIView):
         serializer = CustomerSerializer(request.user.customer, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             if 'avatar_url' in serializer.validated_data:
-                serializer.validated_data['avatar_url'] = serializer.validated_data['avatar_url']
+                # serializer.validated_data['avatar_url'] = serializer.validated_data['avatar_url']
+                mm_Picture.add_picture(request.user.customer.id, serializer.validated_data['avatar_url'])
             serializer.save()
             if any([not _name == serializer.data['name'], not _avatar_url == serializer.data['avatar_url']]):
                 IMServe.refresh_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)

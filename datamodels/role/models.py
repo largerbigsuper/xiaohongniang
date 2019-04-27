@@ -575,8 +575,32 @@ class IDCardCertification(models.Model):
         db_table = 'lv_idcard_certification'
 
 
+class PictureManager(BaseManger):
+
+    def add_picture(self, customer_id, url):
+        return self.create(customer_id=customer_id, url=url)
+
+
+class Picture(models.Model):
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    url = models.CharField(max_length=400, verbose_name='图片地址')
+    is_verified = models.BooleanField(default=False, verbose_name='已审核')
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+
+    objects = PictureManager()
+
+    class Meta:
+        db_table = 'lv_picture'
+        ordering = ['-create_at']
+        verbose_name = '头像审核'
+        verbose_name_plural = '头像审核'
+
+
 mm_Customer = Customer.objects
 mm_RelationShip = RelationShip.objects
 mm_Certification = Certification.objects
 mm_InviteRecord = InviteRecord.objects
 mm_IDCardCertification = IDCardCertification.objects
+mm_Picture = Picture.objects
+

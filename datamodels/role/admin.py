@@ -5,7 +5,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from datamodels.role.models import Customer
+from datamodels.role.models import Customer, Picture, mm_Picture
+from lib.im import IMServe
 
 
 class VipFilter(admin.SimpleListFilter):
@@ -79,5 +80,34 @@ class CustomerAdmin(admin.ModelAdmin):
 
 admin.site.register(Customer, CustomerAdmin)
 
+
+def make_verified(modeladmin, request, queryset):
+    for picture in queryset:
+        picture.customer.avatar_url = picture.url
+        picture.customer.save()
+        picture.is_verified = True
+        picture.save()
+        IMServe.refresh_token(picture.customer.user.id, picture.customer.name, picture.url)
+
+
+make_verified.short_description = "通过验证"
+
+
+@admin.register(Picture)
+class PictureAdmin(admin.ModelAdmin):
+    list_display = ('id', 'avatar')
+    readonly_fields = ('avatar', )
+    actions = [make_verified]
+
+    def get_queryset(self, request):
+        return mm_Picture.filter(is_verified=False)
+
+    def avatar(self, obj):
+        if obj.url:
+            return format_html('<img src="%s" height="80">' % obj.url)
+        return ''
+
+    avatar.short_description = '头像'
+    avatar.allow_tags = True
 
 
