@@ -77,5 +77,5 @@ def _send_sms(business_id, phone_numbers, sign_name, template_code, template_par
 
 if __name__ == '__main__':
     __business_id = uuid.uuid1()
-    params = {'code': '12325'}
-    print(_send_sms(__business_id, "18258185399", "正能科技", "SMS_152210626", params))
+    params = {'code': '1232'}
+    print(_send_sms(__business_id, "18258185399", "邯郸鼎典", "SMS_160861562", params))

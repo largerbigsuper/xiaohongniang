@@ -5,12 +5,12 @@ import traceback
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
+from datamodels.notices.models import mm_Demand
 from datamodels.role.models import mm_Customer, RELATIONSHIP_FOLLOWING, mm_Certification
 from datamodels.role.serializers import CustomerSerializer, FollowingRelationShipSerializer, \
     FollowersRelationShipSerializer, CustomerListSerializer, BaseRelationShipSerializer, \
@@ -23,7 +23,6 @@ from lib.common import HeadersKey
 from lib.exceptions import LoginException, DBException
 from lib.im import IMServe
 from lib.pagination import ReturnTwentyPagination
-from lib.qiniucloud import QiniuServe
 from lib.tools import Tool
 
 
@@ -100,6 +99,19 @@ class PasswordResetView(APIView):
 class CustomerProfile(APIView):
     permission_classes = (IsAuthenticated,)
 
+    @staticmethod
+    def _get_stats_data(customer_id):
+        count_view_me = mm_OperationRecord.my_new_visitors_count(customer_id)
+        count_demand_wechat = mm_Demand.get_new_wechat_demand_count(customer_id)
+        count_demand_date_online = mm_Demand.get_new_date_online_count(customer_id)
+        data = {
+            'count_view_me': count_view_me,
+            'count_demand_wechat': count_demand_wechat,
+            'count_demand_date_online': count_demand_date_online,
+
+        }
+        return data
+
     def get(self, request, format=None):
         serializer = CustomerSerializer(request.user.customer)
         latitude = float(request.META.get(HeadersKey.HTTP_LATITUDE, 0))
@@ -107,7 +119,11 @@ class CustomerProfile(APIView):
         request.user.customer.latitude = latitude
         request.user.customer.longitude = longitude
         request.user.customer.save()
-        return Response(Tool.format_data(serializer.data))
+        # 其他统计信息
+        data = serializer.data
+        stats_data = self._get_stats_data(request.user.customer.id)
+        data['extra'] = stats_data
+        return Response(data=data)
 
     def post(self, request, format=None):
         _name = request.user.customer.name
@@ -244,6 +260,18 @@ class UnfollowingList(generics.ListAPIView):
     """
     def get_queryset(self):
         return self.request.user.customer.get_unfollowing_customers()
+
+    serializer_class = NormalCoustomerSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class BothFollowingList(generics.ListAPIView):
+    """
+    互相关注列表
+    """
+
+    def get_queryset(self):
+        return self.request.user.customer.get_both_following_recoreds()
 
     serializer_class = NormalCoustomerSerializer
     permission_classes = (IsAuthenticated,)

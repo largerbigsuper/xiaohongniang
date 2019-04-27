@@ -26,7 +26,7 @@ Customer_Fields = ['id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'acco
                    'images'
                    ]
 
-Base_Info_fields = ['id', 'name', 'age', 'gender', 'avatar_url']
+Base_Info_fields = ['id', 'name', 'age', 'gender', 'avatar_url', 'height']
 Index_Top_Info_fields = Base_Info_fields + ['address_home']
 Recommend_Info_fields = Base_Info_fields + ['height']
 Admin_Info_Fields = ['id', 'user_id', 'name', 'gender', 'account']
@@ -62,7 +62,7 @@ class CustomerListSerializer(serializers.ModelSerializer):
                   'address_company', 'address_home', 'relation_status',
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
-                  'service_vip_expired_at',
+                  'service_vip_expired_at', 'height',
                   )
 
 

@@ -21,7 +21,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'account',
                   'wechat_id', 'intro', 'address_home', 'address_company', 'im_token',
-                  'following_count', 'followers_count', 'blocked_count',
+                  'following_count', 'followers_count', 'blocked_count', 'following_both_count',
                   'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
                   'expect_desc',
                   'birthday', 'height', 'profession', 'education', 'income', 'marital_status',

@@ -53,9 +53,11 @@ class CustomerFilter(FilterSet):
 class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
 
     permission_classes = (IsAuthenticated,)
-    queryset = mm_Customer.all()
     serializer_class = CustomerListSerializer
     filterset_class = CustomerFilter
+
+    def get_queryset(self):
+        return mm_Customer.exclude(gender=self.request.user.customer.gender)
 
     @action(detail=False, serializer_class=IndexTopCustomerSerializer)
     def service_top(self, request):
