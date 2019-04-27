@@ -273,7 +273,7 @@ class BothFollowingList(generics.ListAPIView):
     def get_queryset(self):
         return self.request.user.customer.get_both_following_recoreds()
 
-    serializer_class = NormalCoustomerSerializer
+    serializer_class = FollowingRelationShipSerializer
     permission_classes = (IsAuthenticated,)
 
 
