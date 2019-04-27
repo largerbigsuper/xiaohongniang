@@ -1,4 +1,7 @@
+import json
+
 from django.contrib import admin
+from django.utils.html import format_html
 
 from datamodels.moments.models import Moments, Topic, Comments, Likes
 
@@ -15,7 +18,7 @@ class TopicAdmin(admin.ModelAdmin):
 @admin.register(Moments)
 class MomentsAdmin(admin.ModelAdmin):
     list_per_page = 20
-    list_display = ('id', 'customer', 'text', 'function_type',
+    list_display = ('id', 'customer', 'text',
                     'create_at', 'comment_total', 'like_total', 'is_hidden_name',
                     'address',)
     list_filter = ('create_at', 'is_hidden_name', 'topic', 'function_type')
@@ -24,6 +27,19 @@ class MomentsAdmin(admin.ModelAdmin):
     inlines = [
         TopicInline
     ]
+    readonly_fields = ('images_list',)
+
+    def images_list(self, obj):
+        str_images = obj.images if obj.images else '[]'
+        json_list = json.loads(str_images)
+        images = ''
+        for url in json_list:
+            images += '<img src="%s"  style = "height:178px; width:130px;margin-right:20px" >' % url.get('url', '')
+        html = '<div>' + images + '</div>'
+        return format_html(html)
+
+    images_list.short_description = '图片'
+    images_list.allow_tags = True
 
 
 @admin.register(Comments)

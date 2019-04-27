@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.contrib import admin
@@ -48,7 +49,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ('account', 'name', 'age', 'gender', 'date_joined')
     list_filter = (VipFilter, 'gender', 'user__date_joined')
     # fields = ('account', 'name', 'age', 'gender', 'avatar')
-    readonly_fields = ('avatar', )
+    readonly_fields = ('avatar', 'images_list')
     search_fields = ('account', 'name')
 
     def avatar(self, obj):
@@ -59,6 +60,17 @@ class CustomerAdmin(admin.ModelAdmin):
     avatar.short_description = '头像'
     avatar.allow_tags = True
 
+    def images_list(self, obj):
+        json_list = json.loads(obj.images)
+        images = ''
+        for url in json_list:
+            images += '<img src="%s"  style = "height:178px; width:130px;margin-right:20px" >' % url
+        html = '<div>' + images + '</div>'
+        return format_html(html)
+
+    images_list.short_description = '相册'
+    images_list.allow_tags = True
+
     def date_joined(self, obj):
         return obj.user.date_joined
     date_joined.short_description = '注册时间'
@@ -67,33 +79,5 @@ class CustomerAdmin(admin.ModelAdmin):
 
 admin.site.register(Customer, CustomerAdmin)
 
-#
-# class Vip(Customer):
-#
-#     class Meta:
-#         proxy = True
-#         verbose_name = '会员'
-#         verbose_name_plural = '会员'
-#
-#
-# # class VipAdmin(admin.ModelAdmin):
-#
-#     list_display = ('account', 'name', 'age', 'gender', 'avatar')
-#     list_filter = ('gender', 'user__date_joined')
-#     readonly_fields = ('avatar',)
-#     search_fields = ('account', 'name')
-#
-#     def avatar(self, obj):
-#         if obj.id:
-#             return format_html('<img src="%s" height="80">' % obj.avatar_url)
-#         return ''
-#
-#     avatar.short_description = '头像'
-#     avatar.allow_tags = True
-#
-#     def get_queryset(self, request):
-#         return Customer.objects.exclude(service_vip_expired_at__gt=datetime.now())
-#
-#
-# admin.site.register(Vip, VipAdmin)
+
 

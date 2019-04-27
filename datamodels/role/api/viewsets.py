@@ -5,6 +5,7 @@
 # @Email   : zaihuazhao@163.com
 # @File    : veiwset.py
 import requests
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import FilterSet, OrderingFilter, CharFilter, NumberFilter
 from rest_framework import viewsets, status, mixins
@@ -58,6 +59,17 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return mm_Customer.exclude(gender=self.request.user.customer.gender)
+
+    def filter_queryset(self, queryset):
+        if 'q' in self.request.query_params:
+            q = self.request.query_params['q']
+            return queryset.exclude(Q(name='') | Q(account='')).filter(Q(name__icontains=q) | Q(account__icontains=q))
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        if 'q' in kwargs:
+            self.queryset = super().get_queryset().filter(Q(name__icontains=kwargs['q']) | Q(account__icontains=kwargs['q']))
+        return super().list(request, *args, **kwargs)
 
     @action(detail=False, serializer_class=IndexTopCustomerSerializer)
     def service_top(self, request):
