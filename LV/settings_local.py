@@ -5,6 +5,7 @@
 # @Email   : zaihuazhao@163.com
 # @File    : common_settings.py
 import os
+
 class AliYunSMS:
     ACCESS_KEY_ID = "LTAIPQYeKTLNiPUv"
     ACCESS_KEY_SECRET = "wHBmEIr1YNp6rNr8zrK9cjFK1gJsLa"
