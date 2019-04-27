@@ -112,6 +112,7 @@ class BaseRole(models.Model):
     mini_openid = models.CharField(verbose_name='小程序openid', max_length=60, null=True, blank=True)
     online_card_count = models.PositiveIntegerField(verbose_name='线上服务卡', default=0)
     offline_card_count = models.PositiveIntegerField(verbose_name='线下服务卡', default=0)
+    is_idcard_verified = models.BooleanField(verbose_name='身份证认证', default=False)
 
     class Meta:
         abstract = True
@@ -539,7 +540,26 @@ class InviteRecord(models.Model):
         ]
 
 
+class IDCardCertificationManager(BaseManger):
+    pass
+
+
+class IDCardCertification(models.Model):
+    """身份证认证记录"""
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    realname = models.CharField(max_length=20, verbose_name='真实姓名')
+    idnumber = models.CharField(max_length=18, verbose_name='身份证号码')
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    objects = IDCardCertificationManager()
+
+    class Meta:
+        db_table = 'lv_idcard_certification'
+
+
 mm_Customer = Customer.objects
 mm_RelationShip = RelationShip.objects
 mm_Certification = Certification.objects
 mm_InviteRecord = InviteRecord.objects
+mm_IDCardCertification = IDCardCertification.objects

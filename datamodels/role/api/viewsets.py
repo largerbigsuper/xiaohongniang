@@ -17,8 +17,8 @@ from LV import settings
 from LV.settings_lv import Platform
 from datamodels.role.api.serializers import CustomerBaseInfoSerializer, RecommedCustomerSerializer, \
     InviteRecordSerializer, CustomerRegisterSerializer, MiniprogramLoginSerializer, IndexTopCustomerSerializer, \
-    CustomerListSerializer
-from datamodels.role.models import mm_Customer, mm_InviteRecord
+    CustomerListSerializer, IDCardCertificationSerializer
+from datamodels.role.models import mm_Customer, mm_InviteRecord, mm_IDCardCertification
 from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_CustomerPoint, mm_CustomerBonusRecord
 from lib import customer_login
@@ -146,3 +146,23 @@ class InviteRecordViewSet(mixins.ListModelMixin,
     def get_queryset(self):
         return mm_InviteRecord.get_customer_records(self.request.session['customer_id'])
 
+
+class IDCardCertificationViewSet(mixins.CreateModelMixin, GenericViewSet):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = IDCardCertificationSerializer
+
+    queryset = mm_IDCardCertification.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        obj, _ = mm_IDCardCertification.update_or_create(customer_id=request.session['customer_id'],
+                                                         defaults={
+                                                             'realname': serializer.validated_data['realname'],
+                                                             'idnumber': serializer.validated_data['idnumber']
+                                                         }
+                                                         )
+        request.user.customer.is_idcard_verified = True
+        request.user.customer.save()
+        return Response(data=serializer.data)
