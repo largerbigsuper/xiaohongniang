@@ -222,7 +222,7 @@ class CustomerManager(BaseManger):
         st_distance_sphere(POINT({longitude}, {latitude} ), POINT(lv_customers.longitude, lv_customers.latitude)) AS distance
         FROM lv_customers
         WHERE id >= 1
-        AND lv_customers.lv_customers != {gender}
+        AND lv_customers.gender != {gender}
         AND lv_customers.latitude BETWEEN {latitude_low} AND  {latitude_heigh}
         AND lv_customers.longitude BETWEEN {longitude_low} AND {longitude_heigh}
         HAVING distance < {distance}
