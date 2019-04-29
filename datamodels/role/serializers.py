@@ -27,7 +27,7 @@ class CustomerSerializer(serializers.ModelSerializer):
                   'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
                   'child_status', 'years_to_marry', 'score', 'condition', 'images',
                   'service_vip_expired_at', 'service_show_index_expired_at', 'invitecode',
-                  'online_card_count', 'offline_card_count', 'is_idcard_verified'
+                  'online_card_count', 'offline_card_count', 'is_idcard_verified', 'avatar_status'
                   )
         read_only_fields = ('account', 'user', 'id', 'im_token',
                             'service_vip_expired_at', 'service_show_index_expired_at')
@@ -63,7 +63,7 @@ class CustomerListSerializer(serializers.ModelSerializer):
                   'address_company', 'address_home', 'relation_status',
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
-                  'service_vip_expired_at', 'is_idcard_verified'
+                  'service_vip_expired_at', 'is_idcard_verified', 'avatar_status'
                   )
 
 
@@ -98,7 +98,7 @@ class CustomerHasSkillsListSerializer(serializers.ModelSerializer):
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
                   'skills',
-                  'service_vip_expired_at', 'is_idcard_verified'
+                  'service_vip_expired_at', 'is_idcard_verified', 'avatar_status'
                   )
 
 
@@ -133,7 +133,7 @@ class CustomerSingleListSerializer(serializers.ModelSerializer):
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
                   'expect_desc',
-                  'service_vip_expired_at', 'is_idcard_verified'
+                  'service_vip_expired_at', 'is_idcard_verified', 'avatar_status'
                   )
 
 
@@ -144,7 +144,7 @@ class CoustomerBaseInfoSerializer(serializers.ModelSerializer):
             'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count',
             'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut',
-            'service_vip_expired_at', 'is_idcard_verified'
+            'service_vip_expired_at', 'is_idcard_verified', 'avatar_verified'
         )
 
 
@@ -167,7 +167,7 @@ class NormalCoustomerSerializer(serializers.ModelSerializer):
             'id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'wechat_id', 'intro', 'address_home',
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
             'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut',
-            'service_vip_expired_at', 'is_idcard_verified'
+            'service_vip_expired_at', 'is_idcard_verified', 'avatar_verified'
         )
 
 
@@ -195,7 +195,7 @@ class NormalCoustomerDetailSerializer(serializers.ModelSerializer):
             'expect_desc',
             'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
             'child_status', 'years_to_marry', 'score', 'condition', 'images',
-            'service_vip_expired_at', 'is_idcard_verified'
+            'service_vip_expired_at', 'is_idcard_verified', 'avatar_verified'
         )
 
 
@@ -223,7 +223,7 @@ class CoustomerDistanceSerializer(serializers.ModelSerializer):
             'address_company', 'im_token', 'following_count', 'followers_count', 'blocked_count', 'relation_status',
             'is_myself', 'is_manager', 'is_shop_keeper', 'skills', 'is_show_skill', 'is_rut', 'distance',
             'last_request_at',
-            'service_vip_expired_at', 'is_idcard_verified'
+            'service_vip_expired_at', 'is_idcard_verified', 'avatar_verified'
         )
 
 
@@ -232,7 +232,7 @@ class CustomerSimpleSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ('id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'im_token',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut',
-                  'service_vip_expired_at', 'is_idcard_verified'
+                  'service_vip_expired_at', 'is_idcard_verified', 'avatar_verified'
                   )
 
 

@@ -84,20 +84,30 @@ admin.site.register(Customer, CustomerAdmin)
 def make_verified(modeladmin, request, queryset):
     for picture in queryset:
         picture.customer.avatar_url = picture.url
+        picture.customer.avatar_status = 1
         picture.customer.save()
         picture.is_verified = True
         picture.save()
-        IMServe.refresh_token(picture.customer.user.id, picture.customer.name, picture.url)
 
 
 make_verified.short_description = "通过验证"
+
+
+def make_failed(modeladmin, request, queryset):
+    for picture in queryset:
+        picture.customer.avatar_url = picture.url
+        picture.customer.avatar_status = 2
+        picture.customer.save()
+
+
+make_failed.short_description = "未通过验证"
 
 
 @admin.register(Picture)
 class PictureAdmin(admin.ModelAdmin):
     list_display = ('id', 'avatar')
     readonly_fields = ('avatar', )
-    actions = [make_verified]
+    actions = [make_verified, make_failed]
 
     def get_queryset(self, request):
         return mm_Picture.filter(is_verified=False)
