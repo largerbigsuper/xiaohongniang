@@ -126,8 +126,10 @@ class CustomerManager(BaseManger):
         try:
             with transaction.atomic():
                 user = self._add_user(account, password)
-                im_token = IMServe.gen_token(user.id, account)['token']
-                customer = self.create(user=user, account=account, im_token=im_token, **kwargs)
+                customer = self.create(user=user, account=account, **kwargs)
+                customer.im_token = IMServe.gen_token(customer.id, account)['token']
+                customer.save()
+
                 return customer
         except IntegrityError:
             raise DBException('账号已注册')

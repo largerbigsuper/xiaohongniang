@@ -128,7 +128,7 @@ class TopicManager(BaseManger):
         topic, created = self.get_or_create(name=name, defaults={'customer_id': customer_id, 'logo_url': logo_url})
         if created:
             group_id = topic.id
-            IMServe.create_group(user_id, group_id=group_id, group_name=name)
+            IMServe.create_group(customer_id, group_id=group_id, group_name=name)
         return topic
 
 

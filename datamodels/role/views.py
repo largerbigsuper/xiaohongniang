@@ -143,7 +143,7 @@ class CustomerProfile(APIView):
                 mm_Picture.add_picture(request.user.customer.id, serializer.validated_data['avatar_url'])
             serializer.save()
             if any([not _name == serializer.data['name'], not _avatar_url == serializer.data['avatar_url']]):
-                IMServe.refresh_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)
+                IMServe.refresh_token(request.user.customer.id, request.user.customer.name, request.user.customer.avatar_url)
             return Response(Tool.format_data(serializer.data))
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
