@@ -69,3 +69,6 @@ def protocol(request):
     return render(request, 'protocol.html')
 
 
+def index(request):
+    return render(request, 'register/register.html')
+

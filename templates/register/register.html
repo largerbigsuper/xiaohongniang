@@ -1,0 +1,348 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>邯郸小红娘-注册</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 16 * (clientWidth / 375) + 'px';
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+    <style type="text/css">
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-tap-highlight-color: transparent;
+        }
+        p,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            margin: 0;
+        }
+        body {
+            padding: 0;
+            font-family: PingFangSC-Regular, "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", sans-serif;
+            height: 100%;
+            word-wrap: break-word;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-text-size-adjust: none;
+            background: #fff;
+            color: #333333;
+            max-width: 500px;
+            margin: auto;
+            padding-bottom: 40px;
+        }
+        .invite-info {
+            margin-bottom: 0.63rem;
+            font-size: 0;
+            position: relative;
+        }
+        .invite-info img {
+            width: 100%;
+            height: auto;
+        }
+        .submit {
+            margin: auto;
+            width: 100%;
+        }
+        .submit_item {
+            display: flex;
+            font-size: 16px;
+            margin: auto 20px;
+            padding: 20px 0px;
+            border-bottom: 1px solid #E4E4E4
+        }
+        .submit_item img {
+            width: auto;
+            height: 60%;
+            margin: auto 8px;
+        }
+        .submit_item input {
+            border: 0px solid #fff;
+            margin: auto 8px;
+            height: 20px;
+            outline: none;
+            width: 100%;
+            font-size: inherit;
+        }
+        .submit_item input::-webkit-input-placeholder {
+            color: #AAAAAA;
+        }
+        .submit_but {
+            width: 170px;
+            font-size: 16px;
+            display: block;
+            text-align: center;
+            height: 25px;
+            line-height: 25px;
+            border-radius: 4px;
+            color: #f69c4a;
+            margin: auto 8px auto 0;
+            border:0;
+        }
+        .down_but {
+            background: #ffffff!important;
+            color: #f69c4a!important;
+            border: 1px solid #f69c4a!important;
+            display: inline-block;
+            width: auto;
+            margin: auto;
+        }
+        .protocol {
+            text-align: center;
+            font-size: 12px;
+            margin: 20px;
+        }
+        .protocol input {
+            margin: 0 10px;
+            vertical-align: text-bottom;
+        }
+        .bottom_but {
+            margin: auto 20px;
+            background: #f69c4a;
+            color: #fff;
+            padding: 10px;
+            border: 1px solid #f69c4a;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%;
+            text-align: center;
+            display: block;
+        }
+        .toastdiv>div {
+            width: 60%;
+            border-radius: 4px;
+            margin: auto;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 0.8rem;
+        }
+        .toastdiv>div>p {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        }
+        .z-banner{
+            position: absolute;
+            width: 100%;
+            top: 0px;
+        }
+      .register-people-area{
+        text-align: center;
+        position: relative;
+        width: 100%;
+      }
+      .register-people-title{
+        position: absolute;
+        z-index: 1000;
+        color: #ffffff;
+        width:160px;
+        text-align: center;
+        left: calc(50% - 80px);
+        top:8%;
+        font-size: 14px;
+      }
+
+      .register-people-text{
+        position: absolute;
+        font-family: 'SourceHanSansCN-Bold';
+        color:#333333;
+        width: 80%;
+        left:10%;
+        top:25%;
+        font-size: 12px;
+      }
+
+      .register-people-text-span{
+        display: block;
+        width: 100%;
+        text-align: left;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+
+      .register-down{
+        width: 100%;
+        display: block;
+        text-align: center;
+
+      }
+      .register-down-btn{
+        width: 60%;
+        height: 50px;
+        line-height: 50px;
+        display: inline-block;
+        text-align: center;
+        background: #f69c4a;
+        border-radius: 50px;
+        color:#fff;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="invite-info">
+
+      <img src="{{STATIC_URL}}register/register-banner.png">
+
+
+      <div class="register-people-area">
+        <span class="register-people-title" style="top:6%">——缘分等着你——</span>
+        <img src="{{STATIC_URL}}register/register-people.png">
+      </div>
+
+      <div class="register-people-area">
+        <span class="register-people-title">超靠谱的脱单神器</span>
+        <div class="register-people-text">
+          <span class="register-people-text-span">
+            1.邯郸单身男女的恋爱福利，海量会员，多种玩法，祝您早日脱单。
+          </span>
+          <span class="register-people-text-span">
+            2.权威发布，与邯郸电视台、102.8收音广播等媒体资源通力合作。
+          </span>
+          <span class="register-people-text-span">
+            3.会员身份实名认证，拒绝欺骗虚假，会员真实可靠，为您的安全保驾护航。
+          </span>
+        </div>
+        <img src="{{STATIC_URL}}register/register-idc.png">
+      </div>
+
+      <img src="{{STATIC_URL}}register/register-footer.png">
+
+      <div class="register-down">
+        <span class="register-down-btn">
+          <img src="{{STATIC_URL}}register/ios.png" style="width: 15px;vertical-align: middle;margin-right: 20px">
+          IOS版本下载
+        </span>
+        <span class="register-down-btn">
+          <img src="{{STATIC_URL}}register/android.png" style="width: 15px;vertical-align: middle;margin-right: 20px">
+          Android版本下载
+        </span>
+      </div>
+
+    </div>
+    <div style="display: flex;">
+<span class="submit">
+<p class="submit_item">
+<input id='phone' placeholder="请输入手机号" type="text">
+</p>
+<p class="submit_item">
+<input id='verf' placeholder="请输入短信验证码" type="number">
+<button onclick="getverf()" class="submit_but" id="indenty">获取验证码</button>
+</p>
+<p class="submit_item">
+<input id='passwd' placeholder="设置密码（6-20位字母或数字）" type="password">
+</p>
+<p id='inviteItem' class="submit_item">
+<input id='invitecode' placeholder="请输入邀请码" type="text" readonly="readonly">
+</p>
+</span>
+    </div>
+</div>
+<p class="protocol">
+    <input id='prot' checked="checked" type="checkbox">
+    <span>已阅读并同意</span>
+    <a style="color:#f69c4a" id="home_register">注册必读</a>
+</p>
+<div style='display: flex'>
+    <button class="bottom_but" onclick="submit()">马上注册</button>
+</div>
+</div>
+<script>
+
+    var nums = 60;
+
+
+    //定时器
+    function second() {
+        nums--;
+        if(nums > 0){
+            $('#indenty').empty();
+            $('#indenty').append(nums+'s可重新获取');
+        }else{
+            clearInterval(time); //清除js定时器
+            $("#indenty").attr("disabled", false);
+            $('#indenty').empty();
+            $('#indenty').append('获取验证码');
+            nums = 60; //重置时间
+        }
+    }
+
+
+    //获取验证码
+    function getverf(){
+        time = setInterval(second,1000);
+        $("#indenty").attr("disabled", true);
+
+        var data = {
+            account:$('#phone').val()
+        }
+        $.ajax({
+            type: 'POST',
+            url: 'https://test.lhxq.top/sms',
+            data: data,
+            success: function () {
+
+            },
+            dataType: 'JSON'
+        });
+    }
+
+
+    //提交
+    function submit() {
+        var params = {
+            account:$('#phone').val(),
+            password:$('#passwd').val(),
+            code:$('#verf').val()
+
+        }
+        $.ajax({
+            type: 'POST',
+            url: 'https://test.lhxq.top/api/customer/enroll/'+$('#invitecode').val(),
+            data: params,
+            success: function () {
+                alert('注册成功');
+            },
+            dataType: 'JSON'
+        });
+    }
+
+
+    $(document).ready(function () {
+        var url = location.host + '/protocol/'
+        $('#home_register').attr('href',url);
+
+        var hash = location.hash;
+        $('#invitecode').val(hash.split('=')[1]);
+    })
+
+    function toApp() {
+        alert('暂未开放！敬请期待！')
+    }
+
+
+
+
+</script>
+</body>
+</html>
