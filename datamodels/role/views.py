@@ -174,7 +174,7 @@ class AroundCustomerView(generics.ListAPIView):
     def get_queryset(self):
         latitude = float(self.request.META.get(HeadersKey.HTTP_LATITUDE, 0))
         longitude = float(self.request.META.get(HeadersKey.HTTP_LONGITUDE, 0))
-        return mm_Customer.customer_around(latitude, longitude)
+        return mm_Customer.customer_around(latitude, longitude, self.request.user.customer.gender)
 
     serializer_class = CoustomerDistanceSerializer
     permission_classes = (IsAuthenticated,)

@@ -197,7 +197,7 @@ class CustomerManager(BaseManger):
         last_request_at = datetime.now() - timedelta(days=days)
         return self.filter(last_request_at__gt=last_request_at)
 
-    def customer_around(self, latitude, longitude, distance=10000):
+    def customer_around(self, latitude, longitude, gender, distance=10000):
         latitude_range, longitude_range = Tool.get_lon_lat_range(latitude, longitude, distance)
         latitude_low, latitude_heigh = latitude_range
         longitude_low, longitude_heigh = longitude_range
@@ -209,12 +209,14 @@ class CustomerManager(BaseManger):
             'distance': distance,
             'latitude': latitude,
             'longitude': longitude,
+            'gender': gender
         }
         sql = '''
         Select *, 
         st_distance_sphere(POINT({longitude}, {latitude} ), POINT(lv_customers.longitude, lv_customers.latitude)) AS distance
         FROM lv_customers
         WHERE id >= 1
+        AND lv_customers.lv_customers != {gender}
         AND lv_customers.latitude BETWEEN {latitude_low} AND  {latitude_heigh}
         AND lv_customers.longitude BETWEEN {longitude_low} AND {longitude_heigh}
         HAVING distance < {distance}
