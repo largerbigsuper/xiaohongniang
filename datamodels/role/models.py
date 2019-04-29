@@ -65,6 +65,7 @@ class BaseRole(models.Model):
     age = models.PositiveSmallIntegerField('年龄', null=True, blank=True)
     gender = models.IntegerField('性别', choices=GENDER_CHOICE, default=0)
     avatar_url = models.CharField('头像', max_length=300, blank=True)
+    avatar_verified = models.BooleanField('头像是否已审核', default=False)
     account = models.CharField('账号', max_length=11, unique=True)
     wechat_id = models.CharField('微信号', max_length=24, blank=True)
     intro = models.CharField('自我简介', max_length=120, blank=True)

@@ -84,6 +84,7 @@ admin.site.register(Customer, CustomerAdmin)
 def make_verified(modeladmin, request, queryset):
     for picture in queryset:
         picture.customer.avatar_url = picture.url
+        picture.customer.avatar_verified = True
         picture.customer.save()
         picture.is_verified = True
         picture.save()

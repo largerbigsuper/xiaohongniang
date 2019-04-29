@@ -23,7 +23,7 @@ Customer_Fields = ['id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'acco
                    'birthday', 'height',
                    'profession', 'education', 'income', 'marital_status', 'child_status', 'years_to_marry', 'score',
                    'condition',
-                   'images', 'is_idcard_verified'
+                   'images', 'is_idcard_verified', 'avatar_verified'
                    ]
 
 Base_Info_fields = ['id', 'name', 'age', 'gender', 'avatar_url', 'height']
@@ -62,7 +62,7 @@ class CustomerListSerializer(serializers.ModelSerializer):
                   'address_company', 'address_home', 'relation_status',
                   'following_count', 'followers_count', 'blocked_count', 'is_myself',
                   'is_manager', 'is_shop_keeper', 'is_show_skill', 'is_rut', 'last_request_at',
-                  'service_vip_expired_at', 'height', 'is_idcard_verified'
+                  'service_vip_expired_at', 'height', 'is_idcard_verified', 'avatar_verified'
                   )
 
 
@@ -84,7 +84,8 @@ class CustomerProfileSerialier(BaseCustomerSerialzier):
                   'skills', 'is_show_skill', 'is_rut',
                   'expect_desc',
                   'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
-                  'child_status', 'years_to_marry', 'score', 'condition', 'images', 'is_idcard_verified'
+                  'child_status', 'years_to_marry', 'score', 'condition', 'images', 'is_idcard_verified',
+                  'avatar_verified'
                   )
 
         read_only_fields = ('id', 'user_id', 'account', 'im_token',
