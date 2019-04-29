@@ -140,6 +140,7 @@ class CustomerProfile(APIView):
         if serializer.is_valid(raise_exception=True):
             if 'avatar_url' in serializer.validated_data:
                 serializer.validated_data['avatar_url'] = serializer.validated_data['avatar_url']
+                serializer.validated_data['avatar_status'] = 0
                 mm_Picture.add_picture(request.user.customer.id, serializer.validated_data['avatar_url'])
             serializer.save()
             if any([not _name == serializer.data['name'], not _avatar_url == serializer.data['avatar_url']]):
