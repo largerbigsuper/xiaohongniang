@@ -332,7 +332,7 @@
         var url = location.host + '/protocol/'
         $('#home_register').attr('href',url);
 
-        var hash = location.hash;
+        var hash = location.search;
         $('#invitecode').val(hash.split('=')[1]);
     })
 
