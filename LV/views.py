@@ -60,6 +60,7 @@ class APPConfigView(APIView):
             'user_total': user_total,
             'image_domain': QiNiuSettings.BUCKET_DOMAIN_DICT['image'],
             'chat_times_limit': settings.NORNAML_CUSTOMER_CHAT_TIMES_LIMIT_PER_DAY,
+            'kefuid': 1
 
         }
         return Response(Tool.format_data(app_config))
