@@ -206,6 +206,7 @@ class MessageTemplate(models.Model):
 
     class Meta:
         db_table = 'lv_message_template'
+        verbose_name = verbose_name_plural = '打招呼模板'
 
 
 class CustomerBonusRecordManager(BaseManger):
