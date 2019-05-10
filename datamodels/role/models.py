@@ -139,6 +139,9 @@ class BaseRole(models.Model):
 
 class CustomerManager(BaseManger):
 
+    def get_queryset(self):
+        return super().get_queryset().exclude(avatar_url='')
+
     Default_Password = '888888'
 
     def add(self, account, password, **kwargs):
