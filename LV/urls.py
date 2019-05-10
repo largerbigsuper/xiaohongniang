@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.urls import path, include
 
+from LV import views
 from .router import router
 from LV.views import UploadTokenView, ImTokenView, APPConfigView, protocol
 
@@ -27,6 +28,7 @@ admin_urlpatterns = [
 ]
 
 urlpatterns = [
+    path('', views.index),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('sms/', include('datamodels.sms.urls')),
@@ -43,7 +45,10 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('protocol/', protocol),
-] + admin_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 admin.site.site_header = '邯郸小红娘'

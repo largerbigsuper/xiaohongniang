@@ -36,7 +36,7 @@ class ImTokenView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-        data = IMServe.gen_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)
+        data = IMServe.gen_token(request.user.customer.id, request.user.customer.name, request.user.customer.avatar_url)
         request.user.customer.im_token = data['token']
         request.user.customer.save()
         return Response(Tool.format_data(data))
@@ -60,6 +60,7 @@ class APPConfigView(APIView):
             'user_total': user_total,
             'image_domain': QiNiuSettings.BUCKET_DOMAIN_DICT['image'],
             'chat_times_limit': settings.NORNAML_CUSTOMER_CHAT_TIMES_LIMIT_PER_DAY,
+            'kefuid': 1
 
         }
         return Response(Tool.format_data(app_config))
@@ -68,4 +69,7 @@ class APPConfigView(APIView):
 def protocol(request):
     return render(request, 'protocol.html')
 
+
+def index(request):
+    return render(request, 'register/register.html')
 

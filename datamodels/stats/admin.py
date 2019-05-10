@@ -1,6 +1,6 @@
 from django.contrib import admin, messages
 
-from datamodels.stats.models import CustomerBonusRecord, WithDrawRecord, mm_CustomerBonusRecord
+from datamodels.stats.models import CustomerBonusRecord, WithDrawRecord, mm_CustomerBonusRecord, MessageTemplate
 
 
 @admin.register(CustomerBonusRecord)
@@ -40,3 +40,10 @@ class WithDrawRecordAdmin(admin.ModelAdmin):
                         )
 
         super(WithDrawRecordAdmin, self).save_model(request, obj, form, change)
+
+
+@admin.register(MessageTemplate)
+class MessageTemplateAdmin(admin.ModelAdmin):
+
+    list_per_page = 20
+    list_display = ('id', 'text')

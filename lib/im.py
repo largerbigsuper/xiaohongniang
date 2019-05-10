@@ -42,18 +42,18 @@ class IMServe:
             raise APIException(response.result['errorMessage'])
 
     @classmethod
-    def create_group(cls, user_id, group_id, group_name):
-        response = cls.server.Group.create(user_id, group_id, group_name)
+    def create_group(cls, customer_id, group_id, group_name):
+        response = cls.server.Group.create(customer_id, group_id, group_name)
         if not response.status == 200:
             raise APIException(response.result['errorMessage'])
 
     @classmethod
-    def destory_group(cls, user_id, group_id):
-        cls.server.Group.dismiss(user_id, group_id)
+    def destory_group(cls, customer_id, group_id):
+        cls.server.Group.dismiss(customer_id, group_id)
 
     @classmethod
-    def join_group(cls, user_id, group_id, group_name):
-        response = cls.server.Group.join(user_id, group_id, group_name)
+    def join_group(cls, customer_id, group_id, group_name):
+        response = cls.server.Group.join(customer_id, group_id, group_name)
         if not response.status == 200:
             raise APIException(response.result['errorMessage'])
 

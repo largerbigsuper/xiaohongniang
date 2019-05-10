@@ -15,6 +15,7 @@ from datamodels.products.api.viewsets import AdminVirtualServiceViewSet, Custome
     AdminServiceCertificationViewSet, SkuViewSet, SkuExchageViewSet
 from datamodels.role.api.viewsets import CustomerViewSet, InviteRecordViewSet, IDCardCertificationViewSet
 from datamodels.role.api.viewset_admin import AdminInviteRecordViewSet, AdminOpreationViewSet, AdminCustomerViewSet
+from datamodels.sms.api.viewsets import SMSViewSet
 from datamodels.stats.api.viewsets import PointViewSet, AdminPointViewSet, MessageTemplateViewSet, \
     CustomerBonusRecordViewSet, WithDrawRecordViewSet, CustomerChatRecordViewSet
 
@@ -36,6 +37,7 @@ router.register('bonus', CustomerBonusRecordViewSet, base_name='bonus')
 router.register('withdraw', WithDrawRecordViewSet, base_name='withdraw')
 router.register('chatrecord', CustomerChatRecordViewSet, base_name='chatrecord')
 router.register('idcard', IDCardCertificationViewSet, base_name='idcard')
+router.register('sms', SMSViewSet, base_name='sms')
 
 
 router.register('admin/op', AdminOpreationViewSet, base_name='admin-op')

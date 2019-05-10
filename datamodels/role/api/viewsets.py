@@ -74,8 +74,14 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, serializer_class=IndexTopCustomerSerializer)
     def service_top(self, request):
         """置顶人员"""
-        self.queryset = mm_Customer.show_in_home_page()
-        return super().list(request)
+        queryset = mm_Customer.show_in_home_page()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, serializer_class=RecommedCustomerSerializer)
     def recommend(self, request):

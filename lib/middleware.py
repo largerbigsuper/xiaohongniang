@@ -9,6 +9,7 @@ import json
 import time
 
 from django.core.cache import cache
+from rest_framework.authentication import SessionAuthentication
 
 from lib.common import CacheKey, HeadersKey
 
@@ -59,3 +60,9 @@ class ResponseFormateMiddleware:
         #     return JsonResponse(dict(code=exception.code, msg=exception.msg))
         # else:
         #     return None
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return

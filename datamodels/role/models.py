@@ -60,11 +60,28 @@ class BaseRole(models.Model):
         (2, '有，和我在一起'),
         (3, '有，不和我在一起'),
     )
+    AVATAR_STATUS = (
+        (0, '未审核'),
+        (1, '审核通过'),
+        (2, '审核不通过'),
+    )
+    HOUSE_STATUS = (
+        (0, '保密'),
+        (1, '已购房'),
+        (2, '未购房'),
+    )
+    CAR_STATUS = (
+        (0, '保密'),
+        (1, '已购车'),
+        (2, '未购车'),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField('名称', max_length=20)
     age = models.PositiveSmallIntegerField('年龄', null=True, blank=True)
     gender = models.IntegerField('性别', choices=GENDER_CHOICE, default=0)
     avatar_url = models.CharField('头像', max_length=300, blank=True)
+    avatar_status = models.PositiveSmallIntegerField('头像审核状态', choices=AVATAR_STATUS, default=0)
     account = models.CharField('账号', max_length=11, unique=True)
     wechat_id = models.CharField('微信号', max_length=24, blank=True)
     intro = models.CharField('自我简介', max_length=120, blank=True)
@@ -92,6 +109,8 @@ class BaseRole(models.Model):
     income = models.PositiveIntegerField(verbose_name='收入', choices=INCOME_CHOICE, default=0)
     marital_status = models.PositiveIntegerField(verbose_name='婚姻状况', choices=MARITAL_STATUS_CHOICE, default=0)
     child_status = models.PositiveIntegerField(verbose_name='有无小孩', choices=CHILD_STATUS_CHOICE, default=0)
+    house_status = models.PositiveIntegerField(verbose_name='房产状态', choices=HOUSE_STATUS, default=0)
+    car_status = models.PositiveIntegerField(verbose_name='车辆状态', choices=CAR_STATUS, default=0)
     years_to_marry = models.PositiveIntegerField(verbose_name='几年内结婚', default=0)
     score = models.PositiveIntegerField(verbose_name='自评分数', default=0)
     condition = models.TextField(verbose_name='择偶标准', max_length=1000, blank=True, default='{}')
@@ -120,14 +139,19 @@ class BaseRole(models.Model):
 
 class CustomerManager(BaseManger):
 
+    def get_queryset(self):
+        return super().get_queryset().exclude(avatar_url='')
+
     Default_Password = '888888'
 
     def add(self, account, password, **kwargs):
         try:
             with transaction.atomic():
                 user = self._add_user(account, password)
-                im_token = IMServe.gen_token(user.id, account)['token']
-                customer = self.create(user=user, account=account, im_token=im_token, **kwargs)
+                customer = self.create(user=user, account=account, **kwargs)
+                customer.im_token = IMServe.gen_token(customer.id, account)['token']
+                customer.save()
+
                 return customer
         except IntegrityError:
             raise DBException('账号已注册')
@@ -195,7 +219,7 @@ class CustomerManager(BaseManger):
         last_request_at = datetime.now() - timedelta(days=days)
         return self.filter(last_request_at__gt=last_request_at)
 
-    def customer_around(self, latitude, longitude, distance=10000):
+    def customer_around(self, latitude, longitude, gender, distance=10000):
         latitude_range, longitude_range = Tool.get_lon_lat_range(latitude, longitude, distance)
         latitude_low, latitude_heigh = latitude_range
         longitude_low, longitude_heigh = longitude_range
@@ -207,12 +231,14 @@ class CustomerManager(BaseManger):
             'distance': distance,
             'latitude': latitude,
             'longitude': longitude,
+            'gender': gender
         }
         sql = '''
         Select *, 
         st_distance_sphere(POINT({longitude}, {latitude} ), POINT(lv_customers.longitude, lv_customers.latitude)) AS distance
         FROM lv_customers
         WHERE id >= 1
+        AND lv_customers.gender != {gender}
         AND lv_customers.latitude BETWEEN {latitude_low} AND  {latitude_heigh}
         AND lv_customers.longitude BETWEEN {longitude_low} AND {longitude_heigh}
         HAVING distance < {distance}

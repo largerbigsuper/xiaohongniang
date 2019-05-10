@@ -139,11 +139,12 @@ class CustomerProfile(APIView):
         serializer = CustomerSerializer(request.user.customer, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             if 'avatar_url' in serializer.validated_data:
-                # serializer.validated_data['avatar_url'] = serializer.validated_data['avatar_url']
+                serializer.validated_data['avatar_url'] = serializer.validated_data['avatar_url']
+                serializer.validated_data['avatar_status'] = 0
                 mm_Picture.add_picture(request.user.customer.id, serializer.validated_data['avatar_url'])
             serializer.save()
             if any([not _name == serializer.data['name'], not _avatar_url == serializer.data['avatar_url']]):
-                IMServe.refresh_token(request.user.id, request.user.customer.name, request.user.customer.avatar_url)
+                IMServe.refresh_token(request.user.customer.id, request.user.customer.name, request.user.customer.avatar_url)
             return Response(Tool.format_data(serializer.data))
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -174,7 +175,7 @@ class AroundCustomerView(generics.ListAPIView):
     def get_queryset(self):
         latitude = float(self.request.META.get(HeadersKey.HTTP_LATITUDE, 0))
         longitude = float(self.request.META.get(HeadersKey.HTTP_LONGITUDE, 0))
-        return mm_Customer.customer_around(latitude, longitude)
+        return mm_Customer.customer_around(latitude, longitude, self.request.user.customer.gender)
 
     serializer_class = CoustomerDistanceSerializer
     permission_classes = (IsAuthenticated,)
