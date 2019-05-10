@@ -318,7 +318,7 @@
         }
         $.ajax({
             type: 'POST',
-            url: location.protocol + "//" + location.host + '/api/customer/enroll/' + $('#invitecode').val(),
+            url: location.protocol + "//" + location.host + '/api/customer/enroll/' + '?invitecode=' + $('#invitecode').val(),
             data: params,
             success: function () {
                 alert('注册成功');
