@@ -65,6 +65,17 @@ class BaseRole(models.Model):
         (1, '审核通过'),
         (2, '审核不通过'),
     )
+    HOUSE_STATUS = (
+        (0, '保密'),
+        (1, '已购房'),
+        (2, '未购房'),
+    )
+    CAR_STATUS = (
+        (0, '保密'),
+        (1, '已购车'),
+        (2, '未购车'),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField('名称', max_length=20)
     age = models.PositiveSmallIntegerField('年龄', null=True, blank=True)
@@ -98,6 +109,8 @@ class BaseRole(models.Model):
     income = models.PositiveIntegerField(verbose_name='收入', choices=INCOME_CHOICE, default=0)
     marital_status = models.PositiveIntegerField(verbose_name='婚姻状况', choices=MARITAL_STATUS_CHOICE, default=0)
     child_status = models.PositiveIntegerField(verbose_name='有无小孩', choices=CHILD_STATUS_CHOICE, default=0)
+    house_status = models.PositiveIntegerField(verbose_name='房产状态', choices=HOUSE_STATUS, default=0)
+    car_status = models.PositiveIntegerField(verbose_name='车辆状态', choices=CAR_STATUS, default=0)
     years_to_marry = models.PositiveIntegerField(verbose_name='几年内结婚', default=0)
     score = models.PositiveIntegerField(verbose_name='自评分数', default=0)
     condition = models.TextField(verbose_name='择偶标准', max_length=1000, blank=True, default='{}')

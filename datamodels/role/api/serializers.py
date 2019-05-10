@@ -23,7 +23,8 @@ Customer_Fields = ['id', 'user_id', 'name', 'age', 'gender', 'avatar_url', 'acco
                    'birthday', 'height',
                    'profession', 'education', 'income', 'marital_status', 'child_status', 'years_to_marry', 'score',
                    'condition',
-                   'images', 'is_idcard_verified', 'avatar_status'
+                   'images', 'is_idcard_verified', 'avatar_status',
+                   'house_status', 'car_status'
                    ]
 
 Base_Info_fields = ['id', 'name', 'age', 'gender', 'avatar_url', 'height']
@@ -85,7 +86,8 @@ class CustomerProfileSerialier(BaseCustomerSerialzier):
                   'expect_desc',
                   'birthday', 'height', 'profession', 'education', 'income', 'marital_status',
                   'child_status', 'years_to_marry', 'score', 'condition', 'images', 'is_idcard_verified',
-                  'avatar_status'
+                  'avatar_status',
+                  'house_status', 'car_status'
                   )
 
         read_only_fields = ('id', 'user_id', 'account', 'im_token',
