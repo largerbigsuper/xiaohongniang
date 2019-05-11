@@ -24,6 +24,7 @@ from datamodels.sms.models import mm_SMSCode
 from datamodels.stats.models import mm_CustomerPoint, mm_CustomerBonusRecord
 from lib import customer_login
 from lib.common import HeadersKey
+from lib.middleware import CsrfExemptSessionAuthentication
 from lib.tools import gen_invite_code, decode_invite_code
 
 
@@ -90,7 +91,7 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
         return super().list(request)
 
     @csrf_exempt
-    @action(methods=['post'], detail=False, serializer_class=CustomerRegisterSerializer, permission_classes=[])
+    @action(methods=['post'], detail=False, serializer_class=CustomerRegisterSerializer, permission_classes=[], authentication_classes=[])
     def enroll(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
