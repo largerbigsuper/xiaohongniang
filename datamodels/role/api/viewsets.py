@@ -112,6 +112,8 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
                 amount=mm_CustomerBonusRecord.Award_Mapping[mm_CustomerBonusRecord.Action_Enroll],
                 desc=mm_CustomerBonusRecord.template_enroll.format(customer.account)
             )
+            # 增加积分
+            mm_CustomerPoint.add_action(inviter_id, mm_CustomerPoint.Action_Invite_Enroll)
 
         data = dict(account=account, id=customer.id, user_id=customer.user.id)
         return Response(data=data, status=status.HTTP_200_OK)
