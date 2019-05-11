@@ -233,10 +233,10 @@
           <img src="{{STATIC_URL}}register/ios.png" style="width: 15px;vertical-align: middle;margin-right: 20px">
           IOS版本下载
         </span>
-        <span class="register-down-btn">
+        <a class="register-down-btn" href="https://www.pgyer.com/JqYg">
           <img src="{{STATIC_URL}}register/android.png" style="width: 15px;vertical-align: middle;margin-right: 20px">
           Android版本下载
-        </span>
+        </a>
       </div>
 
     </div>
@@ -272,6 +272,16 @@
     var nums = 60;
 
 
+    //手机号码正则
+    function checkPhone(){
+        var phone = document.getElementById('phone').value;
+        if(!(/^1[34578]\d{9}$/.test(phone))){
+            alert("手机号码有误，请重填。");
+            return false;
+        }
+    }
+
+
     //定时器
     function second() {
         nums--;
@@ -290,21 +300,30 @@
 
     //获取验证码
     function getverf(){
-        time = setInterval(second,1000);
-        $("#indenty").attr("disabled", true);
+        var boolean = checkPhone();
+        if(boolean == false){
 
-        var data = {
-            account:$('#phone').val()
+        }else{
+            time = setInterval(second,1000);
+            $("#indenty").attr("disabled", true);
+
+            var data = {
+                account:$('#phone').val()
+            }
+            $.ajax({
+                type: 'POST',
+                url: 'https://test.lhxq.top/api/sms/',
+                data: data,
+                success: function () {
+
+                },
+                error: function(){
+                    alert('获取验证码失败');
+                },
+                dataType: 'JSON'
+            });
         }
-        $.ajax({
-            type: 'POST',
-            url: 'https://test.lhxq.top/api/sms/',
-            data: data,
-            success: function () {
 
-            },
-            dataType: 'JSON'
-        });
     }
 
 
@@ -318,10 +337,14 @@
         }
         $.ajax({
             type: 'POST',
-            url: location.protocol + "//" + location.host + '/api/customer/enroll/' + '?invitecode=' + $('#invitecode').val(),
+            url: location.protocol + "//" + location.host + '/api/customers/enroll/' + '?invitecode=' +
+                $('#invitecode').val(),
             data: params,
             success: function () {
                 alert('注册成功');
+            },
+            error: function(){
+                alert('注册失败！请重新注册！');
             },
             dataType: 'JSON'
         });
