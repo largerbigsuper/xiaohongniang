@@ -71,9 +71,9 @@ class CustomerPointManager(BaseManger):
     Action_Add_Comment = 3
     Action_Add_Moment = 4
     Action_Add_Bottle = 5
-    Action_Pick_Bottle = 5
-    Action_Invite_Enroll = 6
-    Action_Talk = 7
+    Action_Pick_Bottle = 6
+    Action_Invite_Enroll = 7
+    Action_Talk = 8
 
     Action_Choice = (
         (Action_Withdraw, '兑换'),
@@ -114,7 +114,7 @@ class CustomerPointManager(BaseManger):
     # 积分最低行为次数标准
     Action_Per_Day_Base_Count = {
         Action_Add_Like: 5,
-        Action_Add_Moment: 5
+        Action_Add_Comment: 5
     }
 
     def get_total_point(self, customer_id):
@@ -131,15 +131,13 @@ class CustomerPointManager(BaseManger):
                                             ).count() < self.Action_Per_Day_Base_Count[action]
             if count_limited:
                 return True
-        if action == self.Action_Add_Moment:
+        if action == self.Action_Add_Comment:
             count_limited = mm_Comments.filter(from_customer=customer_id,
                                                create_at__date=datetime.now().date()
                                                ).count() < self.Action_Per_Day_Base_Count[action]
             if count_limited:
                 return True
 
-        if action == self.Action_Add_Comment:
-            return
         if action == self.Action_Withdraw:
             return False
         else:
