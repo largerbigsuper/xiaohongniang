@@ -88,6 +88,7 @@ def make_verified(modeladmin, request, queryset):
         picture.customer.save()
         picture.is_verified = True
         picture.save()
+        IMServe.refresh_token(picture.customer.id, picture.customer.name, picture.url)
 
 
 make_verified.short_description = "通过验证"
