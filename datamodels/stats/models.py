@@ -114,7 +114,7 @@ class CustomerPointManager(BaseManger):
     # 积分最低行为次数标准
     Action_Per_Day_Base_Count = {
         Action_Add_Like: 5,
-        Action_Add_Comment: 5
+        Action_Add_Moment: 5
     }
 
     def get_total_point(self, customer_id):
