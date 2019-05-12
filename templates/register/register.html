@@ -358,7 +358,7 @@
         var hash = location.search;
         var code = hash.split('=')[1];
         if(code.indexOf('&') != -1){
-            code = val.split('&')[0]
+            code = code.split('&')[0]
         }
         $('#invitecode').val(code);
     })
