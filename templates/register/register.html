@@ -312,7 +312,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: 'https://test.lhxq.top/api/sms/',
+                url: location.protocol + "//" + location.host+'/api/sms/',
                 data: data,
                 success: function () {
 
@@ -356,7 +356,11 @@
         $('#home_register').attr('href',url);
 
         var hash = location.search;
-        $('#invitecode').val(hash.split('=')[1]);
+        var code = hash.split('=')[1];
+        if(code.indexOf('&') != -1){
+            code = val.split('&')[0]
+        }
+        $('#invitecode').val(code);
     })
 
     function toApp() {
