@@ -46,9 +46,10 @@ class MessageTemplateViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = MessageTempalteSerializer
+    queryset = mm_MessageTemplate.all()
 
-    def get_queryset(self):
-        return mm_MessageTemplate.my_templates(self.request.session['customer_id'])
+    # def get_queryset(self):
+    #     return mm_MessageTemplate.my_templates(self.request.session['customer_id'])
 
     def perform_create(self, serializer):
         serializer.save(customer_id=self.request.session['customer_id'])

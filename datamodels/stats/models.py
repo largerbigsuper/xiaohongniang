@@ -6,6 +6,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+from datamodels.moments.models import mm_Likes, mm_Comments
 from datamodels.role.models import Customer
 from lib.common import BaseManger
 
@@ -71,6 +72,8 @@ class CustomerPointManager(BaseManger):
     Action_Add_Moment = 4
     Action_Add_Bottle = 5
     Action_Pick_Bottle = 5
+    Action_Invite_Enroll = 6
+    Action_Talk = 7
 
     Action_Choice = (
         (Action_Withdraw, '兑换'),
@@ -80,26 +83,38 @@ class CustomerPointManager(BaseManger):
         (Action_Add_Moment, '发动态'),
         (Action_Add_Bottle, '发漂流瓶'),
         (Action_Pick_Bottle, '捡漂流瓶'),
+        (Action_Invite_Enroll, '邀请注册'),
+        (Action_Talk, '聊天'),
     )
 
     Action_Point_Mapping = {
-        Action_Login: 20,
-        Action_Add_Like: 10,
-        Action_Add_Comment: 20,
-        Action_Add_Moment: 20,
-        Action_Add_Bottle: 20,
-        Action_Pick_Bottle: 10,
+        Action_Login: 1,
+        Action_Add_Like: 2,
+        Action_Add_Comment: 2,
+        Action_Add_Moment: 1,
+        Action_Add_Bottle: 1,
+        Action_Pick_Bottle: 0,
+        Action_Invite_Enroll: 10,
+        Action_Talk: 1
     }
 
     Action_Desc = {action: msg for action, msg in Action_Choice}
 
+    # 每天积分行为限制
     Action_Per_Day_Limit_Setting = {
         Action_Login: 1,
-        Action_Add_Like: 10,
-        Action_Add_Comment: 10,
-        Action_Add_Moment: 5,
-        Action_Add_Bottle: 5,
-        Action_Pick_Bottle: 10,
+        Action_Add_Like: 1,
+        Action_Add_Comment: 1,
+        Action_Add_Moment: 1,
+        Action_Add_Bottle: 2,
+        Action_Pick_Bottle: 0,
+        Action_Invite_Enroll: 10000,
+        Action_Talk: 2
+    }
+    # 积分最低行为次数标准
+    Action_Per_Day_Base_Count = {
+        Action_Add_Like: 5,
+        Action_Add_Comment: 5
     }
 
     def get_total_point(self, customer_id):
@@ -110,11 +125,28 @@ class CustomerPointManager(BaseManger):
             return 0
 
     def is_limited(self, customer_id, action):
+        if action == self.Action_Add_Like:
+            count_limited = mm_Likes.filter(customer_id=customer_id,
+                                            create_at__date=datetime.now().date()
+                                            ).count() < self.Action_Per_Day_Base_Count[action]
+            if count_limited:
+                return True
+        if action == self.Action_Add_Moment:
+            count_limited = mm_Comments.filter(from_customer=customer_id,
+                                               create_at__date=datetime.now().date()
+                                               ).count() < self.Action_Per_Day_Base_Count[action]
+            if count_limited:
+                return True
+
+        if action == self.Action_Add_Comment:
+            return
         if action == self.Action_Withdraw:
             return False
         else:
             action_count_today = self.filter(customer_id=customer_id,
-                                             create_at__date=datetime.now().date()).count()
+                                             create_at__date=datetime.now().date(),
+                                             action=action
+                                             ).count()
             return action_count_today >= self.Action_Per_Day_Limit_Setting[action]
 
     def _add_action(self, customer_id, action, amount, total_left, operator_id=None):

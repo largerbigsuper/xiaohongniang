@@ -246,8 +246,8 @@ class CustomerManager(BaseManger):
         '''.format(**params)
         return mm_Customer.raw(sql)
 
-    def show_in_home_page(self):
-        return self.filter(service_show_index_expired_at__gt=datetime.now()).order_by('?')[:3]
+    def show_in_home_page(self, gender):
+        return self.exclude(gender=gender).filter(service_show_index_expired_at__gt=datetime.now()).order_by('?')[:3]
 
     def recommend_customers(self, customer):
         timelimit = datetime.now() - timedelta(days=5)

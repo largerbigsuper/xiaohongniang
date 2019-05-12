@@ -62,20 +62,16 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
         return mm_Customer.exclude(gender=self.request.user.customer.gender)
 
     def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
         if 'q' in self.request.query_params:
             q = self.request.query_params['q']
             return queryset.exclude(Q(name='') | Q(account='')).filter(Q(name__icontains=q) | Q(account__icontains=q))
         return queryset
 
-    def list(self, request, *args, **kwargs):
-        if 'q' in kwargs:
-            self.queryset = super().get_queryset().filter(Q(name__icontains=kwargs['q']) | Q(account__icontains=kwargs['q']))
-        return super().list(request, *args, **kwargs)
-
     @action(detail=False, serializer_class=IndexTopCustomerSerializer)
     def service_top(self, request):
         """置顶人员"""
-        queryset = mm_Customer.show_in_home_page()
+        queryset = mm_Customer.show_in_home_page(gender=request.user.customer.gender)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -116,6 +112,8 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
                 amount=mm_CustomerBonusRecord.Award_Mapping[mm_CustomerBonusRecord.Action_Enroll],
                 desc=mm_CustomerBonusRecord.template_enroll.format(customer.account)
             )
+            # 增加积分
+            mm_CustomerPoint.add_action(inviter_id, mm_CustomerPoint.Action_Invite_Enroll)
 
         data = dict(account=account, id=customer.id, user_id=customer.user.id)
         return Response(data=data, status=status.HTTP_200_OK)
