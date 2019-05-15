@@ -1,0 +1,1533 @@
+body,h1,h2,h3,h4,h5,h6,p,ul,li{
+    margin:0;
+    padding:0;
+}
+body{
+    font-family: "Microsoft YaHei";
+}
+@font-face {
+    font-family: Cap;
+    src:url('../font/Capsuula.ttf');
+}
+.firstyanfa{
+    margin-top: 100px;
+}
+@media (max-width: 767px){
+    .firstyanfa{
+        margin-top: 0;
+    }
+    #container{
+        width:100%;
+        height: 150px;
+        margin: 0 auto;
+        margin-bottom:15px;
+    }
+    #container yd-offw-container{
+        margin-top: 40px;
+    }
+    header{
+        height:44px;
+    }
+    .navbar{
+        border-radius: 0;
+        margin-bottom: 0;
+        z-index: 10;
+        top:0;
+        width:100%;
+        position: absolute;
+        min-height: 44px;
+    }
+    .navbar img{
+        height:30px;
+        margin-top: 7px;
+    }
+    .navbar-nav{
+        margin:0 -15px;
+    }
+    .navbar-default .navbar-toggle{
+        border:0;
+        margin-top: 4px;
+    }
+    .navbar-collapse{
+        border:0;
+    }
+    .navbar-default{
+        background: rgba(0,0,0,0.8);
+        border:none;
+    }
+    .navbar-header a{
+        color:#fff;
+        font-size: 24px;
+        line-height: 44px;
+        text-decoration: none;
+    }
+    .navbar-default .navbar-nav li a{
+        color:#fff;
+    }
+    .navbar-nav li a{
+        padding:0;
+        line-height: 41px;
+    }
+    .nav li a{
+        padding:0 30px;
+    }
+    header ul{
+        line-height: 44px;
+        background:rgba(0,0,0,0.8);
+    }
+    .navbar-default .navbar-nav > li > a:hover{
+        color:#ccc;
+    }
+    .navbar-default .navbar-toggle .icon-bar{
+        background-color: #eee;
+        height:3px;
+    }
+    .navbar-default .navbar-toggle:focus{
+        background-color: transparent;
+    }
+    .navbar-toggle{
+        margin-right:0;
+        margin-bottom: 4px;
+    }
+    .bannerBox{
+        position: relative;
+        width: 100%;
+        height:200px;
+        background: url("../images/index1.png") no-repeat center;
+        background-size: 100% 100%;
+    }
+    .bannerBox img:first-child{
+        width:100%;
+        height:300px;
+    }
+    .bannerBox h3{
+        position: absolute;
+        top:70px;
+        color:#fff;
+        width:100%;
+        font-size: 18px;
+        font-weight: normal;
+    }
+    .bannerBox h4{
+        position: absolute;
+        top:100px;
+        color:#fff;
+        width:100%;
+        font-size: 14px;
+        font-weight: normal;
+        opacity: 0;
+    }
+    .bannerBox p{
+        position: absolute;
+        top:130px;
+        color:#fff;
+        width:280px;
+        left:50%;
+        font-size: 12px;
+        opacity: 0;
+        text-align: left;
+        margin-left: -140px;
+    }
+    .bannerBox p i{
+        font-style: normal;
+        display: block;
+        text-align: center;
+    }
+    .bannerBox p span{
+        letter-spacing: 3.2px;
+    }
+    .bannerBox .scroll{
+        position: absolute;
+        bottom:10px;
+        left:50%;
+        margin-left:-20px;
+        cursor: pointer;
+        opacity: 0;
+        width:40px;
+        opacity: 0;
+    }
+    .aboutBox{
+        background-color: #fff;
+        overflow: hidden;
+    }
+    .aboutBox h3{
+        font-size: 24px;
+        margin-top: 30px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .aboutBox p:nth-child(2){
+        font-size: 20px;
+        margin-top: 5px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .aboutBox p:nth-child(3){
+        font-size: 12px;
+        margin-top: 10px;
+        color:#5c5c5c;
+        width:50%;
+        margin-left: 25%;
+    }
+    .aboutBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:100px;
+        height:30px;
+        color:#2365F9;
+        font-size: 12px;
+        display: block;
+        margin:30px auto;
+    }
+    .aboutBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .layoutBox{
+        background-color: #f6f6f6;
+        overflow: hidden;
+        padding-bottom: 20px;
+    }
+    .layoutBox h3{
+        font-size: 24px;
+        margin-top: 30px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .layoutBox p{
+        font-size: 20px;
+        margin-top: 5px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .layoutBox img{
+        margin: 20px auto;
+        width:60%;
+    }
+    .layoutBox div{
+        width:100%;
+        height:180px;
+        margin: 0 auto;
+        background: url("../images/layout1.png") no-repeat center;
+        background-size: 100%;
+        margin-top: 10px;
+    }
+    .yunying{
+        width:100%;
+        /*height:210px;*/
+        background: url("../images/yunying1.png") no-repeat center bottom;
+        background-size: 100% 100%;
+        padding-top: 20px;
+        padding-bottom: 30px;
+    }
+    .yunying_tit{
+        text-align: center;
+        font-size: 24px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .yunying p.yanfa{
+        font-size: 16px;
+        color:#fff;
+        margin-top: 20px;
+        text-align: center;
+    }
+    .yunying p.yanfadizhi{
+        font-size: 14px;
+        color:#fff;
+        text-align: center;
+    }
+    .joinBox{
+        position: relative;
+        overflow: hidden;
+        background: url("../images/join.png") no-repeat center;
+        background-size: cover;
+        width: 100%;
+        height:450px;
+    }
+    .joinBox h3{
+        position: absolute;
+        top:20px;
+        width:100%;
+        color:#fff;
+        font-size: 24px;
+        letter-spacing:4px;
+    }
+    .joinBox .joinus{
+        position: absolute;
+        font-size: 20px;
+        top: 50px;
+        font-family: Cap;
+        color:#fff;
+        width:100%;
+    }
+    .joinBox .bgPic{
+        height:450px;
+    }
+    .carousel{
+        position: absolute;
+        top:50px;
+        width:100%;
+    }
+    .carousel-caption{
+        top:20px;
+        text-align: left;
+    }
+    .carousel-caption img{
+        margin: auto;
+        width:50px;
+    }
+    .carousel-caption .contBox h4{
+        /*padding-left: 30%;*/
+        text-align: center;
+    }
+    .carousel-caption .contBox h5{
+        height:220px;
+        overflow: auto;
+    }
+    .carousel-caption h4{
+        font-size: 16px;
+        color:#fff;
+        margin: 20px 0;
+    }
+    .carousel-caption h5 p{
+        font-size: 12px;
+        color:#fff;
+        margin-bottom: 10px;
+    }
+    .carousel-indicators{
+        bottom:30px;
+    }
+    .joinBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:100px;
+        height:30px;
+        font-size: 12px;
+        color:#fff;
+        position: absolute;
+        bottom:60px;
+        left:50%;
+        margin-left: -50px;
+        z-index: 2;
+    }
+    .joinBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .waiCarousel{
+        height:400px;
+    }
+    .carousel-indicators li{
+        width:10px;
+        height:10px;
+        border: 2px solid #fff;
+    }
+    .carousel-indicators .active{
+        width:12px;
+        height:12px;
+        background-color: #2365F9;
+        border:0;
+    }
+    .carousel-control.right{
+        background-image: none;
+    }
+    .carousel-control{
+        top:30%;
+    }
+    .carousel-control img{
+        width:10px;
+    }
+    .contactBox{
+        margin-bottom: 10px;
+    }
+    .contactBox h3{
+        font-size: 24px;
+        margin-top: 20px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .contactBox .lianxi{
+        font-size: 20px;
+        margin-top: 5px;
+        font-family: Cap;
+        color:#6a6a6a;
+        margin-bottom:10px;
+    }
+    .contactBox h5{
+        font-size: 14px;
+        color:#2c2525;
+        margin:10px 0;
+    }
+    .contactBox .lianxiwm{
+        margin-top: 20px;
+    }
+    .Contact{
+        margin-bottom: 15px;
+        display: flex;
+        align-items:center;
+        justify-content: center;
+    }
+    .Contacts{
+        /*display: flex;*/
+        /*align-items: center;*/
+        color: #6a6767;
+        font-size: 14px;
+        /*float:left;*/
+        margin:0 30px;
+    }
+    .Contact img{
+        width:20px;
+    }
+    .Contact p{
+        color:#6a6767;
+        font-size: 14px;
+        width:85%;
+    }
+    footer{
+        width:100%;
+        background-color: #0d2a74;
+        line-height: 22px;
+        padding: 7px 0;
+    }
+    footer p{
+        color:#fff;
+        font-size: 12px;
+    }
+    footer p a{
+        color: #ffffff !important;
+    }
+    footer p img{
+        vertical-align: bottom;
+    }
+}
+
+
+@media (min-width: 768px) and (max-width: 999px){
+    .active1{
+        color: #ccc;
+        border-bottom: 3px #2365F9 solid;
+    }
+    #container{
+        width: 100%;
+        height: 300px;
+        margin: 0 auto;
+        margin-bottom:30px;
+    }
+    header{
+        height:88px;
+    }
+    .navbar{
+        border-radius: 0;
+        margin-bottom: 0;
+        z-index: 10;
+        top:0;
+        width:100%;
+        position: fixed;
+    }
+    .navbar-default .navbar-toggle{
+        border:0;
+    }
+    .navbar img{
+        height:50px;
+        margin-top: 19px;
+    }
+    .navbar-default{
+        background: rgba(0,0,0,0.8);
+        border:none;
+    }
+    .navbar-default .navbar-nav li a{
+        color:#fff;
+        font-size: 14px;
+    }
+    .navbar-nav li a{
+        padding:0;
+        line-height: 85px;
+    }
+    .nav li a{
+        padding:0 8px;
+    }
+    header ul{
+        line-height: 88px;
+        width:100%;
+    }
+    .navbar-default .navbar-nav > li > a:hover{
+        color:#ccc;
+        /*border-bottom: 3px #2365F9 solid;*/
+    }
+    #example-navbar-collapse{
+        width:50%;
+    }
+    .navbar-default .navbar-toggle .icon-bar{
+        background-color: #eee;
+        height:3px;
+    }
+    .bannerBox{
+        position: relative;
+        width: 100%;
+        height:600px;
+        background: url("../images/index.png") no-repeat center;
+        background-size: 100%;
+    }
+    .bannerBox img:first-child{
+        width:100%;
+    }
+    .bannerBox h3{
+        position: absolute;
+        top:130px;
+        color:#fff;
+        width:100%;
+        font-size: 38px;
+        font-weight: normal;
+    }
+    .bannerBox h4{
+        position: absolute;
+        top:200px;
+        color:#fff;
+        width:100%;
+        font-size: 18px;
+        font-weight: normal;
+        opacity: 0;
+    }
+    .bannerBox p{
+        position: absolute;
+        top:260px;
+        color:#fff;
+        width:340px;
+        left:50%;
+        font-size: 14px;
+        opacity: 0;
+        text-align: left;
+        margin-left: -170px;
+    }
+    .bannerBox p i{
+        text-align: center;
+        display: block;
+        font-style: normal;
+    }
+    .bannerBox p span{
+        letter-spacing: 3.8px;
+    }
+    .bannerBox .scroll{
+        width:50px;
+        position: absolute;
+        bottom:20px;
+        left:50%;
+        margin-left:-25px;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .aboutBox{
+        height:420px;
+        background-color: #fff;
+        overflow: hidden;
+    }
+    .aboutBox h3{
+        font-size: 46px;
+        margin-top: 66px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .aboutBox p:nth-child(2){
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .aboutBox p:nth-child(3){
+        font-size: 16px;
+        margin-top: 20px;
+        color:#5c5c5c;
+        width:50%;
+        margin-left: 25%;
+    }
+    .aboutBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:218px;
+        height:50px;
+        color:#2365F9;
+        font-size: 16px;
+        display: block;
+        margin:0 auto;
+        margin-top: 50px;
+    }
+    .aboutBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .layoutBox{
+        height:600px;
+        background-color: #f6f6f6;
+        overflow: hidden;
+    }
+    .layoutBox h3{
+        font-size: 46px;
+        margin-top: 100px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .layoutBox p{
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .layoutBox img{
+        margin: auto auto;
+        margin-top: 30px;
+    }
+    .layoutBox div{
+        width:100%;
+        height:250px;
+        margin: 0 auto;
+        background: url("../images/layout.png") no-repeat center;
+        background-size: cover;
+        margin-top: 20px;
+    }
+    .yunying{
+        width:100%;
+        /*height:450px;*/
+        background: url("../images/yunying.png") no-repeat center bottom;
+        background-size: 100% 100%;
+        padding-top: 10px;
+        padding-bottom: 80px;
+    }
+    .yunying_tit{
+        text-align: center;
+        font-size: 42px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .yunying p.yanfa{
+        font-size: 24px;
+        color:#fff;
+        margin-top: 30px;
+        text-align: center;
+    }
+    .yunying p.yanfadizhi{
+        font-size: 20px;
+        color:#fff;
+        text-align: center;
+    }
+    .joinBox{
+        position: relative;
+        overflow: hidden;
+        background: url("../images/join.png") no-repeat center;
+        background-size: cover;
+        width: 100%;
+        height:800px;
+    }
+    .joinBox h3{
+        position: absolute;
+        top:88px;
+        width:100%;
+        color:#fff;
+        font-size: 46px;
+        letter-spacing:4px;
+    }
+    .joinBox .joinus{
+        position: absolute;
+        font-size: 42px;
+        top: 150px;
+        font-family: Cap;
+        color:#fff;
+        width:100%;
+    }
+    .carousel{
+        position: absolute;
+        top:200px;
+        width:100%;
+    }
+    .carousel-caption{
+        top:20px;
+        text-align: left;
+    }
+    .carousel-caption img{
+        margin: auto;
+    }
+    .carousel-caption .contBox{
+        padding-left: 30%;
+    }
+    .carousel-caption .contBox h5{
+        height:220px;
+        overflow: auto;
+    }
+    .carousel-caption h4{
+        font-size: 28px;
+        color:#fff;
+        margin: 30px 0;
+    }
+    .carousel-caption h5 p{
+        font-size: 18px;
+        color:#fff;
+        margin-bottom: 20px;
+    }
+    .carousel-indicators{
+        bottom:30px;
+    }
+    .joinBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:218px;
+        height:50px;
+        font-size: 16px;
+        color:#fff;
+        position: absolute;
+        bottom:80px;
+        left:50%;
+        margin-left: -109px;
+        z-index: 2;
+    }
+    .joinBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .waiCarousel{
+        height:600px;
+    }
+    .carousel-indicators li{
+        width:14px;
+        height:14px;
+        border: 2px solid #fff;
+        margin:0 3px;
+    }
+    .carousel-indicators .active{
+        width:16px;
+        height:16px;
+        background-color: #2365F9;
+        border:0;
+        margin:0 3px;
+    }
+    .carousel-control.right{
+        background-image: none;
+    }
+    .carousel-control{
+        top:50%;
+    }
+    .contactBox{
+        margin-bottom: 58px;
+    }
+    .contactBox h3{
+        font-size: 46px;
+        margin-top: 100px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .contactBox .lianxi{
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+        margin-bottom:30px;
+    }
+    .contactBox h5{
+        font-size: 18px;
+        color:#2c2525;
+        margin:30px 0;
+    }
+    .contactBox .lianxiwm{
+        margin-top: 88px;
+    }
+    .Contact{
+        margin-bottom: 34px;
+        display: flex;
+        justify-content:center;
+        align-items:center;
+    }
+    .Contacts{
+        /*display: flex;*/
+        /*align-items: center;*/
+        color: #6a6767;
+        font-size: 18px;
+        /*float:left;*/
+        margin:0 90px;
+    }
+    .Contact img{
+        width:34px;
+        display: inline-block;
+    }
+    .Contact p{
+        display: inline-block;
+        color:#6a6767;
+        font-size: 18px;
+    }
+    footer{
+        width:100%;
+        background-color: #0d2a74;
+        padding: 15px 0;
+    }
+    footer p{
+        color:#fff;
+        font-size: 18px;
+    }
+    footer p a{
+        color:#fff !important;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+    footer p img{
+        vertical-align: bottom;
+    }
+}
+
+
+@media (min-width: 1000px) and (max-width: 1399px){
+    .active1{
+        color: #ccc;
+        border-bottom: 3px #2365F9 solid;
+    }
+    #container{
+        width:100%;
+        height: 300px;
+        margin: 0 auto;
+        margin-bottom:15px;
+    }
+    header{
+        height:88px;
+    }
+    .navbar{
+        border-radius: 0;
+        margin-bottom: 0;
+        z-index: 10;
+        top:0;
+        width:100%;
+        position: fixed;
+    }
+    .navbar-default .navbar-toggle{
+        border:0;
+    }
+    .navbar img{
+        margin-top: 15px;
+    }
+    .navbar-default{
+        background: rgba(0,0,0,0.8);
+        border:none;
+    }
+    .navbar-default .navbar-nav li a{
+        color:#fff;
+        font-size: 16px;
+    }
+    .navbar-nav li a{
+        padding:0;
+        line-height: 85px;
+    }
+    .nav li a{
+        padding:0 16px;
+    }
+    header ul{
+        line-height: 88px;
+        width:100%;
+    }
+    .navbar-default .navbar-nav > li > a:hover{
+        color:#ccc;
+        /*border-bottom: 3px #2365F9 solid;*/
+    }
+    #example-navbar-collapse{
+        width:50%;
+    }
+    .navbar-default .navbar-toggle .icon-bar{
+        background-color: #eee;
+        height:3px;
+    }
+    .bannerBox{
+        position: relative;
+        width: 100%;
+        height:800px;
+        background: url("../images/index.png") no-repeat center;
+        background-size: 100%;
+    }
+    .bannerBox img:first-child{
+        width:100%;
+    }
+    .bannerBox h3{
+        position: absolute;
+        top:180px;
+        color:#fff;
+        width:100%;
+        font-size: 46px;
+        font-weight: normal;
+    }
+    .bannerBox h4{
+        position: absolute;
+        top:260px;
+        color:#fff;
+        width:100%;
+        font-size: 20px;
+        font-weight: normal;
+        opacity: 0;
+    }
+    .bannerBox p{
+        position: absolute;
+        top:330px;
+        color:#fff;
+        width:380px;
+        left:50%;
+        font-size: 16px;
+        opacity: 0;
+        text-align: left;
+        margin-left: -190px;
+    }
+    .bannerBox p i{
+        text-align: center;
+        display: block;
+        font-style: normal;
+    }
+    .bannerBox p span{
+        letter-spacing: 4.3px;
+    }
+    .bannerBox .scroll{
+        width:64px;
+        position: absolute;
+        bottom:36px;
+        left:50%;
+        margin-left:-42px;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .aboutBox{
+        background-color: #fff;
+        overflow: hidden;
+        padding:50px 0;
+    }
+    .aboutBox h3{
+        font-size: 46px;
+        /*margin-top: 66px;*/
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .aboutBox p:nth-child(2){
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .aboutBox p:nth-child(3){
+        font-size: 16px;
+        margin-top: 20px;
+        color:#5c5c5c;
+        width:50%;
+        margin-left: 25%;
+    }
+    .aboutBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:218px;
+        height:50px;
+        color:#2365F9;
+        font-size: 16px;
+        display: block;
+        margin:0 auto;
+        margin-top: 50px;
+    }
+    .aboutBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .layoutBox{
+        height:786px;
+        background-color: #f6f6f6;
+        overflow: hidden;
+    }
+    .layoutBox h3{
+        font-size: 46px;
+        margin-top: 100px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .layoutBox p{
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .layoutBox img{
+        margin: auto auto;
+        margin-top: 30px;
+    }
+    .layoutBox div{
+        width:100%;
+        height:400px;
+        margin: 0 auto;
+        background: url("../images/layout.png") no-repeat center;
+        background-size: cover;
+        margin-top: 20px;
+    }
+    .yunying{
+        width:100%;
+        /*height:630px;*/
+        background: url("../images/yunying.png") no-repeat center bottom;
+        background-size: 100% 100%;
+        padding-top: 30px;
+        padding-bottom: 80px;
+    }
+    .yunying_tit{
+        text-align: center;
+        font-size: 42px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .yunying p.yanfa{
+        font-size: 28px;
+        color:#fff;
+        margin-top: 30px;
+        text-align: center;
+    }
+    .yunying p.yanfadizhi{
+        font-size: 24px;
+        color:#fff;
+        text-align: center;
+    }
+    .joinBox{
+        position: relative;
+        overflow: hidden;
+        background: url("../images/join.png") no-repeat center;
+        background-size: cover;
+        width: 100%;
+        height:800px;
+    }
+    .joinBox h3{
+        position: absolute;
+        top:88px;
+        width:100%;
+        color:#fff;
+        font-size: 46px;
+        letter-spacing:4px;
+    }
+    .joinBox .joinus{
+        position: absolute;
+        font-size: 42px;
+        top: 150px;
+        font-family: Cap;
+        color:#fff;
+        width:100%;
+    }
+    .carousel{
+        position: absolute;
+        top:200px;
+        width:100%;
+    }
+    .carousel-caption{
+        top:20px;
+        text-align: left;
+    }
+    .carousel-caption img{
+        margin: auto;
+    }
+    .carousel-caption .contBox{
+        padding-left: 30%;
+    }
+    .carousel-caption .contBox h5{
+        height:220px;
+        overflow: auto;
+    }
+    .carousel-caption h4{
+        font-size: 28px;
+        color:#fff;
+        margin: 30px 0;
+    }
+    .carousel-caption h5 p{
+        font-size: 18px;
+        color:#fff;
+        margin-bottom: 20px;
+    }
+    .carousel-indicators{
+        bottom:30px;
+    }
+    .joinBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:218px;
+        height:50px;
+        font-size: 16px;
+        color:#fff;
+        position: absolute;
+        bottom:80px;
+        left:50%;
+        margin-left: -109px;
+        z-index: 2;
+    }
+    .joinBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .waiCarousel{
+        height:600px;
+    }
+    .carousel-indicators li{
+        width:14px;
+        height:14px;
+        border: 2px solid #fff;
+        margin:0 3px;
+    }
+    .carousel-indicators .active{
+        width:16px;
+        height:16px;
+        background-color: #2365F9;
+        border:0;
+        margin:0 3px;
+    }
+    .carousel-control.right{
+        background-image: none;
+    }
+    .carousel-control{
+        top:50%;
+    }
+    .contactBox{
+        margin-bottom: 58px;
+    }
+    .contactBox h3{
+        font-size: 46px;
+        margin-top: 100px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .contactBox .lianxi{
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+        margin-bottom:30px;
+    }
+    .contactBox h5{
+        font-size: 18px;
+        color:#2c2525;
+        margin:30px 0;
+    }
+    .contactBox .lianxiwm{
+        margin-top: 88px;
+    }
+    .Contact{
+        margin-bottom: 34px;
+        display: flex;
+        justify-content:center;
+        align-items:center;
+    }
+    .Contacts{
+        /*display: flex;*/
+        /*align-items: center;*/
+        color: #6a6767;
+        font-size: 18px;
+        /*float:left;*/
+        margin:0 90px;
+    }
+    .Contact img{
+        width:34px;
+        display: inline-block;
+    }
+    .Contact p{
+        display: inline-block;
+        color:#6a6767;
+        font-size: 18px;
+    }
+    footer{
+        width:100%;
+        background-color: #0d2a74;
+        padding: 15px 0;
+    }
+    footer p{
+        color:#fff;
+        font-size: 18px;
+    }
+    footer p a{
+        color:#fff !important;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+    footer p img{
+        vertical-align: bottom;
+    }
+}
+/*-------------------------------------------------------------------------*/
+@media (min-width: 1400px){
+    .active1{
+        color: #ccc;
+        border-bottom: 3px #2365F9 solid;
+    }
+    #container{
+        width:100%;
+        height: 300px;
+        margin: 0 auto;
+        margin-bottom:15px;
+    }
+    header{
+        height:88px;
+    }
+    .navbar{
+        border-radius: 0;
+        margin-bottom: 0;
+        z-index: 10;
+        top:0;
+        width:100%;
+        position: fixed;
+    }
+    .navbar-default .navbar-toggle{
+        border:0;
+    }
+    .navbar img{
+        margin-top: 15px;
+    }
+    .navbar-default{
+        background: rgba(0,0,0,0.8);
+        border:none;
+    }
+    .navbar-default .navbar-nav li a{
+        color:#fff;
+        font-size: 20px;
+    }
+    .navbar-nav li a{
+        padding:0;
+        line-height: 85px;
+    }
+    .nav li a{
+        padding:0 30px;
+    }
+    header ul{
+        line-height: 88px;
+        width:100%;
+    }
+    .navbar-default .navbar-nav > li > a:hover{
+        color:#ccc;
+        /*border-bottom: 3px #2365F9 solid;*/
+    }
+    #example-navbar-collapse{
+        width:50%;
+    }
+    .navbar-default .navbar-toggle .icon-bar{
+        background-color: #eee;
+        height:3px;
+    }
+    .bannerBox{
+        position: relative;
+        width: 100%;
+        height:900px;
+        background: url("../images/index.png") no-repeat center;
+        background-size: 100%;
+    }
+    .bannerBox img:first-child{
+        width:100%;
+    }
+    .bannerBox h3{
+        position: absolute;
+        top:300px;
+        color:#fff;
+        width:100%;
+        font-size: 54px;
+        font-weight: normal;
+    }
+    .bannerBox h4{
+        position: absolute;
+        top:400px;
+        color:#fff;
+        width:100%;
+        font-size: 24px;
+        font-weight: normal;
+        opacity: 0;
+    }
+    .bannerBox p{
+        position: absolute;
+        top:500px;
+        color:#fff;
+        width:420px;
+        left:50%;
+        font-size: 18px;
+        opacity: 0;
+        text-align: left;
+        margin-left: -210px;
+    }
+    .bannerBox p i{
+        font-style: normal;
+        text-align: center;
+        display: block;
+    }
+    .bannerBox p span{
+        letter-spacing: 4.8px;
+    }
+    .bannerBox .scroll{
+        position: absolute;
+        bottom:36px;
+        left:50%;
+        margin-left:-42px;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .aboutBox{
+        height:450px;
+        background-color: #fff;
+        overflow: hidden;
+    }
+    .aboutBox h3{
+        font-size: 46px;
+        margin-top: 66px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .aboutBox p:nth-child(2){
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .aboutBox p:nth-child(3){
+        font-size: 16px;
+        margin-top: 20px;
+        color:#5c5c5c;
+        width:50%;
+        margin-left: 25%;
+    }
+    .aboutBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:218px;
+        height:50px;
+        color:#2365F9;
+        font-size: 16px;
+        display: block;
+        margin:0 auto;
+        margin-top: 50px;
+    }
+    .aboutBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .layoutBox{
+        height:800px;
+        background-color: #f6f6f6;
+        overflow: hidden;
+    }
+    .layoutBox h3{
+        font-size: 46px;
+        margin-top: 100px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .layoutBox p{
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+    }
+    .layoutBox img{
+        margin: auto auto;
+        margin-top: 30px;
+    }
+    .layoutBox div{
+        width:100%;
+        height:500px;
+        margin: 0 auto;
+        background: url("../images/layout.png") no-repeat center;
+        background-size: cover;
+        margin-top: 20px;
+    }
+    .yunying{
+        width:100%;
+        /*height:630px;*/
+        background: url("../images/yunying.png") no-repeat center bottom;
+        background-size: 100% 100%;
+        padding-bottom: 100px;
+        padding-top: 20px;
+    }
+    .yunying_tit{
+        text-align: center;
+        font-size: 42px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .yunying p.yanfa{
+        font-size: 28px;
+        color:#fff;
+        margin-top: 30px;
+        text-align: center;
+    }
+    .yunying p.yanfadizhi{
+        font-size: 24px;
+        color:#fff;
+        text-align: center;
+    }
+    .joinBox{
+        position: relative;
+        overflow: hidden;
+        background: url("../images/join.png") no-repeat center;
+        background-size: cover;
+        width: 100%;
+        height:800px;
+    }
+    .joinBox h3{
+        position: absolute;
+        top:88px;
+        width:100%;
+        color:#fff;
+        font-size: 46px;
+        letter-spacing:4px;
+    }
+    .joinBox .joinus{
+        position: absolute;
+        font-size: 42px;
+        top: 150px;
+        font-family: Cap;
+        color:#fff;
+        width:100%;
+    }
+    .carousel{
+        position: absolute;
+        top:200px;
+        width:100%;
+    }
+    .carousel-caption{
+        top:20px;
+        text-align: left;
+    }
+    .carousel-caption img{
+        margin: auto;
+    }
+    .carousel-caption .contBox{
+        padding-left: 40%;
+    }
+    .carousel-caption .contBox h5{
+        height:230px;
+        overflow: auto;
+    }
+    .carousel-caption h4{
+        font-size: 28px;
+        color:#fff;
+        margin: 30px 0;
+    }
+    .carousel-caption h5 p{
+        font-size: 18px;
+        color:#fff;
+        margin-bottom: 20px;
+    }
+    .carousel-indicators{
+        bottom:30px;
+    }
+    .joinBox button{
+        border:2px #CDCECE solid;
+        border-radius: 30px;
+        background-color: transparent;
+        outline: none;
+        width:218px;
+        height:50px;
+        font-size: 16px;
+        color:#fff;
+        position: absolute;
+        bottom:80px;
+        left:50%;
+        margin-left: -109px;
+        z-index: 2;
+    }
+    .joinBox button:hover{
+        background-color: #2365F9;
+        color:#fff;
+        border:0;
+    }
+    .waiCarousel{
+        height:600px;
+    }
+    .carousel-indicators li{
+        width:14px;
+        height:14px;
+        border: 2px solid #fff;
+        margin:0 3px;
+    }
+    .carousel-indicators .active{
+        width:16px;
+        height:16px;
+        background-color: #2365F9;
+        border:0;
+        margin:0 3px;
+    }
+    .carousel-control.right{
+        background-image: none;
+    }
+    .carousel-control{
+        top:50%;
+    }
+    .contactBox{
+        margin-bottom: 58px;
+    }
+    .contactBox h3{
+        font-size: 46px;
+        margin-top: 100px;
+        letter-spacing:4px;
+        color:#231c1c;
+    }
+    .contactBox .lianxi{
+        font-size: 42px;
+        margin-top: 20px;
+        font-family: Cap;
+        color:#6a6a6a;
+        margin-bottom:30px;
+    }
+    .contactBox h5{
+        font-size: 18px;
+        color:#2c2525;
+        margin:30px 0;
+    }
+    .contactBox .lianxiwm{
+        margin-top: 88px;
+    }
+    .Contact{
+        margin-bottom: 34px;
+        display: flex;
+        justify-content:center;
+        align-items:center;
+    }
+    .Contacts{
+        /*display: flex;*/
+        /*align-items: center;*/
+        color: #6a6767;
+        font-size: 18px;
+        /*float:left;*/
+        margin:0 90px;
+    }
+    .Contact img{
+        width:34px;
+        display: inline-block;
+    }
+    .Contact p{
+        display: inline-block;
+        color:#6a6767;
+        font-size: 18px;
+    }
+    footer{
+        width:100%;
+        background-color: #0d2a74;
+        padding: 15px 0;
+    }
+    footer p{
+        color:#fff;
+        font-size: 18px;
+    }
+    footer p span{
+        font-size: 18px;
+    }
+    footer p a{
+        font-size: 14px;
+        color: #ffffff !important;
+        margin-top: 10px;
+    }
+    footer p img{
+        vertical-align: bottom;
+    }
+}

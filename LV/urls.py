@@ -28,7 +28,8 @@ admin_urlpatterns = [
 ]
 
 urlpatterns = [
-    path('', views.index),
+    path('', views.about_us),
+    path('enroll', views.register),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('sms/', include('datamodels.sms.urls')),
