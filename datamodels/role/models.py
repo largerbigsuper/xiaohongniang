@@ -276,6 +276,13 @@ class CustomerManager(BaseManger):
 
         return self.filter(**f).exclude(gender=customer.gender).order_by('-last_request_at', 'id')
 
+    def get_kefu_id(self):
+        kefu = mm_Customer.filter(account='10000000000').first()
+        if kefu:
+            return kefu.id
+        else:
+            return -1
+
 
 class Customer(BaseRole):
     objects = CustomerManager()
