@@ -58,15 +58,25 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CustomerListSerializer
     filterset_class = CustomerFilter
 
-    def get_queryset(self):
-        return mm_Customer.exclude(gender=self.request.user.customer.gender)
-
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
         if 'q' in self.request.query_params:
             q = self.request.query_params['q']
             return queryset.exclude(Q(name='') | Q(account='')).filter(Q(name__icontains=q) | Q(account__icontains=q))
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        """用户列表"""
+        self.queryset = mm_Customer.get_customer_with_avatar().exclude(gender=self.request.user.customer.gender)
+        queryset = self.filter_queryset(self.queryset)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, serializer_class=IndexTopCustomerSerializer)
     def service_top(self, request):
