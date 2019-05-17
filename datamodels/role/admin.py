@@ -96,8 +96,11 @@ make_verified.short_description = "通过验证"
 
 def make_failed(modeladmin, request, queryset):
     for picture in queryset:
-        picture.customer.avatar_url = picture.url
-        picture.customer.avatar_status = 2
+        # picture.customer.avatar_url = picture.url
+        if picture.customer.avatar_url:
+            picture.customer.avatar_status = 1
+        else:
+            picture.customer.avatar_status = 0
         picture.customer.save()
 
 

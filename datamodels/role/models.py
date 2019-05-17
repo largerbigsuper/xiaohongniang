@@ -24,11 +24,12 @@ class BaseRole(models.Model):
     )
     PROFESSION_CHOICE = (
         (0, '未知'),
-        (1, '事业单位'),
-        (2, '政府机关'),
-        (3, '私营企业'),
-        (4, '自由职业'),
-        (5, '其他'),
+        (1, '白领/一般职业'),
+        (2, '公务员/事业单位'),
+        (3, '自由职业/个体户/私营业主'),
+        (4, '暂时无业'),
+        (5, '退休'),
+        (6, '学生'),
     )
     EDUCATION_CHOICE = (
         (0, '未知'),
@@ -139,10 +140,15 @@ class BaseRole(models.Model):
 
 class CustomerManager(BaseManger):
 
-    def get_queryset(self):
-        return super().get_queryset().exclude(avatar_url='').filter(avatar_status=1)
-
     Default_Password = '888888'
+
+    #
+    # def get_queryset(self):
+    #     return super().get_queryset().exclude(avatar_url='').filter(avatar_status=1)
+
+    def get_customer_with_avatar(self):
+        # 返回有头像，且认证通过的用户
+        return self.exclude(avatar_url='').filter(avatar_status=1)
 
     def add(self, account, password, **kwargs):
         try:
@@ -247,7 +253,7 @@ class CustomerManager(BaseManger):
         return mm_Customer.raw(sql)
 
     def show_in_home_page(self, gender):
-        return self.exclude(gender=gender).filter(service_show_index_expired_at__gt=datetime.now()).order_by('?')[:3]
+        return self.get_customer_with_avatar().exclude(gender=gender).filter(service_show_index_expired_at__gt=datetime.now()).order_by('?')[:3]
 
     def recommend_customers(self, customer):
         timelimit = datetime.now() - timedelta(days=5)
