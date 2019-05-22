@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
+from LV import handan_global_config
 from LV.settings import QiNiuSettings
 from datamodels.role.models import mm_Customer
 from lib.common import CacheKey
@@ -60,7 +61,8 @@ class APPConfigView(APIView):
             'user_total': user_total,
             'image_domain': QiNiuSettings.BUCKET_DOMAIN_DICT['image'],
             'chat_times_limit': settings.NORNAML_CUSTOMER_CHAT_TIMES_LIMIT_PER_DAY,
-            'kefuid': mm_Customer.get_kefu_id()
+            'kefuid': mm_Customer.get_kefu_id(),
+            'isNeedVerified': handan_global_config.IsNeedVerified
 
         }
         return Response(Tool.format_data(app_config))
