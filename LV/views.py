@@ -62,7 +62,10 @@ class APPConfigView(APIView):
             'image_domain': QiNiuSettings.BUCKET_DOMAIN_DICT['image'],
             'chat_times_limit': settings.NORNAML_CUSTOMER_CHAT_TIMES_LIMIT_PER_DAY,
             'kefuid': mm_Customer.get_kefu_id(),
-            'isNeedVerified': handan_global_config.IsNeedVerified
+            'isNeedVerified': handan_global_config.IsNeedVerified,
+            'isOnlineSwitch': handan_global_config.IsOnlineSwitch,
+            'next_app_version': handan_global_config.Next_APP_Version
+
 
         }
         return Response(Tool.format_data(app_config))

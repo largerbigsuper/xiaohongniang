@@ -8,4 +8,7 @@
 
 # 是否需要认证
 IsNeedVerified = 1
-#
+# 是否上线
+IsOnlineSwitch = False
+# 需要内购的版本
+Next_APP_Version = 2.0
