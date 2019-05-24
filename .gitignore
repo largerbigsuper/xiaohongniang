@@ -20,4 +20,6 @@ celerybeat-schedule
 # Environments
 venv/
 
+# vscode 
+.vscode
 

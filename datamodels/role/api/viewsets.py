@@ -5,9 +5,10 @@
 # @Email   : zaihuazhao@163.com
 # @File    : veiwset.py
 import requests
-from django.db.models import Q
+from django.db.models import Q, F, ExpressionWrapper, BooleanField
+from django.db.models.functions import Now
 from django.views.decorators.csrf import csrf_exempt
-from django_filters.rest_framework import FilterSet, OrderingFilter, CharFilter, NumberFilter
+from django_filters.rest_framework import FilterSet, OrderingFilter
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -67,7 +68,14 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request, *args, **kwargs):
         """用户列表"""
-        self.queryset = mm_Customer.get_customer_with_avatar().exclude(gender=self.request.user.customer.gender)
+        self.queryset = mm_Customer.get_customer_with_avatar().exclude(
+            gender=self.request.user.customer.gender
+        ).annotate(
+            is_number=ExpressionWrapper(
+                F('service_vip_expired_at') - Now(),
+                output_field=BooleanField())
+        ).order_by('is_number', '-last_request_at')
+
         queryset = self.filter_queryset(self.queryset)
 
         page = self.paginate_queryset(queryset)
