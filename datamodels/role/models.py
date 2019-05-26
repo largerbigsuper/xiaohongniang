@@ -218,8 +218,8 @@ class CustomerManager(BaseManger):
     def customers_with_skills(self):
         return self.all().filter(skills__isnull=False).order_by('-last_request_at')
 
-    def customers_need_paired(self):
-        return self.all().filter(is_rut=True).order_by('-last_request_at')
+    def customers_need_paired(self, customer):
+        return self.exclude(gender=customer.gender).filter(is_rut=True).order_by('-last_request_at')
 
     def active_customer_in_days(self, days=5):
         last_request_at = datetime.now() - timedelta(days=days)

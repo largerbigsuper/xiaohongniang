@@ -198,7 +198,7 @@ class CustomerSingleList(generics.ListAPIView):
     pagination_class = ReturnTwentyPagination
 
     def get_queryset(self):
-        return mm_Customer.customers_need_paired()
+        return mm_Customer.customers_need_paired(self.request.user.customer)
 
 
 class CustomerDetail(generics.RetrieveAPIView):
