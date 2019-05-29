@@ -63,8 +63,9 @@ class APPConfigView(APIView):
             'chat_times_limit': settings.NORNAML_CUSTOMER_CHAT_TIMES_LIMIT_PER_DAY,
             'kefuid': mm_Customer.get_kefu_id(),
             'isNeedVerified': handan_global_config.IsNeedVerified,
-            'isOnlineSwitch': handan_global_config.IsOnlineSwitch,
-            'next_app_version': handan_global_config.Next_APP_Version
+            'next_app_version': handan_global_config.Next_APP_Version,
+            'version_ios': handan_global_config.CURRENT_APP_VERSION_IOS,
+            'version_android': handan_global_config.CURRENT_APP_VERSION_ANDROID,
 
 
         }
