@@ -9,7 +9,7 @@
 # 是否需要认证
 IsNeedVerified = 1
 # 需要内购的版本
-Next_APP_Version = 1.1
+Next_APP_Version = 1.2
 # 当前iOS App 版本号
 CURRENT_APP_VERSION_IOS = 1.1
 # 当前Android App版本
